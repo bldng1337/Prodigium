@@ -1,25 +1,37 @@
-# SchoolProject
+# **SchoolProject**
+* 2D Topdown
+* Roguelike
+* Lobby Multiplayer
 
-#Christian ( Producer )
+## Code
+* Game: Java (OpenGL)
+* Launcher: .NET C# Wpf XAML
+
+## Links
+* Quire: https://quire.io/w/School_Project
+
+# __Positions__
+## Christian (Producer)
 * Core Engine
 * Shader
 * Music
 
-##Brendon ( Manager )
+## Brendon (Manager)
 * Management
 * Networking
 * Launcher
 * Art
 
-##Hannah ( Art Lead )
+## Hannah (Art Lead)
 * Story
 * Lead Art
 * Level Concept
 * Weapon Concept
 * Levelscripting
 
-##Jakob ( Enviroment Designer  )
+## Jakob (Enviroment Designer)
 * Story
 * Art
 * Levelconcept
 * Weapon developing
+* Enemy Behavior Scripting
