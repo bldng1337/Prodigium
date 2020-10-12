@@ -1,3 +1,4 @@
 #Ignore builds and Eclipse settings
 **/bin
 **/.settings
+**/logs
