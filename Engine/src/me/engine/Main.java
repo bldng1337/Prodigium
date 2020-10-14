@@ -68,7 +68,7 @@ public class Main {
 			   IntBuffer h = stack.mallocInt(1);
 			   IntBuffer comp = stack.mallocInt(1);
 
-			   ByteBuffer icon = STBImage.stbi_load("C:\\Users\\Christian\\Documents\\Unbenannt.png", w, h, comp, 4);
+			   ByteBuffer icon = STBImage.stbi_load(dir+"\\Assets\\Textures\\Icons\\WindowIcon.jpg", w, h, comp, 4);
 
 			   GLFW.glfwSetWindowIcon(window, GLFWImage.mallocStack(1, stack)
 			      .width(w.get(0))
