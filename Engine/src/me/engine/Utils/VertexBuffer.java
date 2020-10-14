@@ -56,6 +56,7 @@ public class VertexBuffer {
 			return;
 		}
 		vb[id]=updateBuffer(vb[id], data);
+		vbo[id][1] = data.length/size;
 		GlStateManager.bindVArray(vao);
 		GL45.glBindBuffer(GL45.GL_ARRAY_BUFFER, vbo[id][0]);
 		GL45.glBufferSubData(GL45.GL_ARRAY_BUFFER,0, vb[id]);
