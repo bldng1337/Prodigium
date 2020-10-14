@@ -13,13 +13,15 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL45;
+import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import me.engine.Utils.Renderer;
+import me.engine.Utils.Shader;
 import me.engine.Utils.VertexBuffer;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.Events.KeyPressed;
@@ -28,7 +30,7 @@ public class Main {
 	public static Logger log;
 	long window;
 	public static File dir=new File(System.getProperty("user.dir"));
-	Renderer render=new Renderer();
+	Renderer render;
 	
 	public Main() {
 		init();
@@ -48,6 +50,7 @@ public class Main {
 		GLFW.glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE); // the window will stay hidden after creation
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);//GLError
 		
 		window = GLFW.glfwCreateWindow(300, 300, "Hello World!", MemoryUtil.NULL, MemoryUtil.NULL);
 		if (window==MemoryUtil.NULL)
@@ -97,22 +100,27 @@ public class Main {
 
 		// Set the clear color
 		GL45.glClearColor(0.239f, 0.239f, 0.239f, 0.0f);
-
-		// Run the rendering loop until the user has attempted to close
-		// the window or has pressed the ESCAPE key.
+		
+		//Error Callback
+		Callback debugProc = GLUtil.setupDebugMessageCallback();
+		
+		render=new Renderer();
 		VertexBuffer bf=new VertexBuffer(false);
 		float[] vert= {
 				-0.5f,0.5f,1f,
 				-0.5f,-0.5f,1f,
 				0.5f,-0.5f,1f,
+				-0.5f,0.5f,1f,
 				0.5f,0.5f,1f,
-				-0.5f,0.5f,1f
+				0.5f,-0.5f,1f
 		};
 		bf.createBuffer(vert, 0, 3);
+		Shader s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 		while ( !GLFW.glfwWindowShouldClose(window) ) {
 			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			loop();
-			render.render();
+			
+//			loop();
+//			render.render();
 //			GL11.glColor4f(1, 0, 0, 1);
 //			GL11.glBegin(GL11.GL_POLYGON);
 //			GL11.glVertex2d(-0.5, -0.5);
@@ -120,20 +128,27 @@ public class Main {
 //			GL11.glVertex2d(0.5, 0.5);
 //			GL11.glVertex2d(0.5, -0.5);
 //			GL11.glEnd();
-			
-//			bf.bind(0);
-//			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, bf.getbuffersize(0));
-//			bf.unbind();
+			float dir=0.005f;
+			if((System.currentTimeMillis()/1000)%2==0)
+				dir*=-1;
+			for(int i=0;i<vert.length;i++) 
+				if((i+1)%3!=0)
+					vert[i]=(float) (vert[i]+dir);
+			bf.updateBuffer(vert, 0, 3);
+			bf.bind(0);
+			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, bf.getbuffersize(0));
+			bf.unbind();
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			GLFW.glfwPollEvents();
 		}
+		if(debugProc!=null)
+			debugProc.free();
 	}
 	
 	public void loop() {
 		render.renderQuad(-0.5f, -0.5f, 1, 1, 0);
-		render.flush();
 	}
 	
 	
