@@ -31,13 +31,19 @@ public class VertexBuffer {
 			updateBuffer(data,id,size);
 			return;
 		}
+		if(data.length%size!=0) {
+			Main.log.warning("Array incorrect size "+(data.length));
+			return;
+		}
+		GlStateManager.bindVArray(vao);
 		vbo[id][0] = GL45.glGenBuffers();
 		vbo[id][1] = data.length/size;
 		vb[id]=toBuffer(data);
 		GL45.glBindBuffer(GL45.GL_ARRAY_BUFFER, vbo[id][0]);
-		GL45.glBufferData(GL45.GL_ARRAY_BUFFER, vb[id], static_data ? GL45.GL_STATIC_DRAW : GL45.GL_DYNAMIC_DRAW);
+		GL45.glBufferData(GL45.GL_ARRAY_BUFFER, vb[id],  GL45.GL_DYNAMIC_DRAW);
 		GL45.glVertexAttribPointer(id, size, GL45.GL_FLOAT, false, 0, 0);
-		unbind();
+		GL45.glBindBuffer(GL45.GL_ARRAY_BUFFER, 0);
+		GlStateManager.unbindVArray();
 	}
 	
 	public void updateBuffer(float[] data,int id,int size) {
@@ -45,11 +51,16 @@ public class VertexBuffer {
 			Main.log.severe("Tried to update an static Buffer");
 			return;
 		}
+		if(data.length%size!=0) {
+			Main.log.warning("Array incorrect size "+(data.length));
+			return;
+		}
 		vb[id]=updateBuffer(vb[id], data);
-		vbo[id][1] = data.length/size;
+		GlStateManager.bindVArray(vao);
 		GL45.glBindBuffer(GL45.GL_ARRAY_BUFFER, vbo[id][0]);
-		GL45.glBufferSubData(GL45.GL_ARRAY_BUFFER, vbo[id][0], vb[id]);
+		GL45.glBufferSubData(GL45.GL_ARRAY_BUFFER,0, vb[id]);
 		GL45.glBindBuffer(GL45.GL_ARRAY_BUFFER, vbo[id][0]);
+		GlStateManager.unbindVArray();
 	}
 	
 	public FloatBuffer toBuffer(float[] data) {
