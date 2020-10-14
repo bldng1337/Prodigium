@@ -1,4 +1,4 @@
-# **SchoolProject**
+# **Prodigium**
 * 2D Topdown
 * Roguelike
 * Lobby Multiplayer
@@ -8,7 +8,7 @@
 * Launcher: .NET C# Wpf XAML
 
 ## Links
-* Quire: https://quire.io/w/School_Project-19
+* Quire: https://quire.io/w/Prodigium
 
 # __Positions__
 ## Christian (Producer)
@@ -20,7 +20,7 @@
 * Management
 * Networking
 * Launcher
-* Art
+* Splash Art
 
 ## Hannah (Art Lead)
 * Story
