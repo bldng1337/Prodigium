@@ -7,6 +7,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
+import me.engine.Utils.Event.EventManager;
 
 public class Renderer {
 
@@ -17,6 +18,7 @@ public class Renderer {
 	int vindex=0,vbindex,tindex;
 	private VertexBuffer[] v;
 	static Matrix4f scale,projection;
+	public Camera c;
 	Shader s;
 	
 	public Renderer() {
@@ -24,7 +26,9 @@ public class Renderer {
 		vertecies=new float[MAXDRAW];
 		txt=new float[MAXDRAW];
 		v=new VertexBuffer[MAXCALLS];
+		c=new Camera();
 		vbindex=-1;
+		EventManager.register(c);
 	}
 	public void renderQuad(float x, float y, float width, float height, long texid,int frame) {
 		float tx=Texture.getx(texid)+Texture.getdx(texid)*frame;
@@ -112,6 +116,7 @@ public class Renderer {
 		s.useUniform("projection", projection);
 		s.useUniform("scale", scale);
 		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
+		s.useUniform("u_Transform", c.translate);
 		Main.getTex().bind();
 		for(int i=0;i<=vbindex;i++) {
 			VertexBuffer vb=v[i];
@@ -151,6 +156,5 @@ public class Renderer {
 	public void scale(float x,float y,float z) {
 		scale.scale(x, y, z);
 	}
-	
 	
 }

@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 import java.util.Iterator;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL45;
@@ -105,6 +106,10 @@ public class Shader {
 				Main.log.warning(()->"Uniform "+name+" is too long "+data.length);
 				break;
 			}
+	}
+	
+	public void useUniform(String name,Vector2f data) {
+		useUniform(name,data.x,data.y);
 	}
 	
 	public void useUniform(String name,int... data) {

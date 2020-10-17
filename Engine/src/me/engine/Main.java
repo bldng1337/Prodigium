@@ -6,11 +6,14 @@ import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -64,7 +67,7 @@ public class Main {
 			GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);//GLError
 			//WINDOW
-			window = GLFW.glfwCreateWindow(300, 300, "Prodigium", MemoryUtil.NULL, MemoryUtil.NULL);
+			window = GLFW.glfwCreateWindow(900, 500, "Prodigium", MemoryUtil.NULL, MemoryUtil.NULL);
 			if (window==MemoryUtil.NULL)
 				throw new RuntimeException("Failed to create the GLFW window");
 			GLFW.glfwSetKeyCallback(window, (wwindow, key, scancode, action, mods) -> {
@@ -121,7 +124,8 @@ public class Main {
 			long txt=tex.registerTexturesafe("Test.testgif:gif");
 			long txt2=tex.registerTexturesafe("Test.testpng:png");
 			tex.flush();
-			
+			render.c.getStati().set(1920/2f, 1080/2f);
+			render.c.setP(()->new Vector2f(px,py));
 			//Blend for Alpha
 			GlStateManager.enable(GL45.GL_BLEND);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
@@ -130,8 +134,12 @@ public class Main {
 				long time=System.nanoTime();//Frametime for debug
 				EventManager.call(new Update());
 				EventManager.call(new Render());
-				render.renderQuad(1920/6f, 1080/2f, 500f, 500f, txt,(int)(System.currentTimeMillis()/120)%Texture.getaniframes(txt));
-				render.renderQuad(1920/2f, 1080/2f, 500f, 500f, txt2,0);
+				Random r=new Random();
+				r.setSeed(2);
+				for(int i=0;i<30;i++) {
+					render.renderQuad(r.nextInt(2000)-1000f, r.nextInt(2000)-1000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
+				}
+				render.renderQuad(px, py, 140f, 140f, txt2,0);
 				render.render();
 				render.clear();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
@@ -145,6 +153,8 @@ public class Main {
 	}
 	
 	double mx,my;
+	
+	float px=0,py=0;
 	public void setupCallbacks() {
 		GLFW.glfwSetMouseButtonCallback(window, (wwindow,key,pressed,args)->{
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
@@ -158,6 +168,22 @@ public class Main {
 			windowwidth=width;
 			windowheight=height;
 			setAspectRatio(windowwidth, windowheight);
+		});
+		GLFW.glfwSetKeyCallback(window, (long window,int key, int scancode, int action, int mods)->{
+			switch(key) {
+			case GLFW.GLFW_KEY_W:
+				py-=10;
+				break;
+			case GLFW.GLFW_KEY_S:
+				py+=10;
+				break;
+			case GLFW.GLFW_KEY_A:
+				px-=10;
+				break;
+			case GLFW.GLFW_KEY_D:
+				px+=10;
+				break;
+			}
 		});
 	}
 	
