@@ -10,9 +10,9 @@ import me.engine.Main;
 public class VertexBuffer {
 	private int vao,vbo[][];
 	private FloatBuffer[] vb;
-	private boolean static_data,bound;
+	private boolean staticdata,bound;
 	private int[] enabledbuffers;
-	public VertexBuffer(boolean static_data) {
+	public VertexBuffer(boolean staticdata) {
 		vao = GL45.glGenVertexArrays();
 		vbo = new int[15][2];
 		enabledbuffers=new int[15];
@@ -22,7 +22,7 @@ public class VertexBuffer {
 			vbo[i][0] = -1;
 			
 		}
-		this.static_data=static_data;
+		this.staticdata=staticdata;
 	}
 	
 	public void createBuffer(float[] data,int id,int size) {
@@ -32,7 +32,7 @@ public class VertexBuffer {
 			return;
 		}
 		if(data.length%size!=0) {
-			Main.log.warning("Array incorrect size "+(data.length));
+			Main.log.warning(()->"Array incorrect size "+(data.length));
 			return;
 		}
 		GlStateManager.bindVArray(vao);
@@ -47,12 +47,12 @@ public class VertexBuffer {
 	}
 	
 	public void updateBuffer(float[] data,int id,int size) {
-		if(static_data) {
+		if(staticdata) {
 			Main.log.severe("Tried to update an static Buffer");
 			return;
 		}
 		if(data.length%size!=0) {
-			Main.log.warning("Array incorrect size "+(data.length));
+			Main.log.warning(()->"Array incorrect size "+(data.length));
 			return;
 		}
 		vb[id]=updateBuffer(vb[id], data);

@@ -6,10 +6,12 @@ import org.lwjgl.opengl.GL45;
 
 public class GlStateManager {
 	
+	private GlStateManager() {}
+	
 	static HashMap<Integer, Boolean> states=new HashMap<>();
 	static int txt=-1,shader=0,vao=-1;
 	
-	public static void Enable(int flag) {
+	public static void enable(int flag) {
 		if(states.containsKey(flag)) {
 			if(!states.get(flag))
 				GL45.glEnable(flag);
@@ -19,7 +21,7 @@ public class GlStateManager {
 		}
 	}
 	
-	public static void Disable(int flag) {
+	public static void disable(int flag) {
 		if(states.containsKey(flag)) {
 			if(states.get(flag)) 
 				GL45.glDisable(flag);
@@ -34,6 +36,11 @@ public class GlStateManager {
 			GL45.glBindTexture(GL45.GL_TEXTURE_2D, id);
 	}
 	
+	public static void unbindTexture2D() {
+		if(txt!=0)
+			GL45.glBindTexture(GL45.GL_TEXTURE_2D, 0);
+	}
+	
 	public static void bindShader(int s) {
 		if(shader!=s)
 			GL45.glUseProgram(s);
@@ -44,10 +51,10 @@ public class GlStateManager {
 			GL45.glUseProgram(0);
 	}
 	
-	public static void bindVArray(int vao_) {
-		if(vao!=vao_)
-			GL45.glBindVertexArray(vao_);
-		vao=vao_;
+	public static void bindVArray(int vvao) {
+		if(vao!=vvao)
+			GL45.glBindVertexArray(vvao);
+		vao=vvao;
 	}
 	public static void unbindVArray() {
 		if(vao!=0)

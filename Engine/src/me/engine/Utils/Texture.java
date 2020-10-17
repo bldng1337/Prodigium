@@ -40,14 +40,14 @@ public class Texture {
 		try {
 			return registerTexture(id);
 		}catch(IOException e) {
-			GlStateManager.Disable(GL45.GL_TEXTURE_2D);
+			GlStateManager.disable(GL45.GL_TEXTURE_2D);
 			Main.log.warning(e.getMessage());
 		}
 		return 0;
 	}
 	
 	public long registerTexture(String id) throws IOException {
-		GlStateManager.Enable(GL45.GL_TEXTURE_2D);
+		GlStateManager.enable(GL45.GL_TEXTURE_2D);
 		if(texturemap.containsKey(id))
 			return texturemap.get(id);
 		String p=id.replace(".", "\\")
@@ -130,8 +130,7 @@ public class Texture {
 		GL45.glTexParameteri(GL45.GL_TEXTURE_2D, GL45.GL_TEXTURE_MAG_FILTER, GL45.GL_NEAREST);
 		GL45.glTexImage2D(GL45.GL_TEXTURE_2D, 0, GL45.GL_RGBA, msize, msize, 0, GL45.GL_RGBA, GL45.GL_UNSIGNED_BYTE, ib);
 		GL45.glBindTexture(GL45.GL_TEXTURE_2D, 0);
-		//TODO: Add an unbind function
-		GlStateManager.bindTexture2D(0);
+		GlStateManager.unbindTexture2D();
 		atlas++;
 		cx=0;
 		cy=0;
@@ -183,7 +182,7 @@ public class Texture {
 	
 	long gentexid(int x,int y,int dx,int dy,int atlas,int animframe, String id) {
 		if(atlas>7||x>4095||y>4095||dx>4095||dy>4095||animframe>63) {
-			Main.log.severe("Error creating Texture ["+id+"] size out of bounds!");
+			Main.log.severe(()->"Error creating Texture ["+id+"] size out of bounds!");
 			System.exit(1);
 		}
 		return ((long)atlas|((long)x<<(13*1+2))|((long)y<<(13*2+2))|((long)dx<<(13*3+2))|((long)dy<<(13*4+2))|((long)animframe<<(13*5+2)));

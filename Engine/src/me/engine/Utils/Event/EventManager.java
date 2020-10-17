@@ -5,8 +5,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import me.engine.Main;
+
 public class EventManager {
-	static ArrayList<MethodType> clist=new ArrayList<MethodType>();
+	static ArrayList<MethodType> clist=new ArrayList<>();
 	
 	public static void register(Object o) {
 		for(Method m: o.getClass().getMethods()) {
@@ -24,12 +26,8 @@ public class EventManager {
 			if(m.m.getParameterTypes()[0].getSimpleName().equals("Event")||(m.m.getParameterTypes()[0].equals(e.getClass()))) {
 				try {
 					m.m.invoke(m.c, e);
-				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					e1.printStackTrace();
+				} catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException e1) {
+					Main.log.severe(e1.toString());
 				}
 			}
 		}

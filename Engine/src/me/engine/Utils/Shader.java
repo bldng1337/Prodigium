@@ -59,14 +59,14 @@ public class Shader {
 		ARBShaderObjects.glLinkProgramARB(program);
 		if (ARBShaderObjects.glGetObjectParameteriARB(program,
 				ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL45.GL_FALSE) {
-			Main.log.severe("Error glLink\n"+this.toString());
+			Main.log.severe(()->"Error glLink\n"+this.toString());
 			program=0;
 			return;
 		}
 		ARBShaderObjects.glValidateProgramARB(program);
 		if (ARBShaderObjects.glGetObjectParameteriARB(program,
 				ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL45.GL_FALSE) {
-			Main.log.severe("Error glValidate\n"+this.toString());
+			Main.log.severe(()->"Error glValidate\n"+this.toString());
 			program=0;
 		}
 	}
@@ -76,7 +76,7 @@ public class Shader {
 		try(BufferedReader reader = new BufferedReader(new FileReader(f));){
 			Iterator<String> i=reader.lines().iterator();
 			while(i.hasNext()) {
-				s.append((String) i.next()+"\n");
+				s.append(i.next()+"\n");
 			}
 		} catch (IOException e) {
 			Main.log.severe("Failed to read File: "+f.getAbsolutePath());
@@ -85,8 +85,8 @@ public class Shader {
 	}
 	
 	
-	public void useUniform(String Name,float... data) {
-		int loc=GL45.glGetUniformLocation(this.program, Name);
+	public void useUniform(String name,float... data) {
+		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1)
 			switch(data.length) {
 			case 1:
@@ -102,19 +102,19 @@ public class Shader {
 				GL45.glUniform4f(loc, data[0],data[1],data[2],data[3]);
 				break;
 			default:
-				Main.log.warning("Uniform "+Name+" is too long "+data.length);
+				Main.log.warning(()->"Uniform "+name+" is too long "+data.length);
 				break;
 			}
 	}
 	
-	public void useUniform(String Name,int... data) {
-		int loc=GL45.glGetUniformLocation(this.program, Name);
+	public void useUniform(String name,int... data) {
+		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1)
 			GL45.glUniform1iv(loc, data);
 	}
 	
-	public void useUniform(String Name, Matrix4f data) {
-		int loc=GL45.glGetUniformLocation(this.program, Name);
+	public void useUniform(String name, Matrix4f data) {
+		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1) {
 			FloatBuffer fb=BufferUtils.createFloatBuffer(16);
 			data.get(fb);
@@ -138,7 +138,7 @@ public class Shader {
 		if (ARBShaderObjects.glGetObjectParameteriARB(shader,
 				ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL45.GL_FALSE) {
 			String error = ARBShaderObjects.glGetInfoLogARB(shader, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
-			Main.log.severe("Failed to create Shader: "+error);
+			Main.log.severe(()->"Failed to create Shader: "+error);
 			System.exit(1);
 		}
 		return shader;

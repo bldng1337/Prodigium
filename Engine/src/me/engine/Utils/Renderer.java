@@ -17,8 +17,10 @@ public class Renderer {
 	int vindex=0,vbindex,tindex;
 	private VertexBuffer[] v;
 	static Matrix4f scale,projection;
+	Shader s;
 	
 	public Renderer() {
+		s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 		vertecies=new float[MAXDRAW];
 		txt=new float[MAXDRAW];
 		v=new VertexBuffer[MAXCALLS];
@@ -30,14 +32,11 @@ public class Renderer {
 		float tx2=Texture.getx(texid)+Texture.getdx(texid)+Texture.getdx(texid)*frame;
 		float ty2=Texture.gety(texid)+Texture.getdy(texid);
 		int atlas=Texture.getatlas(texid);
-		tx/=Main.tex.msize;
-		ty/=Main.tex.msize;
-		tx2/=Main.tex.msize;
-		ty2/=Main.tex.msize;
-//		tx=0;
-//		ty=0;
-//		tx2=1;
-//		ty2=1;
+		tx/=Main.getTex().msize;
+		ty/=Main.getTex().msize;
+		tx2/=Main.getTex().msize;
+		ty2/=Main.getTex().msize;
+		
 		vertecies[vindex++]=x;
 		vertecies[vindex++]=y+height;
 		vertecies[vindex++]=1;
@@ -105,17 +104,15 @@ public class Renderer {
 		tindex=0;
 	}
 	
-	Shader s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 	public void render() {
 		flush();
 		vindex=0;
-		//TODO: Maybe format
 		Main.log.finest(()->vbindex+" DrawCalls");
 		s.bind();
 		s.useUniform("projection", projection);
 		s.useUniform("scale", scale);
 		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
-		Main.tex.bind();
+		Main.getTex().bind();
 		for(int i=0;i<=vbindex;i++) {
 			VertexBuffer vb=v[i];
 			vb.bind(0);
