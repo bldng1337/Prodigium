@@ -26,6 +26,7 @@ import org.lwjgl.system.MemoryUtil;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Shader;
+import me.engine.Utils.Texture;
 import me.engine.Utils.VertexBuffer;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.Events.KeyPressed;
@@ -33,10 +34,11 @@ import me.engine.Utils.Event.Events.KeyPressed;
 public class Main {
 	public static Logger log;
 	long window;
+	public static Main m;
 	public static File dir=new File(System.getProperty("user.dir"));
 	Renderer render;
 	int windowwidth,windowheight;
-	
+	public static Texture tex;
 	
 	public Main() {
 		init();
@@ -44,9 +46,17 @@ public class Main {
 
 	public static void main(String[] args) {
 		setupLogger();
-		log.setLevel(Level.ALL);
-		new Main();
+		log.setLevel(Level.FINEST);
+		m=new Main();
 	}
+	
+	long gentexid(int x,int y,int dx,int dy,int atlas,int animframe, String id) {
+		if(atlas>7||x>4095||y>4095||dx>4095||dy>4095||animframe>63) {
+			Main.log.severe("Error creating Texture ["+id+"] size out of bounds!");
+			System.exit(1);
+		}
+		return ((long)atlas|((long)x<<(13*1+2))|((long)y<<(13*2+2))|((long)dx<<(13*3+2))|((long)dy<<(13*4+2))|((long)animframe<<(13*5+2)));
+	} 
 	
 	public void init() {
 		Renderer.clearTransform();
@@ -97,6 +107,7 @@ public class Main {
 		// Make the window visible
 		GLFW.glfwShowWindow(window);
 		GL.createCapabilities();
+		tex=new Texture();
 		render=new Renderer();
 		SetAspectRatio(windowwidth, windowheight);
 		
@@ -116,51 +127,29 @@ public class Main {
 				2f,2f,1f,
 				2f,-2f,1f,
 		};
-		
+		long txt=tex.registerTexturesafe("Test.testgif:gif");
+//		long txt=gentexid(0,0,0,0,0,0,"");
+//		long txt2=gentexid(0,0,0,0,1,0,"");
+		long txt2=tex.registerTexturesafe("Test.testpng:png");
+		tex.flush();
 		bf.createBuffer(vert, 0, 3);
-		Shader s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
+		GlStateManager.Enable(GL45.GL_BLEND);
+		GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 		while ( !GLFW.glfwWindowShouldClose(window) ) {
 			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			long time=System.nanoTime();
-			loop();
+			render.renderQuad(1920/6f, 1080/2f, 500f, 500f, txt,(int)(System.currentTimeMillis()/120)%Texture.getaniframes(txt));
+			render.renderQuad(1920/2f, 1080/2f, 500f, 500f, txt2,0);
 			render.render();
 			render.clear();
-//			GL11.glColor4f(1, 0, 0, 1);
-//			GL11.glBegin(GL11.GL_POLYGON);
-//			GL11.glVertex2d(-0.5, -0.5);
-//			GL11.glVertex2d(-0.5, 0.5);
-//			GL11.glVertex2d(0.5, 0.5);
-//			GL11.glVertex2d(0.5, -0.5);
-//			GL11.glEnd();
-//			float dir=0.005f;
-//			if((System.currentTimeMillis()/1000)%2==0)
-//				dir*=-1;
-//			for(int i=0;i<vert.length;i++) 
-//				if((i+1)%3!=0)
-//					vert[i]=(float) (vert[i]+dir);
-//			bf.updateBuffer(vert, 0, 3);
-			//GL45.glTranslatef(0.5f, 0.5f, 0);
-			
-//			GlStateManager.bindShader(s);
-//			bf.bind(0);
-//			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, bf.getbuffersize(0));
-//			bf.unbind();
-//			GlStateManager.unbindShader();
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			GLFW.glfwPollEvents();
+			GLFW.glfwPollEvents(); // Poll for window events.
 			log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");
 		}
 		if(debugProc!=null)
 			debugProc.free();
 	}
 	
-	public void loop() {
-		for(int i=0;i<2500;i++) {
-			render.renderQuad(((float)Math.random())*1920, ((float)Math.random())*1080, 10, 10, 0);
-		}
-	}
 	
 	public void Callbacks() {
 		/*

@@ -107,6 +107,11 @@ public class Shader {
 			}
 	}
 	
+	public void useUniform(String Name,int... data) {
+		int loc=GL45.glGetUniformLocation(this.program, Name);
+		if(loc!=-1)
+			GL45.glUniform1iv(loc, data);
+	}
 	
 	public void useUniform(String Name, Matrix4f data) {
 		int loc=GL45.glGetUniformLocation(this.program, Name);
@@ -134,6 +139,7 @@ public class Shader {
 				ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL45.GL_FALSE) {
 			String error = ARBShaderObjects.glGetInfoLogARB(shader, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB);
 			Main.log.severe("Failed to create Shader: "+error);
+			System.exit(1);
 		}
 		return shader;
 	}
