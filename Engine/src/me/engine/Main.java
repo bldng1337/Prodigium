@@ -29,6 +29,10 @@ import me.engine.Utils.Renderer;
 import me.engine.Utils.Texture;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.Events.KeyPressed;
+import me.engine.Utils.Event.Events.MouseMoved;
+import me.engine.Utils.Event.Events.MousePressed;
+import me.engine.Utils.Event.Events.Render;
+import me.engine.Utils.Event.Events.Update;
 
 public class Main {
 	public static Logger log;
@@ -124,6 +128,8 @@ public class Main {
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
+				EventManager.call(new Update());
+				EventManager.call(new Render());
 				render.renderQuad(1920/6f, 1080/2f, 500f, 500f, txt,(int)(System.currentTimeMillis()/120)%Texture.getaniframes(txt));
 				render.renderQuad(1920/2f, 1080/2f, 500f, 500f, txt2,0);
 				render.render();
@@ -138,14 +144,15 @@ public class Main {
 			g.close();
 	}
 	
-	
+	double mx,my;
 	public void setupCallbacks() {
-
-		  GLFW.glfwSetMouseButtonCallback(window, (wwindow,key,pressed,args)->{
-			  
+		GLFW.glfwSetMouseButtonCallback(window, (wwindow,key,pressed,args)->{
+			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
-			
+			mx=x;
+			my=y;
+			EventManager.call(new MouseMoved(x, y));
 		});
 		GLFW.glfwSetWindowSizeCallback(window, (wwindow, width, height)->{
 			windowwidth=width;
