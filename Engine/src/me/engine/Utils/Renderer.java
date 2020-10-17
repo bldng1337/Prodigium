@@ -3,17 +3,20 @@ package me.engine.Utils;
 import java.io.File;
 import java.util.Arrays;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
 
 public class Renderer {
 
-	public static final int MAXDRAW=6000;
-	public static final int MAXCALLS=60;
+	public static final int MAXDRAW=5000;
+	public static final int MAXCALLS=10;
 	float[] vertecies;
 	int vindex=0,vbindex;
 	private VertexBuffer[] v;
+	static Matrix4f scale,projection;
+	
 	public Renderer() {
 		vertecies=new float[MAXDRAW];
 		v=new VertexBuffer[MAXCALLS];
@@ -71,12 +74,18 @@ public class Renderer {
 	public void render() {
 		flush();
 		vindex=0;
+		//TODO: Maybe format
+		Main.log.finest(()->vbindex+" DrawCalls");
+		s.bind();
+		s.useUniform("projection", projection);
+		s.useUniform("scale", scale);
 		for(int i=0;i<=vbindex;i++) {
 			VertexBuffer vb=v[i];
 			vb.bind(0);
 			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
 			vb.unbind();
 		}
+		s.unbind();
 	}
 	
 	public void clear() {
@@ -88,6 +97,24 @@ public class Renderer {
 		for(VertexBuffer vb:v)
 			vb.destroy();
 		vertecies=null;
+	}
+	
+	public static void clearTransform() {
+		//TODO: Clear them more efficiently
+		scale=new Matrix4f();
+		projection=new Matrix4f();
+	}
+	
+	public void transform(float x,float y,float z) {
+		scale.translate(x, y, z);
+	}
+	
+	public void ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
+		projection.ortho(left, right, bottom, top, zNear, zFar);
+	}
+	
+	public void scale(float x,float y,float z) {
+		scale.scale(x, y, z);
 	}
 	
 	

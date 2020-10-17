@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Date;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -34,7 +36,7 @@ public class Main {
 	public static File dir=new File(System.getProperty("user.dir"));
 	Renderer render;
 	int windowwidth,windowheight;
-	float aspectratio=16/9;
+	
 	
 	public Main() {
 		init();
@@ -42,10 +44,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		setupLogger();
+		log.setLevel(Level.ALL);
 		new Main();
 	}
 	
 	public void init() {
+		Renderer.clearTransform();
 		//TODO: Use Logger
 		GLFWErrorCallback.createPrint(System.err).set();
 		if (!GLFW.glfwInit())
@@ -93,6 +97,7 @@ public class Main {
 		// Make the window visible
 		GLFW.glfwShowWindow(window);
 		GL.createCapabilities();
+		render=new Renderer();
 		SetAspectRatio(windowwidth, windowheight);
 		
 		Callbacks();
@@ -102,7 +107,6 @@ public class Main {
 		//Error Callback
 		Callback debugProc = GLUtil.setupDebugMessageCallback();
 		
-		render=new Renderer();
 		VertexBuffer bf=new VertexBuffer(false);
 		float[] vert= {
 				-2f,2f,1f,
@@ -121,7 +125,6 @@ public class Main {
 			loop();
 			render.render();
 			render.clear();
-			System.out.println((System.nanoTime()-time)/1000000f+"ms");
 //			GL11.glColor4f(1, 0, 0, 1);
 //			GL11.glBegin(GL11.GL_POLYGON);
 //			GL11.glVertex2d(-0.5, -0.5);
@@ -147,13 +150,14 @@ public class Main {
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			GLFW.glfwPollEvents();
+			log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");
 		}
 		if(debugProc!=null)
 			debugProc.free();
 	}
 	
 	public void loop() {
-		for(int i=0;i<15000;i++) {
+		for(int i=0;i<2500;i++) {
 			render.renderQuad(((float)Math.random())*1920, ((float)Math.random())*1080, 10, 10, 0);
 		}
 	}
@@ -193,7 +197,7 @@ public class Main {
 		// This is your target virtual resolution for the game, the size you built your game to
 		int virtual_width=1920;
 		int virtual_height=1080;
-		 
+		 Renderer.clearTransform();
 		float targetAspectRatio = virtual_width/(float)virtual_height;
 		 
 		// figure out the largest area that fits in this resolution at the desired aspect ratio
@@ -209,25 +213,16 @@ public class Main {
 		// set up the new viewport centered in the backbuffer
 		int vp_x = (windowwidth  / 2) - (width / 2);
 		int vp_y = (windowheight / 2) - (height/ 2);
-		 
-		GL45.glViewport(vp_x,vp_y,width,height);
-		// Now we use glOrtho
-		GL45.glMatrixMode(GL45.GL_PROJECTION);
-		GL45.glPushMatrix();
-		GL45.glLoadIdentity();
-		GL45.glOrtho(0, windowwidth, windowheight, 0, -1, 1);
-		GL45.glMatrixMode(GL45.GL_MODELVIEW);
-		GL45.glPushMatrix();
-		GL45.glLoadIdentity();
 		
-		// Push in scale transformations
-		GL45.glMatrixMode(GL45.GL_MODELVIEW);
-		GL45.glPushMatrix();
-	
+		GL45.glViewport(vp_x,vp_y,width,height);
+		// Now we use Ortho
+		render.ortho(0, windowwidth, windowheight, 0, -1, 1);
+		
 		//Now to calculate the scale considering the screen size and virtual size
 		float scale_x = (float)((float)(windowwidth) / (float)virtual_width);
 		float scale_y = (float)((float)(windowheight) / (float)virtual_height);
 		GL45.glScalef(scale_x, scale_y, 1.0f);
+		render.scale(scale_x, scale_y, 1.0f);
 	}
 	
 	

@@ -35,5 +35,6 @@
 	<classpathentry kind="lib" path="libs/lwjglx-debug-1.0.0.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-stb.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-stb-natives-windows.jar"/>
+	<classpathentry kind="lib" path="libs/joml-1.9.25.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

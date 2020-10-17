@@ -34,9 +34,9 @@ public class GlStateManager {
 			GL45.glBindTexture(GL45.GL_TEXTURE_2D, id);
 	}
 	
-	public static void bindShader(Shader s) {
-		if(shader!=s.program)
-			GL45.glUseProgram(s.program);
+	public static void bindShader(int s) {
+		if(shader!=s)
+			GL45.glUseProgram(s);
 	}
 	
 	public static void unbindShader() {

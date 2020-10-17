@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.Iterator;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL45;
 
@@ -81,6 +84,39 @@ public class Shader {
 		return s.toString();
 	}
 	
+	
+	public void useUniform(String Name,float... data) {
+		int loc=GL45.glGetUniformLocation(this.program, Name);
+		if(loc!=-1)
+			switch(data.length) {
+			case 1:
+				GL45.glUniform1f(loc, data[0]);
+				break;
+			case 2:
+				GL45.glUniform2f(loc, data[0],data[1]);
+				break;
+			case 3:
+				GL45.glUniform3f(loc, data[0],data[1],data[2]);
+				break;
+			case 4:
+				GL45.glUniform4f(loc, data[0],data[1],data[2],data[3]);
+				break;
+			default:
+				Main.log.warning("Uniform "+Name+" is too long "+data.length);
+				break;
+			}
+	}
+	
+	
+	public void useUniform(String Name, Matrix4f data) {
+		int loc=GL45.glGetUniformLocation(this.program, Name);
+		if(loc!=-1) {
+			FloatBuffer fb=BufferUtils.createFloatBuffer(16);
+			data.get(fb);
+			GL45.glUniformMatrix4fv(loc,false, fb);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return ARBShaderObjects.glGetInfoLogARB(program,
@@ -100,6 +136,14 @@ public class Shader {
 			Main.log.severe("Failed to create Shader: "+error);
 		}
 		return shader;
+	}
+	
+	public void bind() {
+		GlStateManager.bindShader(program);
+	}
+	
+	public void unbind() {
+		GlStateManager.unbindShader();
 	}
 
 }
