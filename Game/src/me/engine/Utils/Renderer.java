@@ -116,11 +116,6 @@ public class Renderer {
 		flush();
 	}
 	
-	public void clear() {
-		
-	}
-	
-	
 	public void destroy() {
 		v.destroy();
 		vertecies=null;

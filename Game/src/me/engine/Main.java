@@ -141,8 +141,7 @@ public class Main {
 					render.renderQuad(r.nextInt(2000)-1000f, r.nextInt(2000)-1000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
 				}
 				render.renderQuad(px, py, 140f, 140f, txt2,0);
-				render.render();
-				render.clear();
+				render.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
 				GLFW.glfwPollEvents(); // Poll for window events.
 				log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");// Log Frametime
