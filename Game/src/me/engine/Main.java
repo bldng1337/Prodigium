@@ -120,9 +120,10 @@ public class Main {
 			//Error Callback
 			Callback debugProc = GLUtil.setupDebugMessageCallback();
 			
+			tex.registerTextures();
 			//Test textures
-			long txt=tex.registerTexturesafe("Test.testgif:gif");
-			long txt2=tex.registerTexturesafe("Test.testpng:png");
+			long txt=tex.getTexture("Test.testgif:gif");
+			long txt2=tex.getTexture("Test.testpng:png");
 			tex.flush();
 			render.c.getStati().set(1920/2f, 1080/2f);
 			render.c.setP(()->new Vector2f(px,py));

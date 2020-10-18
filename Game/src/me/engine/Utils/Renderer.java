@@ -111,6 +111,7 @@ public class Renderer {
 		tindex=0;
 	}
 	
+	@Deprecated
 	public void render() {
 		flush();
 	}

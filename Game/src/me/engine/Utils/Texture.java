@@ -36,24 +36,37 @@ public class Texture {
 		msize=maxSize;
 	}
 	
-	public long registerTexturesafe(String id) {
-		try {
-			return registerTexture(id);
-		}catch(IOException e) {
-			GlStateManager.disable(GL45.GL_TEXTURE_2D);
-			Main.log.warning(e.getMessage());
-		}
-		return 0;
+	public void registerTextures() {
+		registerinPath(new File(TPPATH));
 	}
 	
-	public long registerTexture(String id) throws IOException {
+	public void registerinPath(File path) {
+		for(File f:path.listFiles()) {
+			if(f.isDirectory()) {
+				registerinPath(f);
+				continue;
+			}
+			try {
+				registerTexture(f);
+			} catch (IOException e) {
+				Main.log.warning(()->"Failed to load "+f.getAbsolutePath()+" "+e.getMessage());
+			}
+		}
+	}
+	
+	public long getTexture(String string) {
+		if(texturemap.containsKey(string))
+			return texturemap.get(string);
+		Main.log.warning(()->"Cant find texture "+string);
+		return 0;
+	} 
+	
+	public void registerTexture(File f) throws IOException {
 		GlStateManager.enable(GL45.GL_TEXTURE_2D);
-		if(texturemap.containsKey(id))
-			return texturemap.get(id);
-		String p=id.replace(".", "\\")
-				   .replace(":", ".");
-		p=p.replaceAll(":", "\\");
-		File f=new File(TPPATH+p);
+		//TODO: Make this better
+		String p=f.getPath().split("Textures")[1].replace(".", ":")
+				.replace("\\", ".").substring(1);
+		System.out.println(p);
 		if(!f.exists())
 			throw new RuntimeException("Texture missing "+f.getAbsolutePath());
 		Graphics g=catlas.getGraphics();
@@ -70,7 +83,8 @@ public class Texture {
 		    }
 		    if(cy+bfi.getHeight()>msize) {
 		    	flush();
-		    	return registerTexture(id);
+		    	registerTexture(f);
+		    	return;
 		    }
 		    for(int i=0;i<noi;i++) {
 		    	bfi=reader.read(i);
@@ -80,7 +94,7 @@ public class Texture {
 		    cx+=bfi.getWidth()*noi;
 		    if(maxheight<bfi.getHeight())
 		    	maxheight=bfi.getHeight();
-		    return gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, noi, id);
+		    texturemap.put(p, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, noi, p));
 		}else {
 			BufferedImage bfi=ImageIO.read(f);
 			if(cx+bfi.getWidth()>msize) {
@@ -90,14 +104,15 @@ public class Texture {
 		    }
 		    if(cy+bfi.getHeight()>msize) {
 		    	flush();
-		    	return registerTexture(id);
+		    	registerTexture(f);
+		    	return;
 		    }
 			g.drawImage(bfi, cx, cy, null);
 			int x=cx;
 			cx+=bfi.getWidth();
 			if(maxheight<bfi.getHeight())
 		    	maxheight=bfi.getHeight();
-			return gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, id);
+			texturemap.put(p, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, p));
 		}
 	}
 	
@@ -186,6 +201,7 @@ public class Texture {
 			System.exit(1);
 		}
 		return ((long)atlas|((long)x<<(13*1+2))|((long)y<<(13*2+2))|((long)dx<<(13*3+2))|((long)dy<<(13*4+2))|((long)animframe<<(13*5+2)));
-	} 
+	}
+
 
 }
