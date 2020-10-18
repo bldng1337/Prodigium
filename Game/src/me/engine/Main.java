@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -26,6 +25,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.LoggerOutputStream;
 import me.engine.Utils.Renderer;
@@ -36,15 +36,18 @@ import me.engine.Utils.Event.Events.MouseMoved;
 import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Update;
+import me.engine.World.Chunk;
+import me.engine.World.Tile;
 
 public class Main {
 	public static Logger log;
 	long window;
 	private static Main m;
 	public static final File dir=new File(System.getProperty("user.dir"));
-	Renderer render;
+	static Renderer render;
 	int windowwidth,windowheight;
 	static Texture tex;
+	ChunkRenderer chunkrenderer;
 	
 	public Main() {
 		init();
@@ -109,6 +112,10 @@ public class Main {
 			//Setup Texture and Renderer
 			tex=new Texture();
 			render=new Renderer();
+			System.out.println("dd");
+			System.out.println(Main.getM().getRender()==null);
+			chunkrenderer=new ChunkRenderer();
+			
 			setAspectRatio(windowwidth, windowheight);
 			
 			//Setup Callbacks
@@ -116,7 +123,7 @@ public class Main {
 			
 			// Set the clear color
 			GL45.glClearColor(0.239f, 0.239f, 0.239f, 0.0f);
-			
+			GL45.glBlendColor(1.0f, 1.0f, 1.0f, 1.0f);
 			//Error Callback
 			Callback debugProc = GLUtil.setupDebugMessageCallback();
 			
@@ -130,16 +137,25 @@ public class Main {
 			//Blend for Alpha
 			GlStateManager.enable(GL45.GL_BLEND);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
+			Chunk c=new Chunk();
+			for(int x=0;x<c.SIZE;x++) {
+				for(int y=0;y<c.SIZE;y++) {
+					c.getTiles()[x][y]=new Tile("Test.testground:png");
+				}
+			}
+			Random r=new Random();
+			chunkrenderer.add(c.renderChunk(-3000, -3000, 500));
+			
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
 				EventManager.call(new Update());
 				EventManager.call(new Render());
-				Random r=new Random();
 				r.setSeed(2);
-				for(int i=0;i<30;i++) {
-					render.renderQuad(r.nextInt(2000)-1000f, r.nextInt(2000)-1000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
+				for(int i=0;i<120;i++) {
+					render.renderQuad(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
 				}
+				chunkrenderer.render();
 				render.renderQuad(px, py, 140f, 140f, txt2,0);
 				render.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
@@ -250,6 +266,10 @@ public class Main {
 	
 	public static Main getM() {
 		return m;
+	}
+	
+	public static Renderer getRender() {
+		return render;
 	}
 	
 }

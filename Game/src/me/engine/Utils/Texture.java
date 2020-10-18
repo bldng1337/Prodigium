@@ -91,7 +91,7 @@ public class Texture {
 		    	g.drawImage(bfi, cx+bfi.getWidth()*i, cy, null);
 		    }
 		    int x=cx;
-		    cx+=bfi.getWidth()*noi;
+		    cx+=bfi.getWidth()*noi+1;
 		    if(maxheight<bfi.getHeight())
 		    	maxheight=bfi.getHeight();
 		    texturemap.put(p, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, noi, p));
@@ -109,7 +109,7 @@ public class Texture {
 		    }
 			g.drawImage(bfi, cx, cy, null);
 			int x=cx;
-			cx+=bfi.getWidth();
+			cx+=bfi.getWidth()+1;
 			if(maxheight<bfi.getHeight())
 		    	maxheight=bfi.getHeight();
 			texturemap.put(p, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, p));
