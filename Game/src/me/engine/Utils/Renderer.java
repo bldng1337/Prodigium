@@ -11,12 +11,11 @@ import me.engine.Utils.Event.EventManager;
 
 public class Renderer {
 
-	public static final int MAXDRAW=5000;
-	public static final int MAXCALLS=10;
+	public static final int MAXDRAW=18*1000;
 	float[] vertecies;
 	float[] txt;
-	int vindex=0,vbindex,tindex;
-	private VertexBuffer[] v;
+	int vindex=0,tindex;
+	private VertexBuffer v;
 	static Matrix4f scale,projection;
 	public Camera c;
 	Shader s;
@@ -25,11 +24,10 @@ public class Renderer {
 		s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 		vertecies=new float[MAXDRAW];
 		txt=new float[MAXDRAW];
-		v=new VertexBuffer[MAXCALLS];
 		c=new Camera();
-		vbindex=-1;
 		EventManager.register(c);
 	}
+	
 	public void renderQuad(float x, float y, float width, float height, long texid,int frame) {
 		float tx=Texture.getx(texid)+Texture.getdx(texid)*frame;
 		float ty=Texture.gety(texid);
@@ -83,59 +81,47 @@ public class Renderer {
 		txt[tindex++]=ty;
 		txt[tindex++]=atlas;
 		
-		if(vindex>MAXDRAW-18)
+		if(vindex>MAXDRAW-19)
 			flush();
 	}
 	
 	public void flush() {
 		if(vindex<18)
 			return;
-		vbindex++;
-		if(vbindex>=MAXCALLS) {
-			Main.log.severe("Rendered to much triangles ");
-			vbindex=-1;
-			return;
-		}
-		if(v[vbindex]==null) {
-			v[vbindex]=new VertexBuffer(false);
-			v[vbindex].createBuffer(Arrays.copyOfRange(vertecies, 0,vindex), 0, 3);
-			v[vbindex].createBuffer(Arrays.copyOfRange(txt, 0,tindex), 1, 3);
+		if(v==null) {
+			v=new VertexBuffer(false);
+			v.createBuffer(vertecies, 0, 3);
+			v.createBuffer(txt, 1, 3);
 		}else {
-			v[vbindex].updateBuffer(Arrays.copyOfRange(vertecies, 0,vindex), 0, 3);
-			v[vbindex].updateBuffer(Arrays.copyOfRange(txt, 0,tindex), 1, 3);
+			v.updateBuffer(vertecies, 0, 3);
+			v.updateBuffer(txt, 1, 3);
 		}
-		vindex=0;
-		tindex=0;
-	}
-	
-	public void render() {
-		flush();
-		vindex=0;
-		Main.log.finest(()->vbindex+" DrawCalls");
 		s.bind();
 		s.useUniform("projection", projection);
 		s.useUniform("scale", scale);
 		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
 		s.useUniform("u_Transform", c.translate);
 		Main.getTex().bind();
-		for(int i=0;i<=vbindex;i++) {
-			VertexBuffer vb=v[i];
-			vb.bind(0);
-			vb.bind(1);
-			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
-			vb.unbind();
-		}
+		v.bind(0);
+		v.bind(1);
+		GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vindex);
+		v.unbind();
 		s.unbind();
+		vindex=0;
+		tindex=0;
+	}
+	
+	public void render() {
+		flush();
 	}
 	
 	public void clear() {
-		vbindex=-1;
+		
 	}
 	
 	
 	public void destroy() {
-		for(VertexBuffer vb:v)
-			vb.destroy();
+		v.destroy();
 		vertecies=null;
 	}
 	
