@@ -7,9 +7,17 @@ import java.util.Collections;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ * Manages Events
+ */
 public class EventManager {
 	static ArrayList<MethodType> clist=new ArrayList<>();
 	
+	/**
+	 * Registers an Class to use Events
+	 * @param o The Class that should be registered
+	 */
 	public static void register(Object o) {
 		for(Method m: o.getClass().getMethods()) {
 			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterTypes().length==1) {
@@ -20,6 +28,10 @@ public class EventManager {
 		Collections.sort(clist, (a,b)->{return a.p()-b.p();});
 	}
 	
+	/**
+	 * Calls an Event
+	 * @param e The Event that should be called
+	 */
 	public static void call(Event e) {
 		for(int i = (clist.size() - 1); i >= 0; i--) {
 			MethodType m=clist.get(i);
@@ -34,6 +46,10 @@ public class EventManager {
 		
 	}
 
+	/**
+	 * Unregisters an Event
+	 * @param o The Event which should be unregistered
+	 */
 	public static void unregister(Object o) {
 		for(int i = (clist.size() - 1); i >= 0; i--) {
 			if(clist.get(i).c.equals(o)) {
@@ -43,6 +59,10 @@ public class EventManager {
 	}
 	
 	
+	/**
+	 * @author Christian
+	 * Saves the Data to invoke the registered Methods/Classes
+	 */
 	public static class MethodType{
 		public Method m;
 		public Object c;

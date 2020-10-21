@@ -112,8 +112,6 @@ public class Main {
 			//Setup Texture and Renderer
 			tex=new Texture();
 			render=new Renderer();
-			System.out.println("dd");
-			System.out.println(Main.getM().getRender()==null);
 			chunkrenderer=new ChunkRenderer();
 			
 			setAspectRatio(windowwidth, windowheight);
@@ -138,8 +136,8 @@ public class Main {
 			GlStateManager.enable(GL45.GL_BLEND);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			Chunk c=new Chunk();
-			for(int x=0;x<c.SIZE;x++) {
-				for(int y=0;y<c.SIZE;y++) {
+			for(int x=0;x<Chunk.SIZE;x++) {
+				for(int y=0;y<Chunk.SIZE;y++) {
 					c.getTiles()[x][y]=new Tile("Test.testground:png");
 				}
 			}
@@ -153,10 +151,10 @@ public class Main {
 				EventManager.call(new Render());
 				r.setSeed(2);
 				for(int i=0;i<120;i++) {
-					render.renderQuad(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
+					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
 				}
 				chunkrenderer.render();
-				render.renderQuad(px, py, 140f, 140f, txt2,0);
+				render.renderRect(px, py, 140f, 140f, txt2,0);
 				render.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
 				GLFW.glfwPollEvents(); // Poll for window events.
@@ -171,6 +169,9 @@ public class Main {
 	double mx,my;
 	
 	float px=0,py=0;
+	/**
+	 * Initializes Callbacks for Window Clicks, Keyboard Presses
+	 */
 	public void setupCallbacks() {
 		GLFW.glfwSetMouseButtonCallback(window, (wwindow,key,pressed,args)->{
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
@@ -203,6 +204,11 @@ public class Main {
 		});
 	}
 	
+	/**
+	 * sets the Aspect Ratio after the Window has been resized
+	 * @param width The new width
+	 * @param height The new height
+	 */
 	public void setAspectRatio(int width,int height) {
 		// This is your target virtual resolution for the game, the size you built your game to
 		int virtualwidth=1920;
@@ -237,6 +243,9 @@ public class Main {
 	
 	
 
+	/**
+	 * Setups the Logger
+	 */
 	public static void setupLogger() {
 		log=Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		File logfile=new File(dir.getAbsolutePath()+"\\logs\\log_"+new Date().toString().replaceAll(" ", "_").replaceAll(":", "-")+".txt");

@@ -2,6 +2,10 @@ package me.engine.Utils.Event.Events;
 
 import me.engine.Utils.Event.Event;
 
+/**
+ * @author Christian
+ * Event for MousePresses
+ */
 public class MousePressed extends Event {
 	double x,y;
 	int key,pressed;

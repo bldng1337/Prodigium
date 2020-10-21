@@ -4,6 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
+/**
+ * @author Christian
+ * Converts An OutputStream to the Logger
+ */
 public class LoggerOutputStream extends OutputStream{
 	
 	private final ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);

@@ -2,9 +2,18 @@ package me.engine.Utils.Event;
 
 import java.lang.annotation.*;
 
+/**
+ * @author Christian
+ * Event Target Annotation
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EventTarget {
+	
+	/**
+	 * Priority controls which Method gets called first
+	 * @return
+	 */
 	priority p() default priority.MIDDLE; 
 	public enum priority{
 		LOWEST((byte)4),

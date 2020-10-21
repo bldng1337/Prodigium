@@ -17,10 +17,17 @@ public class Entity {
 		this.y=y;
 	}
 	
+	/**
+	 * @return TextureID
+	 */
 	public long getTextureid() {
 		return textureid;
 	}
 
+	/**
+	 * Sets the TextureID
+	 * @param textureid the new TextureID
+	 */
 	public void setTextureid(long textureid) {
 		this.textureid = textureid;
 	}

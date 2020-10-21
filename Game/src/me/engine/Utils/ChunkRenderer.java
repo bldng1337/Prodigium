@@ -7,11 +7,16 @@ import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ * An Renderer that Renders the Tiles of Chunks
+ */
 public class ChunkRenderer {
 	Shader s;
 	Matrix4f projection,scale;
 	Camera c;
 	ArrayList<VertexBuffer>renderlist;
+	
 	public ChunkRenderer() {
 		renderlist=new ArrayList<>();
 		projection=Renderer.projection;
@@ -23,6 +28,9 @@ public class ChunkRenderer {
 	
 	
 	
+	/**
+	 * Renders all Buffer in the Renderlist
+	 */
 	public void render() {
 		for(VertexBuffer vb:renderlist) {
 			Main.getRender().s.bind();
@@ -40,9 +48,9 @@ public class ChunkRenderer {
 		
 	}
 
-
-
-
+	/**
+	 * @param renderChunk Adds an Buffer to the Renderlist
+	 */
 	public void add(VertexBuffer renderChunk) {
 		renderlist.add(renderChunk);
 	}

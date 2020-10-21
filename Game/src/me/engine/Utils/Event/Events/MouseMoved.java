@@ -2,6 +2,10 @@ package me.engine.Utils.Event.Events;
 
 import me.engine.Utils.Event.Event;
 
+/**
+ * @author Christian
+ * Event for Mouse Movement
+ */
 public class MouseMoved extends Event {
 	double x,y;
 	

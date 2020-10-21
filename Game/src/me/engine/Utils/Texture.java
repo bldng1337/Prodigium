@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 
@@ -17,6 +16,10 @@ import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ * Abstracts Textures in a Class and manages an Texture Atlas
+ */
 public class Texture {
 	private static final String TPPATH=Main.dir.getAbsolutePath()+"\\Assets\\Textures\\";
 	private int[] atlases;
@@ -36,10 +39,17 @@ public class Texture {
 		msize=maxSize;
 	}
 	
+	/**
+	 * Register every Texture found in the Assets/Texture Folder for use in the Game
+	 */
 	public void registerTextures() {
 		registerinPath(new File(TPPATH));
 	}
 	
+	/**
+	 * Registers every Texture in an Path
+	 * @param path The Path to search for Textures
+	 */
 	public void registerinPath(File path) {
 		for(File f:path.listFiles()) {
 			if(f.isDirectory()) {
@@ -54,6 +64,13 @@ public class Texture {
 		}
 	}
 	
+	/**
+	 * Converts the String Texture ID to an Numeric one to be used in Rendering
+	 * The String ID consists of the Path of the Texture in the Textures folder with the \ replaced with . and the . replaced with :
+	 * e.g. Assets\Textures\Test\testpng.png becomes Assets.Textures.Test.testpng:png
+	 * @param string The String ID
+	 * @return The Numeric ID used in Rendering
+	 */
 	public long getTexture(String string) {
 		if(texturemap.containsKey(string))
 			return texturemap.get(string);
@@ -61,7 +78,12 @@ public class Texture {
 		return 0;
 	} 
 	
-	public void registerTexture(File f) throws IOException {
+	/**
+	 * Registers an Texture from an path
+	 * @param f
+	 * @throws IOException
+	 */
+	private void registerTexture(File f) throws IOException {
 		GlStateManager.enable(GL45.GL_TEXTURE_2D);
 		//TODO: Make this better
 		String p=f.getPath().split("Textures")[1].replace(".", ":")
@@ -116,6 +138,9 @@ public class Texture {
 		}
 	}
 	
+	/**
+	 * Binds the Textures
+	 */
 	public void bind() {
 		for(int i=0;i<atlas;i++) {
 			GL45.glBindTextureUnit(i, atlases[i]);
@@ -123,6 +148,9 @@ public class Texture {
 	}
 	
 	
+	/**
+	 * Flushes the Texture to the GPU
+	 */
 	public void flush() {
 		
 		int[] pixels = new int[msize * msize];
@@ -154,6 +182,7 @@ public class Texture {
 	}
 	
 	/*
+	    How to unpack variables from the TextureID
 	 	Unpacking
 		x: ((id>>(13*1+2))&0xFFF) max 4095
 		y: ((id>>(13*2+2))&0xFFF) max 4095
@@ -163,38 +192,80 @@ public class Texture {
 		aniframes: (id>>(13*5+2)&0x3F) 63
 	 */
 	
+	/**
+	 * @param id Texture ID
+	 * @return If the Texture is animated
+	 */
 	public static boolean isanimated(long id) {
 		return getaniframes(id)>1;
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return The X Position in the Texture Atlas
+	 */
 	public static int getx(long id) {
 		return (int) ((id>>(13*1+2))&0xFFF);
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return The Y Position in the Texture Atlas
+	 */
 	public static int gety(long id) {
 		return (int) ((id>>(13*2+2))&0xFFF);
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return The width in the Texture Atlas
+	 */
 	public static int getdx(long id) {
 		return (int) ((id>>(13*3+2))&0xFFF);
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return The height  in the Texture Atlas
+	 */
 	public static int getdy(long id) {
 		return (int) ((id>>(13*4+2))&0xFFF);
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return The Texture Atlas
+	 */
 	public static int getatlas(long id) {
 		return (int) (id&7);
 	}
 	
+	/**
+	 * @param id Texture ID
+	 * @return Number of Animated Frames
+	 */
 	public static int getaniframes(long id) {
 		return (int) ((id>>(13*5+2))&0xFFF);
 	}
 	
+	/**
+	 * @return The Atlas Size
+	 */
 	public int getMsize() {
 		return msize;
 	}
 	
+	/**
+	 * Generates the TextureID
+	 * @param x The x coordinate in the Texture Atlas
+	 * @param y The y coordinate in the Texture Atlas
+	 * @param dx The width in the Texture Atlas
+	 * @param dy The height in the Texture Atlas
+	 * @param atlas The Texture Atlas its located
+	 * @param animframe How many frames the Animation is long if static Image this becomes 0
+	 * @param id The String ID for ErrorLogging
+	 * @return The Numeric ID
+	 */
 	long gentexid(int x,int y,int dx,int dy,int atlas,int animframe, String id) {
 		if(atlas>7||x>4095||y>4095||dx>4095||dy>4095||animframe>63) {
 			Main.log.severe(()->"Error creating Texture ["+id+"] size out of bounds!");

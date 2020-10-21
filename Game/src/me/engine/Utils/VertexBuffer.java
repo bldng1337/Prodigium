@@ -7,6 +7,10 @@ import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ * Abstracts Buffers in a Class and provides Utility methods
+ */
 public class VertexBuffer {
 	private int vao,vbo[][];
 	private FloatBuffer[] vb;
@@ -24,7 +28,13 @@ public class VertexBuffer {
 		}
 		this.staticdata=staticdata;
 	}
-	
+	//TODO:Dont think the size explanation is very good
+	/**
+	 * Creates an new Buffer in the VertexBuffer
+	 * @param data The Data to put into the Buffer
+	 * @param id The ID of the Buffer
+	 * @param size The size of a single Data
+	 */
 	public void createBuffer(float[] data,int id,int size) {
 		if(vbo[id][0]!=-1) {
 			Main.log.warning("Tried to create already existing buffer");
@@ -46,6 +56,12 @@ public class VertexBuffer {
 		GlStateManager.unbindVArray();
 	}
 	
+	/**
+	 * Updates an dynamic Buffer with Data
+	 * @param data The new Data
+	 * @param id The BufferID to be Updated
+	 * @param size The size of a single Data
+	 */
 	public void updateBuffer(float[] data,int id,int size) {
 		if(staticdata) {
 			Main.log.severe("Tried to update an static Buffer");
@@ -64,6 +80,11 @@ public class VertexBuffer {
 		GlStateManager.unbindVArray();
 	}
 	
+	/**
+	 * Converts an array to an Buffer
+	 * @param data The array to be converted
+	 * @return The new Buffer
+	 */
 	public FloatBuffer toBuffer(float[] data) {
 		FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(data.length);
 		verticesBuffer.put(data);
@@ -71,6 +92,12 @@ public class VertexBuffer {
 		return verticesBuffer;
 	}
 	
+	/**
+	 * Updates an already existing Buffer with an new array
+	 * @param buffer The Buffer to be updated
+	 * @param data The new array to Update the Buffer with
+	 * @return The FloatBuffer
+	 */
 	public static FloatBuffer updateBuffer(FloatBuffer buffer, float[] data)
 	{
 	    buffer.clear();
@@ -80,10 +107,19 @@ public class VertexBuffer {
 	    return buffer;
 	}
 	
+	/**
+	 * Gets the VBO ID
+	 * @param id The ID in the Buffer
+	 * @return The ID
+	 */
 	public int getvbo(int id) {
 		return vbo[id][0];
 	}
 	
+	/**
+	 * Binds the specified Buffer
+	 * @param id The BufferID
+	 */
 	public void bind(int id) {
 		bound=true;
 		for(int i=0;i<15;i++) {
@@ -98,6 +134,9 @@ public class VertexBuffer {
 		GL45.glEnableVertexAttribArray(id);
 	}
 	
+	/**
+	 * Unbinds the Buffer
+	 */
 	public void unbind() {
 		if(!bound)
 			return;
@@ -110,10 +149,18 @@ public class VertexBuffer {
 		GlStateManager.unbindVArray();
 	}
 	
+	/**
+	 * Gets the Size of the specified Buffer
+	 * @param id The BufferID
+	 * @return The Size
+	 */
 	public int getbuffersize(int id) {
 		return vbo[id][1];
 	}
 	
+	/**
+	 * Destroys this BufferObject
+	 */
 	public void destroy() {
 		GL45.glDeleteVertexArrays(vao);
 		vao=-1;

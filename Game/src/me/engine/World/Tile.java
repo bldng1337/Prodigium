@@ -2,6 +2,10 @@ package me.engine.World;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ *
+ */
 public class Tile {
 	boolean collideable;
 	long texid;

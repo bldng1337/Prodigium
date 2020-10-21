@@ -6,6 +6,10 @@ import me.engine.Main;
 import me.engine.Utils.Texture;
 import me.engine.Utils.VertexBuffer;
 
+/**
+ * @author Christian
+ * 
+ */
 public class Chunk {
 	public static int SIZE=40;
 	Tile[][] tiles;
@@ -18,6 +22,13 @@ public class Chunk {
 		return tiles;
 	}
 	
+	/**
+	 * Renders the Chunk onto an VertexBuffer
+	 * @param xx The X Coordinate
+	 * @param yy The Y Coordinate
+	 * @param size The Scale
+	 * @return The Buffer
+	 */
 	public VertexBuffer renderChunk(int xx,int yy,int size) {
 		VertexBuffer vb=new VertexBuffer(true);
 		float[] vertecies=new float[SIZE*SIZE*18];

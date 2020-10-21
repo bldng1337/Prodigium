@@ -15,6 +15,10 @@ import org.lwjgl.opengl.GL45;
 
 import me.engine.Main;
 
+/**
+ * @author Christian
+ * Abstracts Shaders in a Class and provides Utility methods
+ */
 public class Shader {
 	
 	protected int program;
@@ -35,6 +39,9 @@ public class Shader {
 	}
 	
 	
+	/**
+	 * Destroys this Shader
+	 */
 	public void destroy() {
 		ARBShaderObjects.glDetachObjectARB(program, vertexShader);
 		ARBShaderObjects.glDetachObjectARB(program, fragmentShader);
@@ -44,7 +51,12 @@ public class Shader {
 		program=0;
 	}
 	
-	public void compile(String farg,String varg) {
+	/**
+	 * Compiles and links the Shader Program
+	 * @param farg Preprocessor arguments Fragment Shader
+	 * @param varg Preprocessor arguments Vertex Shader
+	 */
+	private void compile(String farg,String varg) {
 		vertexShader=createShader(v, GL45.GL_VERTEX_SHADER,varg);
 		fragmentShader=createShader(f, GL45.GL_FRAGMENT_SHADER,farg);
 		
@@ -72,12 +84,18 @@ public class Shader {
 		}
 	}
 	
+	/**
+	 * Gets a Files Content
+	 * @param f The File to read from
+	 * @return The Content from the File
+	 */
 	private String stringfromFile(File f) {
 		StringBuilder s = new StringBuilder();
 		try(BufferedReader reader = new BufferedReader(new FileReader(f));){
 			Iterator<String> i=reader.lines().iterator();
 			while(i.hasNext()) {
-				s.append(i.next()+"\n");
+				s.append(i.next());
+				s.append("\n");
 			}
 		} catch (IOException e) {
 			Main.log.severe("Failed to read File: "+f.getAbsolutePath());
@@ -86,6 +104,11 @@ public class Shader {
 	}
 	
 	
+	/**
+	 * Registers a Uniform for use in the Shader
+	 * @param name Name of the Uniform
+	 * @param data Data to be passed to the Shader
+	 */
 	public void useUniform(String name,float... data) {
 		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1)
@@ -108,16 +131,31 @@ public class Shader {
 			}
 	}
 	
+	/**
+	 * Registers a Uniform for use in the Shader
+	 * @param name Name of the Uniform
+	 * @param data Data to be passed to the Shader
+	 */
 	public void useUniform(String name,Vector2f data) {
 		useUniform(name,data.x,data.y);
 	}
 	
+	/**
+	 * Registers a Uniform for use in the Shader
+	 * @param name Name of the Uniform
+	 * @param data Data to be passed to the Shader
+	 */
 	public void useUniform(String name,int... data) {
 		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1)
 			GL45.glUniform1iv(loc, data);
 	}
 	
+	/**
+	 * Registers a Uniform for use in the Shader
+	 * @param name Name of the Uniform
+	 * @param data Data to be passed to the Shader
+	 */
 	public void useUniform(String name, Matrix4f data) {
 		int loc=GL45.glGetUniformLocation(this.program, name);
 		if(loc!=-1) {
@@ -127,12 +165,22 @@ public class Shader {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return ARBShaderObjects.glGetInfoLogARB(program,
 				ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 	
+	/**
+	 * Compiles a given Shader Source
+	 * @param shaderSource The Source which gets Comiled
+	 * @param shaderType The Type of the Shader
+	 * @param arg The preprocessor Arguments
+	 * @return The ShaderID
+	 */
 	private int createShader(String shaderSource, int shaderType,String arg) {
 		int shader = 0;
 		shader = ARBShaderObjects.glCreateShaderObjectARB(shaderType);
