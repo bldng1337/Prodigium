@@ -1,34 +1,41 @@
 package me.engine.Entity;
 
-import java.io.IOException;
+import javax.script.ScriptEngine;
 
-import me.engine.Main;
+import me.engine.Scripting.ScriptManager;
+import me.engine.Utils.Renderer;
+import me.engine.Utils.Texture;
 
-public class Entity {
-	private long textureid;
-	int x,y;
-	public Entity(String texture) throws IOException {
-		this.x=0;
-		this.y=0;
-	}
+public class Entity{
+	protected long[] textureids;
+	public Animation currTexture;
+	public float x,y,health,speed;
+	protected float width,height;
+	protected int framedelay;
+	protected String name;
+	protected ScriptEngine script;
 	
-	public Entity(int x,int y,String texture) throws IOException {
-		this.x=x;
-		this.y=y;
+	protected Entity() {
+		super();
 	}
-	
+
 	/**
 	 * @return TextureID
 	 */
 	public long getTextureid() {
-		return textureid;
+		return textureids[currTexture.gettextureindex()];
 	}
-
-	/**
-	 * Sets the TextureID
-	 * @param textureid the new TextureID
-	 */
-	public void setTextureid(long textureid) {
-		this.textureid = textureid;
+	
+	public void update() {
+		ScriptManager.invoke(script, "update");
 	}
+	
+	public void render(Renderer r) {
+		r.renderRect(x, y, width, height, getTextureid(), 
+				(int)(System.currentTimeMillis()/framedelay)
+				%Texture.getaniframes(getTextureid()));
+	}
+	
+	
 }
+

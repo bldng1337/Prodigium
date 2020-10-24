@@ -27,14 +27,14 @@ public class Shader {
 	private String v,f;
 	
 	public Shader(File frag,File vert) {
-		v=stringfromFile(vert);
-		f=stringfromFile(frag);
+		v=FileUtils.stringfromFile(vert);
+		f=FileUtils.stringfromFile(frag);
 		compile("","");
 	}
 	
 	public Shader(File frag,String farg,File vert,String varg) {
-		v=stringfromFile(vert);
-		f=stringfromFile(frag);
+		v=FileUtils.stringfromFile(vert);
+		f=FileUtils.stringfromFile(frag);
 		compile(farg,varg);
 	}
 	
@@ -83,26 +83,6 @@ public class Shader {
 			program=0;
 		}
 	}
-	
-	/**
-	 * Gets a Files Content
-	 * @param f The File to read from
-	 * @return The Content from the File
-	 */
-	private String stringfromFile(File f) {
-		StringBuilder s = new StringBuilder();
-		try(BufferedReader reader = new BufferedReader(new FileReader(f));){
-			Iterator<String> i=reader.lines().iterator();
-			while(i.hasNext()) {
-				s.append(i.next());
-				s.append("\n");
-			}
-		} catch (IOException e) {
-			Main.log.severe("Failed to read File: "+f.getAbsolutePath());
-		}
-		return s.toString();
-	}
-	
 	
 	/**
 	 * Registers a Uniform for use in the Shader

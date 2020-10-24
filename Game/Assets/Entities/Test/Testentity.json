@@ -1,0 +1,13 @@
+{
+  "Name": "TEST",
+  "Animation": {
+    "INTERACTION": "Textures.Test.testgif:gif",
+    "IDLE": "Textures.Test.testgif:gif"
+  },
+  "Health": 20.5,
+  "Width": 140,
+  "Height": 140,
+  "Speed": 20.5,
+  "Script": "Scripts.Test.Test:js",
+  "FrameDelay": 120
+}

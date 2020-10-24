@@ -37,6 +37,7 @@ public class Texture {
 		atlases=new int[maxUnits];
 		catlas=new BufferedImage(maxSize, maxSize, BufferedImage.TYPE_4BYTE_ABGR);
 		msize=maxSize;
+		registerTextures();
 	}
 	
 	/**
@@ -85,10 +86,7 @@ public class Texture {
 	 */
 	private void registerTexture(File f) throws IOException {
 		GlStateManager.enable(GL45.GL_TEXTURE_2D);
-		//TODO: Make this better
-		String p=f.getPath().split("Textures")[1].replace(".", ":")
-				.replace("\\", ".").substring(1);
-		System.out.println(p);
+		String p=FileUtils.getIDfromFile(f);
 		if(!f.exists())
 			throw new RuntimeException("Texture missing "+f.getAbsolutePath());
 		Graphics g=catlas.getGraphics();

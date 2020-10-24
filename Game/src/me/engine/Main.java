@@ -25,6 +25,9 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import me.engine.Entity.Entity;
+import me.engine.Entity.EntityManager;
+import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.LoggerOutputStream;
@@ -48,6 +51,8 @@ public class Main {
 	int windowwidth,windowheight;
 	static Texture tex;
 	ChunkRenderer chunkrenderer;
+	ScriptManager sm;
+	EntityManager em;
 	
 	public Main() {
 		init();
@@ -55,7 +60,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		setupLogger();
-		log.setLevel(Level.FINEST);
+		log.setLevel(Level.ALL);
 		m=new Main();
 	}
 	
@@ -114,6 +119,10 @@ public class Main {
 			render=new Renderer();
 			chunkrenderer=new ChunkRenderer();
 			
+			//Setup Entity System
+			sm=new ScriptManager();
+			em=new EntityManager(sm);
+			
 			setAspectRatio(windowwidth, windowheight);
 			
 			//Setup Callbacks
@@ -125,10 +134,9 @@ public class Main {
 			//Error Callback
 			Callback debugProc = GLUtil.setupDebugMessageCallback();
 			
-			tex.registerTextures();
 			//Test textures
-			long txt=tex.getTexture("Test.testgif:gif");
-			long txt2=tex.getTexture("Test.testpng:png");
+			long txt=tex.getTexture("Textures.Test.testgif:gif");
+			long txt2=tex.getTexture("Textures.Test.testpng:png");
 			tex.flush();
 			render.c.getStati().set(1920/2f, 1080/2f);
 			render.c.setP(()->new Vector2f(px,py));
@@ -138,18 +146,20 @@ public class Main {
 			Chunk c=new Chunk();
 			for(int x=0;x<Chunk.SIZE;x++) {
 				for(int y=0;y<Chunk.SIZE;y++) {
-					c.getTiles()[x][y]=new Tile("Test.testground:png");
+					c.getTiles()[x][y]=new Tile("Textures.Test.testground:png");
 				}
 			}
 			Random r=new Random();
 			chunkrenderer.add(c.renderChunk(-3000, -3000, 500));
-			
+			Entity e=em.newEntity("Entities.Test.Testentity:json");
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
 				EventManager.call(new Update());
 				EventManager.call(new Render());
 				r.setSeed(2);
+				e.render(render);
+				e.update();
 				for(int i=0;i<120;i++) {
 					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
 				}
