@@ -40,7 +40,9 @@ import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Chunk;
+import me.engine.World.GameLevel;
 import me.engine.World.Tile;
+import me.engine.World.Levels.SimpleLevel.SimpleLevel;
 
 public class Main {
 	public static Logger log;
@@ -135,7 +137,7 @@ public class Main {
 			Callback debugProc = GLUtil.setupDebugMessageCallback();
 			
 			//Test textures
-			long txt=tex.getTexture("Textures.Test.testgif:gif");
+			long txt=tex.getTexture("Textures.skelett.Skelett_gehen:gif");
 			long txt2=tex.getTexture("Textures.Test.testpng:png");
 			tex.flush();
 			render.c.getStati().set(1920/2f, 1080/2f);
@@ -143,14 +145,8 @@ public class Main {
 			//Blend for Alpha
 			GlStateManager.enable(GL45.GL_BLEND);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
-			Chunk c=new Chunk();
-			for(int x=0;x<Chunk.SIZE;x++) {
-				for(int y=0;y<Chunk.SIZE;y++) {
-					c.getTiles()[x][y]=new Tile("Textures.Test.testground:png");
-				}
-			}
+			GameLevel glevel=new SimpleLevel(150, render, chunkrenderer);
 			Random r=new Random();
-			chunkrenderer.add(c.renderChunk(-3000, -3000, 500));
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
@@ -160,8 +156,11 @@ public class Main {
 				r.setSeed(2);
 				e.render(render);
 				e.update();
+				glevel.render();
+				glevel.update();
+				System.out.println(chunkrenderer.loadedChunks());
 				for(int i=0;i<120;i++) {
-					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/120)%Texture.getaniframes(txt));
+					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/110)%Texture.getaniframes(txt));
 				}
 				chunkrenderer.render();
 				render.renderRect(px, py, 140f, 140f, txt2,0);

@@ -36,6 +36,24 @@ public class Entity{
 				%Texture.getaniframes(getTextureid()));
 	}
 	
-	
+	public float getWidth() {
+		return width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public int getFramedelay() {
+		return framedelay;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ScriptEngine getScript() {
+		return script;
+	}
 }
 

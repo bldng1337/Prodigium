@@ -7,6 +7,7 @@ import me.engine.Main;
  *
  */
 public class Tile {
+	public static final int SIZE=150;
 	boolean collideable;
 	long texid;
 	public Tile(String tex) {

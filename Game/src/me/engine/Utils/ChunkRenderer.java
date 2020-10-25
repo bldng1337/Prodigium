@@ -54,6 +54,14 @@ public class ChunkRenderer {
 	public void add(VertexBuffer renderChunk) {
 		renderlist.add(renderChunk);
 	}
+
+	public void remove(VertexBuffer renderChunk) {
+		renderlist.remove(renderChunk);
+	}
+	
+	public int loadedChunks() {
+		return renderlist.size();
+	}
 	
 
 }

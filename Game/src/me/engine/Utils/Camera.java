@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import me.engine.Main;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.Events.Update;
 
@@ -51,7 +52,6 @@ public class Camera {
 				}
 				topos=new Vector2f(movement.element().x, movement.element().y).sub(stati);
 			}
-			System.out.println(topos);
 			frompos.lerp(topos, time/movement.element().z, translate);
 		}else if(p!=null) {
 			topos=null;
@@ -59,7 +59,14 @@ public class Camera {
 		}
 	}
 	
+	public boolean shouldberendered(float x,float y,float width,float height) {
+		return (x+width)>translate.x&&x<1920+translate.x&&
+			   (y+height)>translate.y&&y>1080+translate.y;
+	}
 	
+	public float getdistfromcamera(float x,float y) {
+		return translate.distance(x, y);
+	}
 	
 	/**
 	 * @author Christian
