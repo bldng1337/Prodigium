@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -158,7 +159,6 @@ public class Main {
 				e.update();
 				glevel.render();
 				glevel.update();
-				System.out.println(chunkrenderer.loadedChunks());
 				for(int i=0;i<120;i++) {
 					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/110)%Texture.getaniframes(txt));
 				}
@@ -186,6 +186,11 @@ public class Main {
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
+			x=Math.abs(x-offsetx);
+			y=Math.abs(y-offsety);
+			x=x/windowwidth*1920;
+			y=y/windowheight*1080;
+			
 			mx=x;
 			my=y;
 			EventManager.call(new MouseMoved(x, y));
@@ -213,6 +218,9 @@ public class Main {
 		});
 	}
 	
+	int offsetx;
+	int offsety;
+	
 	/**
 	 * sets the Aspect Ratio after the Window has been resized
 	 * @param width The new width
@@ -236,10 +244,10 @@ public class Main {
 		}
 		 
 		// set up the new viewport centered in the backbuffer
-		int vpx = (windowwidth  / 2) - (width / 2);
-		int vpy = (windowheight / 2) - (height / 2);
+		offsetx = (windowwidth  / 2) - (width / 2);
+		offsety = (windowheight / 2) - (height / 2);
 		
-		GL45.glViewport(vpx,vpy,width,height);
+		GL45.glViewport(offsetx,offsety,width,height);
 		// Now we use Ortho
 		render.ortho(0, windowwidth, windowheight, 0, -1, 1);
 		
