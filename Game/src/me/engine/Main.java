@@ -39,17 +39,16 @@ import me.engine.Utils.Event.Events.MouseMoved;
 import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Update;
-import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
-import me.engine.World.Tile;
 import me.engine.World.Levels.SimpleLevel.SimpleLevel;
+import me.game.Gui.Gui;
 
 public class Main {
 	public static Logger log;
 	long window;
 	private static Main m;
 	public static final File dir=new File(System.getProperty("user.dir"));
-	static Renderer render;
+	public static Renderer render, uiRenderer;
 	int windowwidth,windowheight;
 	static Texture tex;
 	ChunkRenderer chunkrenderer;
@@ -119,6 +118,7 @@ public class Main {
 			//Setup Texture and Renderer
 			tex=new Texture();
 			render=new Renderer();
+			uiRenderer=new Renderer();
 			chunkrenderer=new ChunkRenderer();
 			
 			//Setup Entity System
@@ -148,6 +148,9 @@ public class Main {
 			GameLevel glevel=new SimpleLevel(150, render, chunkrenderer);
 			Random r=new Random();
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
+			
+			new Gui();
+			
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
@@ -158,13 +161,13 @@ public class Main {
 				e.update();
 				glevel.render();
 				glevel.update();
-				System.out.println(chunkrenderer.loadedChunks());
 				for(int i=0;i<120;i++) {
 					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/110)%Texture.getaniframes(txt));
 				}
 				chunkrenderer.render();
 				render.renderRect(px, py, 140f, 140f, txt2,0);
 				render.flush();
+				uiRenderer.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
 				GLFW.glfwPollEvents(); // Poll for window events.
 				log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");// Log Frametime
@@ -175,7 +178,7 @@ public class Main {
 			g.close();
 	}
 	
-	double mx,my;
+double mx,my;
 	
 	float px=0,py=0;
 	/**
@@ -186,6 +189,11 @@ public class Main {
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
+			x=Math.max(x-offsetx, 0);
+			y=Math.max(y-offsety, 0);
+			x=x/(windowwidth-offsetx*2)*1920;
+			y=y/(windowheight-offsety*2)*1080;
+			
 			mx=x;
 			my=y;
 			EventManager.call(new MouseMoved(x, y));
@@ -213,6 +221,9 @@ public class Main {
 		});
 	}
 	
+	int offsetx;
+	int offsety;
+	
 	/**
 	 * sets the Aspect Ratio after the Window has been resized
 	 * @param width The new width
@@ -236,10 +247,10 @@ public class Main {
 		}
 		 
 		// set up the new viewport centered in the backbuffer
-		int vpx = (windowwidth  / 2) - (width / 2);
-		int vpy = (windowheight / 2) - (height / 2);
+		offsetx = (windowwidth  / 2) - (width / 2);
+		offsety = (windowheight / 2) - (height / 2);
 		
-		GL45.glViewport(vpx,vpy,width,height);
+		GL45.glViewport(offsetx,offsety,width,height);
 		// Now we use Ortho
 		render.ortho(0, windowwidth, windowheight, 0, -1, 1);
 		
