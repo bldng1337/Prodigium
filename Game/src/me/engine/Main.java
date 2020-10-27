@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -151,6 +152,8 @@ public class Main {
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
 			EventManager.call(new Initialization());
 			float dt=0;
+			
+			new Gui();
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
@@ -191,8 +194,8 @@ public class Main {
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
-			x=Math.max(x-offsetx,0);
-			y=Math.max(y-offsety,0);
+			x=Math.max(x-offsetx, 0);
+			y=Math.max(y-offsety, 0);
 			x=x/(windowwidth-offsetx*2)*1920;
 			y=y/(windowheight-offsety*2)*1080;
 			
