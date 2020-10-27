@@ -39,7 +39,7 @@ public class EventManager {
 				try {
 					m.m.invoke(m.c, e);
 				} catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException e1) {
-					Main.log.severe(e1.toString());
+					Main.log.severe(e1.getMessage()+" "+e.getClass().getSimpleName());
 				}
 			}
 		}

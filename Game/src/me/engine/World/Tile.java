@@ -1,5 +1,8 @@
 package me.engine.World;
 
+import org.joml.Rectanglef;
+import org.joml.Vector2f;
+
 import me.engine.Main;
 
 /**
@@ -15,6 +18,12 @@ public class Tile {
 	}
 	
 	
-	
+	public Vector2f solve(Rectanglef tile,Rectanglef t,Vector2f motion) {
+		Rectanglef r=new Rectanglef();
+		t.translate(motion,r);
+		r.intersection(tile);
+		motion.add(r.maxX-r.minX, r.maxY-r.minY);
+		return motion;
+	}
 	
 }

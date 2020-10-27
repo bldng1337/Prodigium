@@ -12,8 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.joml.Rectanglef;
-import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -35,14 +33,14 @@ import me.engine.Utils.LoggerOutputStream;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Texture;
 import me.engine.Utils.Event.EventManager;
+import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
 import me.engine.Utils.Event.Events.MouseMoved;
 import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
+import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
-import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
-import me.engine.World.Tile;
 import me.engine.World.Levels.SimpleLevel.SimpleLevel;
 
 public class Main {
@@ -58,18 +56,20 @@ public class Main {
 	EntityManager em;
 	
 	public Main() {
+		setupLogger();
+		log.setLevel(Level.ALL);
 		init();
 	}
 
 	public static void main(String[] args) {
-		setupLogger();
-		log.setLevel(Level.ALL);
-		m=new Main();
+		new Main();
 	}
 	
 	public void init() {
+		m=this;
 		Renderer.clearTransform();
 		GLFWErrorCallback g=GLFWErrorCallback.createPrint(new PrintStream(new LoggerOutputStream(log))).set();
+		
 			if (!GLFW.glfwInit())
 				throw new IllegalStateException("Unable to initialize GLFW");
 			// Configure GLFW
@@ -139,35 +139,36 @@ public class Main {
 			
 			//Test textures
 			long txt=tex.getTexture("Textures.skelett.Skelett_gehen:gif");
-			long txt2=tex.getTexture("Textures.Test.testpng:png");
+			long txt2=tex.getTexture("Textures.Test.testground:png");
 			tex.flush();
-			render.c.getStati().set(1920/2f, 1080/2f);
-			render.c.setP(()->new Vector2f(px,py));
+//			render.c.getStati().set(1920/2f, 1080/2f);
+//			render.c.setP(()->new Vector2f(px,py));
 			//Blend for Alpha
 			GlStateManager.enable(GL45.GL_BLEND);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			GameLevel glevel=new SimpleLevel(150, render, chunkrenderer);
 			Random r=new Random();
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
+			EventManager.call(new Initialization());
+			float dt=0;
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				long time=System.nanoTime();//Frametime for debug
-				EventManager.call(new Update());
-				EventManager.call(new Render());
 				r.setSeed(2);
 				e.render(render);
 				e.update();
 				glevel.render();
 				glevel.update();
-				for(int i=0;i<120;i++) {
-					render.renderRect(r.nextInt(4000)-2000f, r.nextInt(4000)-2000, 140f, 140f, txt,(int)((System.currentTimeMillis()+r.nextInt())/110)%Texture.getaniframes(txt));
-				}
 				chunkrenderer.render();
-				render.renderRect(px, py, 140f, 140f, txt2,0);
+				EventManager.call(new Update());
+				EventManager.call(new Render(dt));
+				render.flush();
+				EventManager.call(new Render2D(dt));
 				render.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
 				GLFW.glfwPollEvents(); // Poll for window events.
 				log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");// Log Frametime
+				dt=(float)(System.nanoTime()-time)/1000000000f;
 			}
 			//Free Resources
 			if(debugProc!=null)
@@ -175,6 +176,10 @@ public class Main {
 			g.close();
 	}
 	
+	public long getWindow() {
+		return window;
+	}
+
 	double mx,my;
 	
 	float px=0,py=0;
@@ -186,10 +191,10 @@ public class Main {
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
-			x=Math.abs(x-offsetx);
-			y=Math.abs(y-offsety);
-			x=x/windowwidth*1920;
-			y=y/windowheight*1080;
+			x=Math.max(x-offsetx,0);
+			y=Math.max(y-offsety,0);
+			x=x/(windowwidth-offsetx*2)*1920;
+			y=y/(windowheight-offsety*2)*1080;
 			
 			mx=x;
 			my=y;
@@ -290,12 +295,32 @@ public class Main {
 		return tex;
 	}
 	
+	public ChunkRenderer getChunkrenderer() {
+		return chunkrenderer;
+	}
+
+	public ScriptManager getScriptManager() {
+		return sm;
+	}
+
+	public EntityManager getEntityManager() {
+		return em;
+	}
+
 	public static Main getM() {
 		return m;
 	}
 	
 	public static Renderer getRender() {
 		return render;
+	}
+	
+	public int getWindowwidth() {
+		return windowwidth;
+	}
+
+	public int getWindowheight() {
+		return windowheight;
 	}
 	
 }

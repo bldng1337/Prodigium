@@ -153,7 +153,7 @@ public class Renderer {
 		scale=new Matrix4f();
 		projection=new Matrix4f();
 	}
-	
+
 	/**
 	 * Transforms the Geometry
 	 * Use the Transform of {@link Camera#setP(me.engine.Utils.Camera.CameraPos)}
@@ -186,6 +186,15 @@ public class Renderer {
 	 */
 	public void scale(float x,float y,float z) {
 		scale.scale(x, y, z);
+	}
+	
+	
+	public static Matrix4f getScale() {
+		return scale;
+	}
+
+	public static Matrix4f getProjection() {
+		return projection;
 	}
 	
 }

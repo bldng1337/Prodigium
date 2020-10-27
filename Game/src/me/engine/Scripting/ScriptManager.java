@@ -67,4 +67,12 @@ public class ScriptManager {
 		}
 		return null;
 	}
+
+	public ScriptEngine compileScript(String code, String type,Consumer<ScriptEngine> bindings) throws ScriptException {
+		ScriptEngine sce=sem.getEngineByName(type);
+		if(bindings!=null)
+			bindings.accept(sce);
+		sce.eval(scripts.get(code));
+		return sce;
+	}
 }
