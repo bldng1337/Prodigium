@@ -14,7 +14,7 @@ import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.FileUtils;
 
 public class EntityManager {
-	private HashMap<String, EntityData> Entitys=new HashMap<>();
+	private HashMap<String, EntityData> entitylist=new HashMap<>();
 	ScriptManager sm;
 	
 	public EntityManager(ScriptManager s) {
@@ -52,7 +52,7 @@ public class EntityManager {
 						continue;
 					jr.beginObject();
 					while(jr.hasNext())
-						ndata.textureids[Animation.valueOf(jr.nextName()).gettextureindex()]=Main.getTex().getTexture(jr.nextString());
+						ndata.textureids[Animation.valueOf(jr.nextName()).gettextureindex()]=Main.getM().getTex().getTexture(jr.nextString());
 					jr.endObject();
 					break;
 				case "Health":
@@ -78,7 +78,7 @@ public class EntityManager {
 					break;
 				}
 			}
-			Entitys.put(FileUtils.getIDfromFile(f), ndata);
+			entitylist.put(FileUtils.getIDfromFile(f), ndata);
 		} catch (IOException e) {
 			Main.log.severe(()->"Error loading Entity "+e.toString());
 		}
@@ -86,7 +86,7 @@ public class EntityManager {
 	
 	public Entity newEntity(String id) {
 		Entity e=new Entity();
-		EntityData ndata=Entitys.get(id);
+		EntityData ndata=entitylist.get(id);
 		if(ndata==null) {
 			Main.log.warning(()->"Couldnt find Entity "+id);
 			return null;

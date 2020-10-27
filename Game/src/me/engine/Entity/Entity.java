@@ -7,16 +7,36 @@ import me.engine.Utils.Renderer;
 import me.engine.Utils.Texture;
 
 public class Entity{
+	/**
+	 * Array of Textures of that Entity
+	 */
 	protected long[] textureids;
+	/**
+	 * The Current Texture
+	 */
 	public Animation currTexture;
+	/**
+	 * Stats of that Entity
+	 */
 	public float x,y,health,speed;
+	/**
+	 * The Dimension of the Entity
+	 */
 	protected float width,height;
+	/**
+	 * The Delay between Frames of the Animation
+	 */
 	protected int framedelay;
+	/**
+	 * The Name of this Entity
+	 */
 	protected String name;
+	/**
+	 * The Script for this Entity
+	 */
 	protected ScriptEngine script;
 	
 	protected Entity() {
-		super();
 	}
 
 	/**

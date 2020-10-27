@@ -1,7 +1,6 @@
 package me.engine.Utils;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL45;
@@ -15,18 +14,40 @@ import me.engine.Utils.Event.EventManager;
  */
 public class Renderer {
 
+	/**
+	 * The Max Number of Vertices that get packed in one Drawcall
+	 */
 	public static final int MAXDRAW=18*1000;
-	float[] vertecies;
+	/**
+	 * Array of Vertices that get drawn next
+	 */
+	float[] vertices;
+	/**
+	 * Array of TextureCoordinates
+	 */
 	float[] txt;
+	/**
+	 * The write pos from the vertices and texcoords Arrays 
+	 */
 	int vindex=0,tindex;
+	//The VertexBuffer which gets populated with the Vertex data
 	private VertexBuffer v;
+	/**
+	 * Scale and Projection Matrices
+	 */
 	static Matrix4f scale,projection;
+	/**
+	 * Camera System for offset
+	 */
 	public Camera c;
+	/**
+	 * The Shader Program used for Rendering
+	 */
 	Shader s;
 	
 	public Renderer() {
 		s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
-		vertecies=new float[MAXDRAW];
+		vertices=new float[MAXDRAW];
 		txt=new float[MAXDRAW];
 		c=new Camera();
 		EventManager.register(c);
@@ -47,49 +68,49 @@ public class Renderer {
 		float tx2=Texture.getx(texid)+Texture.getdx(texid)+Texture.getdx(texid)*frame;
 		float ty2=Texture.gety(texid)+Texture.getdy(texid);
 		int atlas=Texture.getatlas(texid);
-		tx/=Main.getTex().msize;
-		ty/=Main.getTex().msize;
-		tx2/=Main.getTex().msize;
-		ty2/=Main.getTex().msize;
+		tx/=Main.getM().getTex().msize;
+		ty/=Main.getM().getTex().msize;
+		tx2/=Main.getM().getTex().msize;
+		ty2/=Main.getM().getTex().msize;
 		
-		vertecies[vindex++]=x;
-		vertecies[vindex++]=y+height;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx;
 		txt[tindex++]=ty2;
 		txt[tindex++]=atlas;
 		
-		vertecies[vindex++]=x;
-		vertecies[vindex++]=y;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx;
 		txt[tindex++]=ty;
 		txt[tindex++]=atlas;
 		
-		vertecies[vindex++]=x+width;
-		vertecies[vindex++]=y;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx2;
 		txt[tindex++]=ty;
 		txt[tindex++]=atlas;
 		
-		vertecies[vindex++]=x;
-		vertecies[vindex++]=y+height;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx;
 		txt[tindex++]=ty2;
 		txt[tindex++]=atlas;
 		
-		vertecies[vindex++]=x+width;
-		vertecies[vindex++]=y+height;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx2;
 		txt[tindex++]=ty2;
 		txt[tindex++]=atlas;
 		
-		vertecies[vindex++]=x+width;
-		vertecies[vindex++]=y;
-		vertecies[vindex++]=1;
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
 		txt[tindex++]=tx2;
 		txt[tindex++]=ty;
 		txt[tindex++]=atlas;
@@ -106,10 +127,10 @@ public class Renderer {
 			return;
 		if(v==null) {
 			v=new VertexBuffer(false);
-			v.createBuffer(vertecies, 0, 3);
+			v.createBuffer(vertices, 0, 3);
 			v.createBuffer(txt, 1, 3);
 		}else {
-			v.updateBuffer(vertecies, 0, 3);
+			v.updateBuffer(vertices, 0, 3);
 			v.updateBuffer(txt, 1, 3);
 		}
 		s.bind();
@@ -117,7 +138,7 @@ public class Renderer {
 		s.useUniform("scale", scale);
 		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
 		s.useUniform("u_Transform", c.translate);
-		Main.getTex().bind();
+		Main.getM().getTex().bind();
 		v.bind(0);
 		v.bind(1);
 		GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vindex);
@@ -128,21 +149,10 @@ public class Renderer {
 	}
 	
 	/**
-	 *@deprecated Use flush
-	 * @since commit 31cdb613d836cf4423abd8ca8ff51d9b86e27c46
-	 * @see {@link #flush()}
-	 */
-	@Deprecated
-	public void render() {
-		flush();
-	}
-	
-	/**
 	 * Destroys the Renderer
 	 */
 	public void destroy() {
-		v.destroy();
-		vertecies=null;
+		vertices=null;
 	}
 	
 	/**

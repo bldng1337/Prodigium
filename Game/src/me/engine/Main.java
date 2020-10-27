@@ -6,13 +6,12 @@ import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Date;
-import java.util.Random;
 import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -46,20 +45,68 @@ import me.engine.World.Levels.SimpleLevel.SimpleLevel;
 import me.game.Gui.Gui;
 
 public class Main {
+	/**
+	 * Logger used to log
+	 */
 	public static Logger log;
+	/**
+	 * The GLFW Window ID
+	 */
 	long window;
+	/**
+	 * Reference to Main
+	 */
 	private static Main m;
+	/**
+	 * Working directory
+	 */
 	public static final File dir=new File(System.getProperty("user.dir"));
-	static Renderer render,uirender;
+	/**
+	 * The Renderer used for rendering
+	 */
+	Renderer render,uirender;
+	/**
+	 * Height and width of the Window
+	 */
 	int windowwidth,windowheight;
-	static Texture tex;
+	/**
+	 * TextureManager for loading and rendering Textures
+	 */
+	Texture tex;
+	/**
+	 * ChunkRenderer used to Render Chunks
+	 */
 	ChunkRenderer chunkrenderer;
+	/**
+	 * ScriptManager used to Compile Scripts for Entitys
+	 */
 	ScriptManager sm;
+	/**
+	 * EntityManager to load Entitys
+	 */
 	EntityManager em;
 	
+	/**
+	 * Mouse Coordinates
+	 */
+	double mx,my;
+	
+	/**
+	 * Offset from the Window to the Renderspace
+	 */
+	int offsetx,offsety;
+	/**
+	 * Placeholder PlayerPos
+	 */
+	float px=0,py=0;
+	
 	public Main() {
+		//setup Logger
 		setupLogger();
 		log.setLevel(Level.ALL);
+		for(Handler h: log.getHandlers())
+			h.setLevel(Level.ALL);
+		//init
 		init();
 	}
 
@@ -67,11 +114,14 @@ public class Main {
 		new Main();
 	}
 	
+	/**
+	 * Setups the window, Renderer, Texture and the Main Game Loop 
+	 */
 	public void init() {
-		m=this;
-		Renderer.clearTransform();
-		GLFWErrorCallback g=GLFWErrorCallback.createPrint(new PrintStream(new LoggerOutputStream(log))).set();
-		
+			m=this;
+			Renderer.clearTransform();
+			GLFWErrorCallback g=GLFWErrorCallback.createPrint(new PrintStream(new LoggerOutputStream(log))).set();
+			
 			if (!GLFW.glfwInit())
 				throw new IllegalStateException("Unable to initialize GLFW");
 			// Configure GLFW
@@ -79,28 +129,25 @@ public class Main {
 			GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE); // the window will stay hidden after creation
 			GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);//GLError
-			//WINDOW
+			//CREATE WINDOW
 			window = GLFW.glfwCreateWindow(900, 500, "Prodigium", MemoryUtil.NULL, MemoryUtil.NULL);
 			if (window==MemoryUtil.NULL)
 				throw new RuntimeException("Failed to create the GLFW window");
-			GLFW.glfwSetKeyCallback(window, (wwindow, key, scancode, action, mods) -> {
-					EventManager.call(new KeyPressed(GLFW.glfwGetKeyName(key, scancode)));
-			});
 			// ICON
 			try ( MemoryStack stack = MemoryStack.stackPush() ) {
-				   IntBuffer w = stack.mallocInt(1);
-				   IntBuffer h = stack.mallocInt(1);
-				   IntBuffer comp = stack.mallocInt(1);
-	
-				   ByteBuffer icon = STBImage.stbi_load(dir+"\\Assets\\Textures\\Icons\\Game_icon.png", w, h, comp, 4);
-	
-				   GLFW.glfwSetWindowIcon(window, GLFWImage.mallocStack(1, stack)
-				      .width(w.get(0))
-				      .height(h.get(0))
-				      .pixels(icon)
-				   );
-	
-				   STBImage.stbi_image_free(icon);
+			   IntBuffer w = stack.mallocInt(1);
+			   IntBuffer h = stack.mallocInt(1);
+			   IntBuffer comp = stack.mallocInt(1);
+
+			   ByteBuffer icon = STBImage.stbi_load(dir+"\\Assets\\Textures\\Icons\\Game_icon.png", w, h, comp, 4);
+
+			   GLFW.glfwSetWindowIcon(window, GLFWImage.mallocStack(1, stack)
+			      .width(w.get(0))
+			      .height(h.get(0))
+			      .pixels(icon)
+			   );
+
+			   STBImage.stbi_image_free(icon);
 			}
 			//SIZE
 			//http://forum.lwjgl.org/index.php?topic=5548.0
@@ -114,6 +161,7 @@ public class Main {
 			GLFW.glfwMakeContextCurrent(window);
 			// Enable v-sync
 			GLFW.glfwSwapInterval(1);
+			//Force Aspect Ratio in windowed mode
 			GLFW.glfwSetWindowAspectRatio(window, 16, 9);
 			// Make the window visible
 			GLFW.glfwShowWindow(window);
@@ -128,51 +176,57 @@ public class Main {
 			sm=new ScriptManager();
 			em=new EntityManager(sm);
 			
+			//Setup the Projection and Aspect Ratio
 			setAspectRatio(windowwidth, windowheight);
 			
-			//Setup Callbacks
+			//Setup GLFW Callbacks
 			setupCallbacks();
 			
+			//Blend for Alpha
+			GlStateManager.enable(GL45.GL_BLEND);
 			// Set the clear color
 			GL45.glClearColor(0.239f, 0.239f, 0.239f, 0.0f);
 			GL45.glBlendColor(1.0f, 1.0f, 1.0f, 1.0f);
+			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			//Error Callback
 			Callback debugProc = GLUtil.setupDebugMessageCallback();
 			
-			//Test textures
-			long txt=tex.getTexture("Textures.skelett.Skelett_gehen:gif");
-			long txt2=tex.getTexture("Textures.Test.testground:png");
-			tex.flush();
-//			render.c.getStati().set(1920/2f, 1080/2f);
+			//Set an static transform on the camera so it centers
+			render.c.getStati().set(1920/2f, 1080/2f);
 //			render.c.setP(()->new Vector2f(px,py));
-			//Blend for Alpha
-			GlStateManager.enable(GL45.GL_BLEND);
-			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			GameLevel glevel=new SimpleLevel(150, render, chunkrenderer);
-			Random r=new Random();
+			//TEST ENTITY
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
+			//Call Event init
 			EventManager.call(new Initialization());
 			float dt=0;
 			
 			new Gui();
+			long time=System.nanoTime();//Frametime for debug
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-				long time=System.nanoTime();//Frametime for debug
-				r.setSeed(2);
+				//TEMP Entity Test
 				e.render(render);
 				e.update();
+				
+				//Level Rendering
 				glevel.render();
 				glevel.update();
 				chunkrenderer.render();
+				//Call Event Update
 				EventManager.call(new Update());
+				//Call Event Render
 				EventManager.call(new Render(dt));
 				render.flush();
+				//Call Event Render2D
 				EventManager.call(new Render2D(dt));
-				render.flush();
+				uirender.flush();
 				GLFW.glfwSwapBuffers(window); // swap the color buffers
 				GLFW.glfwPollEvents(); // Poll for window events.
-				log.finest(()->"Frametime "+(System.nanoTime()-time)/1000000f+"ms");// Log Frametime
+				final float frametime=(System.nanoTime()-time)/1000000f;
+				log.finest(()->"Frametime "+frametime+"ms");// Log Frametime
 				dt=(float)(System.nanoTime()-time)/1000000000f;
+				time=System.nanoTime();//Frametime for debug
 			}
 			//Free Resources
 			if(debugProc!=null)
@@ -180,13 +234,13 @@ public class Main {
 			g.close();
 	}
 	
+	/**
+	 * @return the GLFW Window ID
+	 */
 	public long getWindow() {
 		return window;
 	}
 
-	double mx,my;
-	
-	float px=0,py=0;
 	/**
 	 * Initializes Callbacks for Window Clicks, Keyboard Presses
 	 */
@@ -195,6 +249,7 @@ public class Main {
 			  EventManager.call(new MousePressed(mx, my, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
+			//Scale the Mouse Coordinates from Screenspace to World/Renderspace
 			x=Math.max(x-offsetx, 0);
 			y=Math.max(y-offsety, 0);
 			x=x/(windowwidth-offsetx*2)*1920;
@@ -205,11 +260,14 @@ public class Main {
 			EventManager.call(new MouseMoved(x, y));
 		});
 		GLFW.glfwSetWindowSizeCallback(window, (wwindow, width, height)->{
+			//Set the Window width and
+			//Recalculate the Aspect Ratio and the Projection
 			windowwidth=width;
 			windowheight=height;
 			setAspectRatio(windowwidth, windowheight);
 		});
 		GLFW.glfwSetKeyCallback(window, (long window,int key, int scancode, int action, int mods)->{
+			//PlaceHolder PlayerController
 			switch(key) {
 			case GLFW.GLFW_KEY_W:
 				py-=10;
@@ -224,11 +282,10 @@ public class Main {
 				px+=10;
 				break;
 			}
+			EventManager.call(new KeyPressed(key,scancode,action,mods));
 		});
 	}
 	
-	int offsetx;
-	int offsety;
 	
 	/**
 	 * sets the Aspect Ratio after the Window has been resized
@@ -295,7 +352,7 @@ public class Main {
 		}
 	}
 	
-	public static Texture getTex() {
+	public Texture getTex() {
 		return tex;
 	}
 	
@@ -315,7 +372,7 @@ public class Main {
 		return m;
 	}
 	
-	public static Renderer getRender() {
+	public Renderer getRender() {
 		return render;
 	}
 	
@@ -327,7 +384,7 @@ public class Main {
 		return windowheight;
 	}
 	
-	public static Renderer getUIrender() {
+	public Renderer getUIrender() {
 		return uirender;
 	}
 	

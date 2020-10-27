@@ -1,11 +1,7 @@
 package me.engine.Utils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.Iterator;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -21,9 +17,21 @@ import me.engine.Main;
  */
 public class Shader {
 	
+	/**
+	 * The ID of the ShaderProgram
+	 */
 	protected int program;
+	/**
+	 * The ID of the vertex shader
+	 */
 	private int vertexShader;
+	/**
+	 * The ID of the fragment Shader
+	 */
 	private int fragmentShader;
+	/**
+	 * The Source of the Shader
+	 */
 	private String v,f;
 	
 	public Shader(File frag,File vert) {

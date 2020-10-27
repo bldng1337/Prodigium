@@ -1,7 +1,5 @@
 package me.engine.Utils.Event.Events;
 
-import org.lwjgl.glfw.GLFW;
-
 import me.engine.Utils.Event.Event;
 
 /**

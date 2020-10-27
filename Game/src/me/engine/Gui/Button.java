@@ -16,18 +16,16 @@ public class Button
 		this.height = height;
 		posX = x;
 		posY = y;
-		TEXTURE = Main.getTex().getTexture("Textures.Gui." + textureName + ":png");
-		HOVER_TEXTURE = Main.getTex().getTexture("Textures.Gui." + textureName + "_hover:png");
+		TEXTURE = Main.getM().getTex().getTexture("Textures.Gui." + textureName + ":png");
+		HOVER_TEXTURE = Main.getM().getTex().getTexture("Textures.Gui." + textureName + "_hover:png");
 	}
 
 	public void drawButton() {
-		Main.getUIrender().renderRect(posX, posY, width, height, hovering ? HOVER_TEXTURE : TEXTURE, 0);
+		Main.getM().getUIrender().renderRect(posX, posY, width, height, hovering ? HOVER_TEXTURE : TEXTURE, 0);
 	}
 
 	public boolean isHovered(double x, double y) {
-		if ((x >= posX && x <= posX+width)
-			&& (y >= posY && y <= posY+height))
-				return true;
-		return false;
+		return ((x >= posX && x <= posX+width)
+				&& (y >= posY && y <= posY+height));
 	}
 }

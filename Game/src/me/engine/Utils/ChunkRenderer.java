@@ -12,17 +12,29 @@ import me.engine.Main;
  * An Renderer that Renders the Tiles of Chunks
  */
 public class ChunkRenderer {
+	/**
+	 * The Shader Program used for Rendering
+	 */
 	Shader s;
+	/**
+	 * Scale and Projection Matrices
+	 */
 	Matrix4f projection,scale;
+	/**
+	 * Camera System for offset
+	 */
 	Camera c;
+	/**
+	 * List of static VertexBuffers that get Renderd
+	 */
 	ArrayList<VertexBuffer>renderlist;
 	
 	public ChunkRenderer() {
 		renderlist=new ArrayList<>();
 		projection=Renderer.projection;
 		scale=Renderer.scale;
-		c=Main.getRender().c;
-		s=Main.getRender().s;
+		c=Main.getM().getRender().c;
+		s=Main.getM().getRender().s;
 	}
 	
 	
@@ -33,17 +45,17 @@ public class ChunkRenderer {
 	 */
 	public void render() {
 		for(VertexBuffer vb:renderlist) {
-			Main.getRender().s.bind();
-			Main.getRender().s.useUniform("projection", Renderer.projection);
-			Main.getRender().s.useUniform("scale", Renderer.scale);
-			Main.getRender().s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
-			Main.getRender().s.useUniform("u_Transform", Main.getRender().c.translate);
-			Main.getTex().bind();
+			Main.getM().getRender().s.bind();
+			Main.getM().getRender().s.useUniform("projection", Renderer.projection);
+			Main.getM().getRender().s.useUniform("scale", Renderer.scale);
+			Main.getM().getRender().s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
+			Main.getM().getRender().s.useUniform("u_Transform", Main.getM().getRender().c.translate);
+			Main.getM().getTex().bind();
 			vb.bind(0);
 			vb.bind(1);
 			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
 			vb.unbind();
-			Main.getRender().s.unbind();
+			Main.getM().getRender().s.unbind();
 		}
 		
 	}

@@ -21,14 +21,34 @@ import me.engine.Main;
  * Abstracts Textures in a Class and manages an Texture Atlas
  */
 public class Texture {
-	private static final String TPPATH=Main.dir.getAbsolutePath()+"\\Assets\\Textures\\";
+	/**
+	 * Array of TextureAtlasIDs
+	 */
 	private int[] atlases;
+	/**
+	 * Which Atlas gets drawn while Registering
+	 */
 	private int atlas=0;
+	/**
+	 * Tracks the Texture IDs used for Rendering
+	 */
 	HashMap<String, Long> texturemap=new HashMap<>();
+	/**
+	 * The Size of the TextureAtlas
+	 */
 	int msize;
+	/**
+	 * The Texture Atlas which is currently getting constructed
+	 */
 	BufferedImage catlas;
-	int cx=0;
-	int cy=0;
+	
+	/**
+	 * The Pos where The Texture should get drawn on the atlas
+	 */
+	int cx=0,cy=0;
+	/**
+	 * The Height of the Tallest Texture in the Row of the Atlas
+	 */
 	int maxheight=0;
 	
 	public Texture() {
@@ -44,7 +64,7 @@ public class Texture {
 	 * Register every Texture found in the Assets/Texture Folder for use in the Game
 	 */
 	public void registerTextures() {
-		registerinPath(new File(TPPATH));
+		registerinPath(new File(Main.dir.getAbsolutePath()+"\\Assets\\Textures\\"));
 	}
 	
 	/**

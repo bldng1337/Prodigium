@@ -12,10 +12,23 @@ import me.engine.Main;
  * Abstracts Buffers in a Class and provides Utility methods
  */
 public class VertexBuffer {
+	/**
+	 * Vao and vbo id list
+	 */
 	private int vao,vbo[][];
+	/**
+	 * List of FLoatBuffers
+	 */
 	private FloatBuffer[] vb;
+	/**
+	 * If this VertexArrayObject should store static Data
+	 */
 	private boolean staticdata,bound;
+	/**
+	 * Which buffers got enabled
+	 */
 	private int[] enabledbuffers;
+	
 	public VertexBuffer(boolean staticdata) {
 		vao = GL45.glGenVertexArrays();
 		vbo = new int[15][2];

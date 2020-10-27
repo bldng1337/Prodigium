@@ -20,7 +20,7 @@ public class Gui extends GuiScreen
 	
 	@Override
 	public void initGui() {
-		Buttons.add(new Button(0, 500, 500, 100, 50, "test"));
+		buttonlist.add(new Button(0, 500, 500, 100, 50, "test"));
 		
 	}
 }

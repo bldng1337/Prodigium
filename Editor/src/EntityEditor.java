@@ -28,32 +28,79 @@ import imgui.type.ImString;
 import me.engine.Main;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
-import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.FileUtils;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Shader;
 import me.engine.Utils.VertexBuffer;
 
+/**
+ * @author Christian
+ *
+ */
 public class EntityEditor extends Entity{
+	/**
+	 * The TextureIDs for the Textures currently previewed
+	 */
 	int[] textureids;
+	/**
+	 * The StringID of the Textures currently previewed
+	 */
 	String[] textureSaveid;
+	/**
+	 * The width of the Textures currently previewed
+	 */
 	float[] texturewidth;
+	/**
+	 * CurrentTexture
+	 */
 	Animation currTexture;
+	/**
+	 * Stats of the Entity
+	 */
 	float health,speed;
+	/**
+	 * Dimensions of the Entity
+	 */
 	float width,height;
+	/**
+	 * The Delay between Frames of the Animation
+	 */
 	int framedelay;
+	/**
+	 * The Name of the Entity
+	 */
 	String name;
+	/**
+	 * The script of the Entity
+	 */
 	ScriptEngine script;
+	/**
+	 * TextureID for the missingTexture Texture
+	 */
 	int missingtxt;
+	/**
+	 * If there should be width and height or size
+	 */
 	boolean unifiedsize;
+	/**
+	 * Compilation Error
+	 */
+	String error="";
+    int errorline=-1;
+    /**
+     * Flags of the ImGuiTab used to show edited and not Compiled Code
+     */
+    int editorflags=0;
+    /**
+     * Stores the Code
+     */
+    ImString code;
 	
 	//Stuff for Rendering the Sprite
 	private VertexBuffer v;
 	private Shader s;
-	static Matrix4f scale,projection;
-	
-	ImString code;
+	Matrix4f scale,projection;
 	
 	public EntityEditor() {
 		name="Unamed Entity";
@@ -86,6 +133,11 @@ public class EntityEditor extends Entity{
 	
 	
 	
+	/**
+	 * Render Preview of the Sprite
+	 * @param x The X coordinate where it will be rendered
+	 * @param y The Y coordinate where it will be rendered
+	 */
 	public void render(int x,int y) {
 		projection=Renderer.getProjection();
 		scale=Renderer.getScale();
@@ -154,10 +206,22 @@ public class EntityEditor extends Entity{
 	}
 	
 	
+	/**
+	 * Gets Max Frame
+	 * @param slot The texture slot
+	 * @return The Max Frames
+	 */
 	private int getmaxframe(int slot) {
 		return (int) (1/texturewidth[slot]);
 	}
 	
+	
+	/**
+	 * Returns the Texture Coordinates of the specified Texture and frame
+	 * @param slot The Textureslot of the Texture
+	 * @param frame The frame of the Texture
+	 * @return The Texture Coords
+	 */
 	private Vector4f getTexCoords(int slot,int frame) {
 		Vector4f v=new Vector4f();
 		v.x=texturewidth[slot]*frame;
@@ -167,11 +231,10 @@ public class EntityEditor extends Entity{
 		return v;
 	}
 	
-    String error="";
-    int line=-1;
-    int editorflags=0;
-
 	
+	/**
+	 * Renders the ImGui Menus
+	 */
 	public void imGui() {
 		ImGui.setNextWindowSize(400, Main.getM().getWindowheight());
 		ImGui.begin("Editor");
@@ -257,8 +320,8 @@ public class EntityEditor extends Entity{
 				script=Main.getM().getScriptManager().compileScript(code.get(), "ECMAScript", (sc)->{sc.put("Entity", this);sc.put("e", this);});
 				editorflags=0;
 			} catch (ScriptException e) {
-				line=0;
-				line=e.getLineNumber();
+				errorline=0;
+				errorline=e.getLineNumber();
 				error=e.getMessage();
 			}
         }
@@ -266,14 +329,14 @@ public class EntityEditor extends Entity{
         	editorflags=editorflags|ImGuiWindowFlags.UnsavedDocument;
         ImGui.end();
         if(!error.isEmpty()) {
-        	ImGui.setNextWindowPos(sx, sy+ImGui.getFontSize()*(line+1f));
+        	ImGui.setNextWindowPos(sx, sy+ImGui.getFontSize()*(errorline+1f));
         	int flags=ImGuiWindowFlags.NoDecoration|ImGuiWindowFlags.NoDocking|ImGuiWindowFlags.NoMove|
         			  ImGuiWindowFlags.NoSavedSettings|ImGuiWindowFlags.NoTitleBar;
         	ImGui.begin("ERROR",flags);
         	ImGui.text(error);
         	if(ImGui.isItemHovered()) {
         		error="";
-        	    line=-1;
+        	    errorline=-1;
         	    sx=-1;
         	    sy=-1;
         	}
@@ -281,6 +344,10 @@ public class EntityEditor extends Entity{
         }
 	}
 	
+	/**
+	 * Displays a FilePicker
+	 * @return The File the User chose
+	 */
 	private File showFilePicker() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -304,6 +371,12 @@ public class EntityEditor extends Entity{
 	}
 	
 	
+	/**
+	 * Converts an File to an Texture and puts it in the specified Textureslot
+	 * @param image The Filepath of the Image
+	 * @param slot The slot to put the Texture in
+	 * @throws IOException
+	 */
 	private void toTexture(File image,int slot) throws IOException {
 		if(image==null) {
 			textureids[slot]=missingtxt;
@@ -331,6 +404,11 @@ public class EntityEditor extends Entity{
 		}
 	}
 	
+	/**
+	 * Converts an BufferedImage to an Texture and puts it in the specified Textureslot
+	 * @param bf The BufferedImage to be Converted
+	 * @param slot The slot to put the Texture in
+	 */
 	private void toTexture(BufferedImage bf,int slot) {
 		if(textureids[slot]!=0&&textureids[slot]!=missingtxt) {
 			GL45.glDeleteTextures(textureids[slot]);

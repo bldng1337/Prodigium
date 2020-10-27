@@ -14,10 +14,25 @@ import me.engine.Utils.VertexBuffer;
  * 
  */
 public class Chunk {
+	/**
+	 * ChunkSize
+	 */
 	public static final int SIZE=40;
+	/**
+	 * Max distance before the Chunk gets unloaded
+	 */
 	public static final int UNLOADDIST=2;
+	/**
+	 * The Position of the Chunk
+	 */
 	Vector2i pos;
+	/**
+	 * List of Tiles of the Chunk
+	 */
 	Tile[][] tiles;
+	/**
+	 * The Buffer where the Tiles get saved onto if the Chunk is loaded
+	 */
 	VertexBuffer render;
 	
 	public Chunk(int x,int y) {
@@ -25,6 +40,9 @@ public class Chunk {
 		tiles=new Tile[SIZE][SIZE];
 	}
 	
+	/**
+	 * @return A Array of all Tiles in this Chunk
+	 */
 	public Tile[][] getTiles() {
 		return tiles;
 	}
@@ -37,7 +55,6 @@ public class Chunk {
 		if(render==null)
 			return;
 		r.remove(render);
-		render.destroy();
 		render=null;
 	}
 	
@@ -65,10 +82,10 @@ public class Chunk {
 				float tx2=Texture.getx(tiles[cx][cy].texid)+Texture.getdx(tiles[cx][cy].texid);
 				float ty2=Texture.gety(tiles[cx][cy].texid)+Texture.getdy(tiles[cx][cy].texid);
 				int atlas=Texture.getatlas(tiles[cx][cy].texid);
-				tx/=Main.getTex().getMsize();
-				ty/=Main.getTex().getMsize();
-				tx2/=Main.getTex().getMsize();
-				ty2/=Main.getTex().getMsize();
+				tx/=Main.getM().getTex().getMsize();
+				ty/=Main.getM().getTex().getMsize();
+				tx2/=Main.getM().getTex().getMsize();
+				ty2/=Main.getM().getTex().getMsize();
 				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
 				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
 				

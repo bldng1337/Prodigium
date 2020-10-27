@@ -12,6 +12,9 @@ import me.engine.Main;
  * Manages Events
  */
 public class EventManager {
+	/**
+	 * List of Methods currently registered to the EventManager
+	 */
 	static ArrayList<MethodType> clist=new ArrayList<>();
 	
 	/**
@@ -39,7 +42,7 @@ public class EventManager {
 				try {
 					m.m.invoke(m.c, e);
 				} catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException e1) {
-					Main.log.severe(e1.getMessage()+" "+e.getClass().getSimpleName());
+					Main.log.severe(e1.getMessage()+" "+e.getClass().getSimpleName()+" at "+m.c.getClass().getSimpleName());
 				}
 			}
 		}

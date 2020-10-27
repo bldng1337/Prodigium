@@ -9,10 +9,13 @@ import java.util.Iterator;
 import me.engine.Main;
 
 public class FileUtils {
+	
+	private FileUtils() {throw new UnsupportedOperationException();}
 
 	public static File getFilefromID(String id) {
 		return new File(Main.dir.getAbsolutePath()+"\\Assets\\"+id.replace(".", "\\").replace(":", "."));
 	}
+	
 	//TODO: Do that conversion better
 	public static String getIDfromFile(File f) {
 		return f.getPath().split("Assets")[1].replace(".", ":")
@@ -38,6 +41,13 @@ public class FileUtils {
 		return s.toString();
 	}
 	
+	/**
+	 * Gets a Files Content
+	 * @param id The String ID of the File to read from
+	 * The String ID consists of the Path of the Texture in the Textures folder with the \ replaced with . and the . replaced with :
+	 * e.g. Assets\Textures\Test\testpng.png becomes Assets.Textures.Test.testpng:png
+	 * @return The Content of the File
+	 */
 	public static String stringfromFile(String id) {
 		return stringfromFile(getFilefromID(id));
 	}

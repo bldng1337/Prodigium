@@ -12,7 +12,14 @@ public class GlStateManager {
 	
 	private GlStateManager() {}
 	
+	/**
+	 * Hasmap that keeps Track of the States of the GL Flags
+	 */
 	static HashMap<Integer, Boolean> states=new HashMap<>();
+	
+	/**
+	 * Keeps Track which texture, shader or Vertexarray is curently bound
+	 */
 	static int txt=-1,shader=0,vao=-1;
 	
 	/**

@@ -14,7 +14,15 @@ import me.engine.Main;
 import me.engine.Utils.FileUtils;
 
 public class ScriptManager {
+	/**
+	 * List of ScriptSources
+	 */
 	private HashMap<String, String> scripts=new HashMap<>();
+	
+	/**
+	 * Used to compile Scripts
+	 * {@link ScriptEngineManager}
+	 */
 	ScriptEngineManager sem;
 	
 	public ScriptManager() {

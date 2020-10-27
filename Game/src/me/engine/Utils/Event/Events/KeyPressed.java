@@ -1,5 +1,7 @@
 package me.engine.Utils.Event.Events;
 
+import org.lwjgl.glfw.GLFW;
+
 import me.engine.Utils.Event.Event;
 
 /**
@@ -7,12 +9,25 @@ import me.engine.Utils.Event.Event;
  * Event for KeyPresses
  */
 public class KeyPressed extends Event{
-	String k;
-	public KeyPressed(String key) {
-		k=key;
+
+	private int key,scancode,action,mods;
+
+	public KeyPressed(int key, int scancode, int action, int mods) {
+		this.key=key;
+		this.scancode=scancode;
+		this.action=action;
+		this.mods=mods;
 	}
 
 	public String getKey() {
-		return k;
+		return GLFW.glfwGetKeyName(key, scancode);
+	}
+	public Action getAction() {
+		return action==GLFW.GLFW_PRESS?Action.PRESSED:Action.RELEASED;
+	}
+	
+	
+	enum Action{
+		PRESSED,RELEASED;
 	}
 }

@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import me.engine.Main;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.Events.Update;
 
@@ -15,7 +14,14 @@ import me.engine.Utils.Event.Events.Update;
  * 2D Camera
  */
 public class Camera {
+	/**
+	 * Translation of this Camera
+	 */
 	Vector2f translate;
+	
+	/**
+	 * Queue of Scripted Movements for Camera drives
+	 */
 	Deque<Vector3f> movement;
 	Vector2f frompos,topos,stati;
 	long timestamp;

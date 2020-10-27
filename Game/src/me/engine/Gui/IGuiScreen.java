@@ -1,7 +1,7 @@
 package me.engine.Gui;
 
 import me.engine.Utils.Event.EventTarget;
-import me.engine.Utils.Event.Events.Update;
+import me.engine.Utils.Event.Events.Render2D;
 
 public interface IGuiScreen
 {
@@ -10,5 +10,5 @@ public interface IGuiScreen
 	public void performAction(int action);
 	
 	@EventTarget
-	public void drawScreen(Update update);
+	public void drawScreen(Render2D update);
 }
