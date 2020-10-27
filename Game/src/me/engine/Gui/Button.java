@@ -21,7 +21,7 @@ public class Button
 	}
 
 	public void drawButton() {
-		Main.uiRenderer.renderRect(posX, posY, width, height, hovering ? HOVER_TEXTURE : TEXTURE, 0);
+		Main.getUIrender().renderRect(posX, posY, width, height, hovering ? HOVER_TEXTURE : TEXTURE, 0);
 	}
 
 	public boolean isHovered(double x, double y) {

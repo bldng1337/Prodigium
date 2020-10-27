@@ -43,13 +43,14 @@ import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
 import me.engine.World.GameLevel;
 import me.engine.World.Levels.SimpleLevel.SimpleLevel;
+import me.game.Gui.Gui;
 
 public class Main {
 	public static Logger log;
 	long window;
 	private static Main m;
 	public static final File dir=new File(System.getProperty("user.dir"));
-	static Renderer render;
+	static Renderer render,uirender;
 	int windowwidth,windowheight;
 	static Texture tex;
 	ChunkRenderer chunkrenderer;
@@ -324,6 +325,10 @@ public class Main {
 
 	public int getWindowheight() {
 		return windowheight;
+	}
+	
+	public static Renderer getUIrender() {
+		return uirender;
 	}
 	
 }
