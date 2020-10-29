@@ -1,7 +1,7 @@
 package me.engine.Entity;
 
 public enum Animation {
-	INTERACTION(1), DEATH(2), ATTACKING(3), IDLE(4), RUNNING(5);
+	INTERACTION(0), DEATH(1), ATTACKING(2), IDLE(3), RUNNING(4);
 	byte txtindex;
 
 	private Animation(int b) {

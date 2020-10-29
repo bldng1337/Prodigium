@@ -58,6 +58,7 @@ public class Texture {
 		catlas=new BufferedImage(maxSize, maxSize, BufferedImage.TYPE_4BYTE_ABGR);
 		msize=maxSize;
 		registerTextures();
+		flush();
 	}
 	
 	/**
@@ -170,7 +171,6 @@ public class Texture {
 	 * Flushes the Texture to the GPU
 	 */
 	public void flush() {
-		
 		int[] pixels = new int[msize * msize];
 		catlas.getRGB(0, 0, msize, msize, pixels, 0, msize);
 		

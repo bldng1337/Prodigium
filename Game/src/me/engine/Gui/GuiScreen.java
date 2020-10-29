@@ -44,4 +44,8 @@ public class GuiScreen implements IGuiScreen
 		for (Button button : buttonlist)
 			button.drawButton();
 	}
+	
+	public void destroy() {
+		EventManager.unregister(this);
+	}
 }

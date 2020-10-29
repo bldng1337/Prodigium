@@ -26,6 +26,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import me.engine.Entity.Entity;
 import me.engine.Entity.EntityManager;
+import me.engine.Gui.GuiScreen;
 import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.GlStateManager;
@@ -85,6 +86,8 @@ public class Main {
 	 * EntityManager to load Entitys
 	 */
 	EntityManager em;
+	GameLevel currlevel;
+	GuiScreen guiscreen;
 	
 	/**
 	 * Mouse Coordinates
@@ -170,6 +173,7 @@ public class Main {
 			//Setup Texture and Renderer
 			tex=new Texture();
 			render=new Renderer();
+			uirender=new Renderer();
 			chunkrenderer=new ChunkRenderer();
 			
 			//Setup Entity System
@@ -189,20 +193,20 @@ public class Main {
 			GL45.glBlendColor(1.0f, 1.0f, 1.0f, 1.0f);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			//Error Callback
-			Callback debugProc = GLUtil.setupDebugMessageCallback();
+			Callback debugProc = null;//GLUtil.setupDebugMessageCallback();
 			
 			//Set an static transform on the camera so it centers
 			render.c.getStati().set(1920/2f, 1080/2f);
 //			render.c.setP(()->new Vector2f(px,py));
-			GameLevel glevel=new SimpleLevel(150, render, chunkrenderer);
+			currlevel =new SimpleLevel(150);
 			//TEST ENTITY
 			Entity e=em.newEntity("Entities.Test.Testentity:json");
 			//Call Event init
-			EventManager.call(new Initialization());
 			float dt=0;
 			
-			new Gui();
+//			new Gui();
 			long time=System.nanoTime();//Frametime for debug
+			EventManager.call(new Initialization());
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				//TEMP Entity Test
@@ -210,9 +214,12 @@ public class Main {
 				e.update();
 				
 				//Level Rendering
-				glevel.render();
-				glevel.update();
-				chunkrenderer.render();
+				if(currlevel!=null) {
+					currlevel.render();
+					currlevel.update();
+					chunkrenderer.render();
+					render.flush();
+				}
 				//Call Event Update
 				EventManager.call(new Update());
 				//Call Event Render
@@ -234,13 +241,6 @@ public class Main {
 			g.close();
 	}
 	
-	/**
-	 * @return the GLFW Window ID
-	 */
-	public long getWindow() {
-		return window;
-	}
-
 	/**
 	 * Initializes Callbacks for Window Clicks, Keyboard Presses
 	 */
@@ -386,6 +386,30 @@ public class Main {
 	
 	public Renderer getUIrender() {
 		return uirender;
+	}
+	
+	public GameLevel getCurrlevel() {
+		return currlevel;
+	}
+
+	public void setCurrlevel(GameLevel currlevel) {
+		this.currlevel = currlevel;
+	}
+
+	public GuiScreen getGuiscreen() {
+		return guiscreen;
+	}
+
+	public void setGuiscreen(GuiScreen guiscreen) {
+		this.guiscreen.destroy();
+		this.guiscreen = guiscreen;
+	}
+
+	/**
+	 * @return the GLFW Window ID
+	 */
+	public long getWindow() {
+		return window;
 	}
 	
 }

@@ -2,8 +2,13 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.IntBuffer;
+import java.util.MissingFormatWidthException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -20,6 +25,10 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL45;
+
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
@@ -46,6 +55,7 @@ public class EntityEditor extends Entity{
 	/**
 	 * The StringID of the Textures currently previewed
 	 */
+	BufferedImage[] images;
 	String[] textureSaveid;
 	/**
 	 * The width of the Textures currently previewed
@@ -96,15 +106,20 @@ public class EntityEditor extends Entity{
      * Stores the Code
      */
     ImString code;
+    String scriptID;
+    String entityID;
 	
 	//Stuff for Rendering the Sprite
 	private VertexBuffer v;
 	private Shader s;
 	Matrix4f scale,projection;
 	
+	String exportstatus;
+	
 	public EntityEditor() {
-		name="Unamed Entity";
+		name="Unamed_Entity";
 		textureids=new int[Animation.values().length];
+		images=new BufferedImage[Animation.values().length];
 		texturewidth=new float[Animation.values().length];
 		textureSaveid=new String[Animation.values().length];
 		try {
@@ -118,17 +133,22 @@ public class EntityEditor extends Entity{
 			textureids[i]=textureids[0];
 			texturewidth[i]=texturewidth[0];
 			textureSaveid[i]="";
+//			images[i]=images[0];
 		}
 		code=new ImString(6000);
 		framedelay=1;
 		width=140f;
+		entityID="Entities."+name;
 		unifiedsize=true;
 		height=140f;
 		currTexture=Animation.IDLE;
+		exportstatus="Idle...";
 		v=new VertexBuffer(false);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 0, 3);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 1, 3);
 		s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
+		scriptID=entityID.replace("Entities", "Scripts")+":js";
+		entityID+=":json";
 	}
 	
 	
@@ -147,7 +167,7 @@ public class EntityEditor extends Entity{
 				%getmaxframe(currTexture.gettextureindex()));
 		float tx=v4f.x;
 		float ty=v4f.y;
-		float tx2=v4f.w;//texturewidth[currTexture.gettextureindex()]
+		float tx2=v4f.w;
 		float ty2=v4f.z;
 		vertecies[0]=x;
 		vertecies[1]=y+height;
@@ -231,7 +251,166 @@ public class EntityEditor extends Entity{
 		return v;
 	}
 	
-	
+	private void exporten() {
+		exportstatus="";
+		String scode=code.get();
+		if(scriptID.isEmpty()&&!scode.isEmpty()) {
+			exportstatus+="Script ID is empty\n";
+			return;
+		}
+		if(editorflags!=0) {
+			exportstatus+="Compile Script first\n";
+			return;
+		}
+		for(int i=0;i<textureSaveid.length;i++) {
+			String s=textureSaveid[i];
+			if(s.isEmpty()) {
+				exportstatus+="Texture "+Animation.values()[i]+" has no textureID\n";
+				return;
+			}
+			int txtid=textureids[i];
+			if(txtid==missingtxt) {
+				exportstatus+="Texture "+Animation.values()[i]+" has no texture\n";
+				return;
+			}
+		}
+		if(entityID.isEmpty()) {
+			exportstatus+="EntityID is empty\n";
+			return;
+		}
+		if(!scode.isEmpty()) {
+			try(FileWriter f=new FileWriter(FileUtils.getFilefromID(scriptID))){
+				f.write(scode);
+			} catch (IOException e) {
+				exportstatus+="Error exporting Script "+e.getMessage()+"\n";
+			}
+		}
+		for(int i=0;i<textureSaveid.length;i++) {
+			File f=FileUtils.getFilefromID(textureSaveid[i]);
+			f.mkdirs();
+			if(f.exists()) {
+				exportstatus+="Warning Texture already exists "+f.getAbsolutePath()+"\n";
+				continue;
+			}
+			if(texturewidth[i]==1) {
+				try {
+					ImageIO.write(images[i], "png", f);
+				} catch (IOException e) {
+					exportstatus+="Error writing file "+e.getMessage()+"\n";
+				}
+			}else {
+				try {
+					f.createNewFile();
+				} catch (IOException e) {
+					exportstatus+="Error writing file "+e.getMessage()+"\n";
+				}
+				try(FileOutputStream fstream=new FileOutputStream(f);) {
+				AnimatedGifEncoder e = new AnimatedGifEncoder();
+				e.start(fstream);
+				e.setDelay(framedelay);
+				float maxframes=getmaxframe(i);
+				for(int in=0;in<maxframes;in++) {
+					e.addFrame(images[i].getSubimage((int)(in/maxframes*images[i].getWidth()), 0, (int)(texturewidth[i]*images[i].getWidth()), images[i].getHeight()));
+				}
+				e.finish();
+				} catch (IOException e) {
+					exportstatus+="Error writing file "+e.getMessage()+"\n";
+				}
+			}
+		}
+		
+		File f=new File(FileUtils.getFilefromID(entityID).getAbsolutePath());
+		f.mkdirs();
+		if(f.exists()&&!f.delete()) {
+			exportstatus+="Couldnt save Entity at "+f.getAbsolutePath()+"\n";
+			return;
+		}
+		try(JsonWriter jwrite=new JsonWriter(new FileWriter(f))) {
+			jwrite.beginObject();
+			jwrite.name("Name");
+			jwrite.value(name);
+			jwrite.name("Animation");
+			jwrite.beginObject();
+			for(Animation a:Animation.values()) {
+				jwrite.name(a.name());
+				jwrite.value(textureSaveid[a.gettextureindex()]);
+			}
+			jwrite.endObject();
+			jwrite.name("Health");
+			jwrite.value(health);
+			jwrite.name("Width");
+			jwrite.value(width);
+			jwrite.name("Height");
+			jwrite.value(height);
+			jwrite.name("Speed");
+			jwrite.value(speed);
+			if(!code.get().isEmpty()) {
+				jwrite.name("Script");
+				jwrite.value(scriptID);
+			}
+			jwrite.name("FrameDelay");
+			jwrite.value(framedelay);
+			jwrite.endObject();
+			jwrite.flush();
+			exportstatus="Finished exporting "+name;
+		} catch (IOException e) {
+			exportstatus+="Couldnt save Entity "+e.getMessage()+"\n";
+		}
+	}
+	//TODO: create import
+	private void importen(File f) {
+		exportstatus="";
+		entityID=FileUtils.getIDfromFile(f);
+		if(f==null)
+			return;
+		try(JsonReader jr=new JsonReader(new FileReader(f))){
+			jr.beginObject();
+			while(jr.hasNext()) {
+				String s=jr.nextName();
+				switch(s) {
+				case "Name":
+					name=jr.nextString();
+					break;
+				case "Animation":
+					if(jr.peek()==JsonToken.NULL)
+						continue;
+					jr.beginObject();
+					while(jr.hasNext()) {
+						int slot=Animation.valueOf(jr.nextName()).gettextureindex();
+						toTexture(FileUtils.getFilefromID(jr.nextString()), slot);
+					}
+					jr.endObject();
+					break;
+				case "Health":
+					health=(float) jr.nextDouble();
+					break;
+				case "Width":
+					width=(float) jr.nextDouble();
+					break;
+				case "Height":
+					height=(float) jr.nextDouble();
+					break;
+				case "Speed":
+					speed=(float) jr.nextDouble();
+					break;
+				case "Script":
+					code.set(FileUtils.stringfromFile(jr.nextString()));
+					break;
+				case "FrameDelay":
+					framedelay=jr.nextInt();
+					break;
+				default:
+					exportstatus+="Error reading JSON "+f.getName()+" Unknown keyword: "+s;
+					break;
+				}
+			}
+			exportstatus="Finished importing "+name;
+		}catch(Exception e) {
+			exportstatus+=e.toString();
+		}
+		
+	}
+	boolean wasempty=false;
 	/**
 	 * Renders the ImGui Menus
 	 */
@@ -239,9 +418,27 @@ public class EntityEditor extends Entity{
 		ImGui.setNextWindowSize(400, Main.getM().getWindowheight());
 		ImGui.begin("Editor");
 		if(ImGui.collapsingHeader("Attributes")) {
-			ImString imstr=new ImString(name,50);
-			if(ImGui.inputText("Name", imstr))
-				name=imstr.get();
+			ImString imname=new ImString(name,50);
+			if(ImGui.inputText("Name", imname)) {
+				if(imname.get().isEmpty()) {
+					entityID=entityID.replace(name, "Unamed_Entity");
+					scriptID=scriptID.replace(name, "Unamed_Entity");
+					wasempty=true;
+				}else {
+					if(wasempty) {
+						entityID=entityID.replace("Unamed_Entity", imname.get());
+						scriptID=scriptID.replace("Unamed_Entity", imname.get());
+					}else {
+						entityID=entityID.replace(name, imname.get());
+						scriptID=scriptID.replace(name, imname.get());
+					}
+					wasempty=false;
+				}
+				name=imname.get();
+			}
+			ImString imentityID=new ImString(entityID,50);
+			if(ImGui.inputText("EntityID", imentityID))
+				entityID=imentityID.get();
 	        int[] imframe= {framedelay};
 	        if(ImGui.sliderInt("AnimationDelay", imframe, 1, 500))
 	        	framedelay=imframe[0];
@@ -277,7 +474,7 @@ public class EntityEditor extends Entity{
 	        				%getmaxframe(curr.gettextureindex()));
 		        	if(ImGui.imageButton(textureids[curr.gettextureindex()], 50, 50, v.x, v.y, v.w, v.z, 0))
 		        		try {
-							toTexture(showFilePicker(), i);
+							toTexture(showFilePicker("Textures","png","gif"), i);
 						} catch (IOException e) {
 							Main.log.severe(e.toString());
 						}
@@ -296,7 +493,9 @@ public class EntityEditor extends Entity{
 	        }
         }
         if(ImGui.collapsingHeader("Code")) {
-        	
+        	ImString imtxtid=new ImString(scriptID,50);
+    		if(ImGui.inputText("ScriptID", imtxtid))
+    			scriptID=imtxtid.get();
         }
         if(ImGui.collapsingHeader("Preview")) {
         	if(ImGui.treeNode("Select Texture to Preview")) {
@@ -307,8 +506,22 @@ public class EntityEditor extends Entity{
 	        	ImGui.treePop();
         	}
         }
+        if(ImGui.collapsingHeader("File")) {
+        	ImGui.text(exportstatus);
+        	if(ImGui.button("Export"))
+        		try {
+        		exporten();
+        		}catch(Exception e) {
+        			e.printStackTrace();
+        		}
+        	if(ImGui.button("Import"))
+        		importen(showFilePicker("Entity","json"));
+        }
         ImGui.end();
         ImGui.setNextWindowBgAlpha(1f);
+        
+        
+        
         //Code Editor
         int sx=-1;
         int sy=-1;
@@ -317,12 +530,14 @@ public class EntityEditor extends Entity{
         sy=(int) ImGui.getWindowPosY();
         if(ImGui.button("Compile")) {
         	try {
-				script=Main.getM().getScriptManager().compileScript(code.get(), "ECMAScript", (sc)->{sc.put("Entity", this);sc.put("e", this);});
+				script=Main.getM().getScriptManager().compileScript(code.get(),"ECMAScript",sc->{sc.put("Entity", this);sc.put("e", this);});
 				editorflags=0;
 			} catch (ScriptException e) {
 				errorline=0;
 				errorline=e.getLineNumber();
 				error=e.getMessage();
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
         }
         if(ImGui.inputTextMultiline("Code", code, (float)Main.getM().getWindowwidth(),(float)Main.getM().getWindowheight(),ImGuiInputTextFlags.AllowTabInput))
@@ -343,12 +558,12 @@ public class EntityEditor extends Entity{
         	ImGui.end();
         }
 	}
-	
+	File lastdir=Main.dir;
 	/**
 	 * Displays a FilePicker
 	 * @return The File the User chose
 	 */
-	private File showFilePicker() {
+	private File showFilePicker(String filtername,String... extensions) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -356,8 +571,8 @@ public class EntityEditor extends Entity{
 		}
 		JFrame frame = new JFrame();
 		final JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(Main.dir);
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "gif"));
+		fc.setCurrentDirectory(lastdir);
+		fc.addChoosableFileFilter(new FileNameExtensionFilter(filtername, extensions));
 		fc.removeChoosableFileFilter(fc.getChoosableFileFilters()[0]);
 		frame.setBounds(fc.getBounds());
 		frame.setBounds(-100, -100, -100, -100);
@@ -367,6 +582,8 @@ public class EntityEditor extends Entity{
 		fc.showDialog(null, "Choose a Image");
 		fc.setVisible(true);
 		fc.grabFocus();
+		if(fc.getSelectedFile()!=null)
+			lastdir=fc.getSelectedFile();
 		return fc.getSelectedFile();
 	}
 	
@@ -396,9 +613,11 @@ public class EntityEditor extends Entity{
 		    for(int i=0;i<noi;i++)
 		    	g.drawImage(reader.read(i), bfi.getWidth()*i, 0, null);
 		    texturewidth[slot]=bfi.getWidth()/(float)texture.getWidth();
+		    images[slot]=texture;
 		    toTexture(texture, slot);
 		}else {
 			BufferedImage bfi=ImageIO.read(image);
+			images[slot]=bfi;
 			texturewidth[slot]=1f;
 			toTexture(bfi, slot);
 		}
@@ -426,7 +645,6 @@ public class EntityEditor extends Entity{
 			ib.put(a << 24 | b << 16 | g << 8 | r);
 		}
 		ib.flip();
-		
 		int textureid=GL45.glGenTextures();
 		GL45.glBindTexture(GL45.GL_TEXTURE_2D, textureid);
 		GL45.glTexParameteri(GL45.GL_TEXTURE_2D, GL45.GL_TEXTURE_MIN_FILTER, GL45.GL_NEAREST);

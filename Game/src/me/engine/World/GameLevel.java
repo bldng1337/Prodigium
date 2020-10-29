@@ -6,8 +6,6 @@ import org.joml.Vector2i;
 
 import me.engine.Main;
 import me.engine.Entity.Entity;
-import me.engine.Utils.ChunkRenderer;
-import me.engine.Utils.Renderer;
 
 public class GameLevel {
 	/**
@@ -17,7 +15,7 @@ public class GameLevel {
 	
 	protected Chunk[][] chunks;
 	
-	public GameLevel(int size,Renderer r,ChunkRenderer cr) {
+	public GameLevel(int size) {
 		chunks=new Chunk[size][size];
 	}
 	

@@ -80,7 +80,7 @@ public class ScriptManager {
 		ScriptEngine sce=sem.getEngineByName(type);
 		if(bindings!=null)
 			bindings.accept(sce);
-		sce.eval(scripts.get(code));
+		sce.eval(code);
 		return sce;
 	}
 }
