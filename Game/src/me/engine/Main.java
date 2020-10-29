@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -116,7 +117,7 @@ public class Main {
 	public static void main(String[] args) {
 		new Main();
 	}
-	
+	Entity e;
 	/**
 	 * Setups the window, Renderer, Texture and the Main Game Loop 
 	 */
@@ -194,24 +195,23 @@ public class Main {
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			//Error Callback
 			Callback debugProc = null;//GLUtil.setupDebugMessageCallback();
-			
+			e=em.newEntity("Entities.Test.Testentity:json");
 			//Set an static transform on the camera so it centers
 			render.c.getStati().set(1920/2f, 1080/2f);
-//			render.c.setP(()->new Vector2f(px,py));
-			currlevel =new SimpleLevel(150);
+			render.c.setP(()->new Vector2f(e.x,e.y));
+			currlevel =new SimpleLevel(150,"Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png","Textures.Test.testground:png");
 			//TEST ENTITY
-			Entity e=em.newEntity("Entities.Test.Testentity:json");
 			//Call Event init
 			float dt=0;
-			
+			currlevel.addEntity(e);
 //			new Gui();
 			long time=System.nanoTime();//Frametime for debug
 			EventManager.call(new Initialization());
 			while ( !GLFW.glfwWindowShouldClose(window) ) {
 				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				//TEMP Entity Test
-				e.render(render);
-				e.update();
+//				e.render(render);
+//				e.update();
 				
 				//Level Rendering
 				if(currlevel!=null) {
@@ -271,15 +271,23 @@ public class Main {
 			switch(key) {
 			case GLFW.GLFW_KEY_W:
 				py-=10;
+				if(e.motionY>-10)
+					e.motionY-=5;
 				break;
 			case GLFW.GLFW_KEY_S:
 				py+=10;
+				if(e.motionY<10)
+					e.motionY+=5;
 				break;
 			case GLFW.GLFW_KEY_A:
 				px-=10;
+				if(e.motionX>-10)
+					e.motionX-=5;
 				break;
 			case GLFW.GLFW_KEY_D:
 				px+=10;
+				if(e.motionX<10)
+					e.motionX+=5;
 				break;
 			}
 			EventManager.call(new KeyPressed(key,scancode,action,mods));

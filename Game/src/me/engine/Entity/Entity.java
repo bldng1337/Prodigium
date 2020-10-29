@@ -18,7 +18,7 @@ public class Entity{
 	/**
 	 * Stats of that Entity
 	 */
-	public float x,y,health,speed;
+	public float x,y,health,speed,motionX,motionY;
 	/**
 	 * The Dimension of the Entity
 	 */
