@@ -1,5 +1,6 @@
 package me.engine.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.joml.Matrix4f;
@@ -34,18 +35,15 @@ public class ChunkRenderer {
 		projection=Renderer.projection;
 		scale=Renderer.scale;
 		c=Engine.getEngine().getRender().c;
-		s=Engine.getEngine().getRender().s;
+		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.vert"));
 	}
-	
-	
-	
 	
 	/**
 	 * Renders all Buffer in the Renderlist
 	 */
 	public void render() {
 		for(VertexBuffer vb:renderlist) {
-			Engine.getEngine().getRender().s.bind();
+			s.bind();
 			Engine.getEngine().getRender().s.useUniform("projection", Renderer.projection);
 			Engine.getEngine().getRender().s.useUniform("scale", Renderer.scale);
 			Engine.getEngine().getRender().s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
@@ -55,7 +53,7 @@ public class ChunkRenderer {
 			vb.bind(1);
 			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
 			vb.unbind();
-			Engine.getEngine().getRender().s.unbind();
+			s.unbind();
 		}
 		
 	}

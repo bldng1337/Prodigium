@@ -28,4 +28,10 @@ public class Tile {
 		this.collideable=collideable;
 	}
 	
+	public boolean isCollideable() {
+		return collideable;
+	}
+	public long getTexid() {
+		return texid;
+	}
 }
