@@ -2,13 +2,11 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.IntBuffer;
-import java.util.MissingFormatWidthException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -34,7 +32,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
-import me.engine.Main;
+import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
 import me.engine.Utils.FileUtils;
@@ -123,9 +121,9 @@ public class EntityEditor extends Entity{
 		texturewidth=new float[Animation.values().length];
 		textureSaveid=new String[Animation.values().length];
 		try {
-			toTexture(new File(Main.dir+"\\Assets\\Textures\\missing.png"), 0);
+			toTexture(new File(Engine.dir+"\\Assets\\Textures\\missing.png"), 0);
 		} catch (IOException e) {
-			Main.log.warning(e.toString());
+			Engine.log.warning("Error loading Texture"+e.toString());
 		}
 		textureSaveid[0]="";
 		missingtxt=textureids[0];
@@ -146,7 +144,7 @@ public class EntityEditor extends Entity{
 		v=new VertexBuffer(false);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 0, 3);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 1, 3);
-		s=new Shader(new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Main.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
+		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 		scriptID=entityID.replace("Entities", "Scripts")+":js";
 		entityID+=":json";
 	}
@@ -415,7 +413,7 @@ public class EntityEditor extends Entity{
 	 * Renders the ImGui Menus
 	 */
 	public void imGui() {
-		ImGui.setNextWindowSize(400, Main.getM().getWindowheight());
+		ImGui.setNextWindowSize(400, Engine.getEngine().getWindowheight());
 		ImGui.begin("Editor");
 		if(ImGui.collapsingHeader("Attributes")) {
 			ImString imname=new ImString(name,50);
@@ -476,7 +474,7 @@ public class EntityEditor extends Entity{
 		        		try {
 							toTexture(showFilePicker("Textures","png","gif"), i);
 						} catch (IOException e) {
-							Main.log.severe(e.toString());
+							Engine.log.severe(e.toString());
 						}
 		        	ImGui.textDisabled("(?)");
 		        	if(ImGui.isItemHovered()) {
@@ -530,7 +528,7 @@ public class EntityEditor extends Entity{
         sy=(int) ImGui.getWindowPosY();
         if(ImGui.button("Compile")) {
         	try {
-				script=Main.getM().getScriptManager().compileScript(code.get(),"ECMAScript",sc->{sc.put("Entity", this);sc.put("e", this);});
+				script=Engine.getEngine().getScriptManager().compileScript(code.get(),"ECMAScript",sc->{sc.put("Entity", this);sc.put("e", this);});
 				editorflags=0;
 			} catch (ScriptException e) {
 				errorline=0;
@@ -540,7 +538,7 @@ public class EntityEditor extends Entity{
 				e.printStackTrace();
 			}
         }
-        if(ImGui.inputTextMultiline("Code", code, (float)Main.getM().getWindowwidth(),(float)Main.getM().getWindowheight(),ImGuiInputTextFlags.AllowTabInput))
+        if(ImGui.inputTextMultiline("Code", code, (float)Engine.getEngine().getWindowwidth(),(float)Engine.getEngine().getWindowheight(),ImGuiInputTextFlags.AllowTabInput))
         	editorflags=editorflags|ImGuiWindowFlags.UnsavedDocument;
         ImGui.end();
         if(!error.isEmpty()) {
@@ -558,7 +556,7 @@ public class EntityEditor extends Entity{
         	ImGui.end();
         }
 	}
-	File lastdir=Main.dir;
+	File lastdir=Engine.dir;
 	/**
 	 * Displays a FilePicker
 	 * @return The File the User chose

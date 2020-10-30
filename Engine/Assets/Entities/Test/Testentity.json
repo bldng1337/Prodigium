@@ -1,0 +1,16 @@
+{
+  "Name": "TEST",
+  "Animation": {
+    "INTERACTION":"Textures.skelett.Skelett_wakeln:gif",
+	"DEATH":"Textures.skelett.Skelett_tot:gif",
+	"ATTACKING":"Textures.skelett.Skelett_angriff:gif",
+	"IDLE":"Textures.skelett.Skelett_wakeln:gif",
+	"RUNNING":"Textures.skelett.Skelett_gehen:gif"
+  },
+  "Health": 20.5,
+  "Width": 140,
+  "Height": 140,
+  "Speed": 20.5,
+  "Script": "Scripts.Test.Test:js",
+  "FrameDelay": 120
+}

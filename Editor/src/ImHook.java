@@ -1,4 +1,4 @@
-import me.engine.Main;
+import me.engine.Engine;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.EventTarget.priority;
@@ -15,7 +15,7 @@ public class ImHook {
 	 */
 	public ImHook() {
 		EventManager.register(this);
-		new Main();
+		new Engine();
 	}
 	
 	public static void main(String[] args) {

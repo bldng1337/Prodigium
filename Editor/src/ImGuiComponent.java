@@ -17,7 +17,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
-import me.engine.Main;
+import me.engine.Engine;
 
 public class ImGuiComponent {
 
@@ -30,7 +30,7 @@ public class ImGuiComponent {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     public ImGuiComponent() {
-        this.glfwWindow = Main.getM().getWindow();
+        this.glfwWindow = Engine.getEngine().getWindow();
     }
 
     // Initialize Dear ImGui.
@@ -47,7 +47,7 @@ public class ImGuiComponent {
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
         io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.setIniFilename("Assets\\settings.ini"); // We don't want to save .ini file
+        io.setIniFilename("settings.ini");
         // ------------------------------------------------------------
         // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
         final int[] keyMap = new int[ImGuiKey.COUNT];
@@ -172,7 +172,7 @@ public class ImGuiComponent {
 
         // Fonts from file/memory example
         // We can add new fonts from the file system
-        fontAtlas.addFontFromFileTTF("Assets\\Fonts\\Roboto-Regular.ttf", 16, fontConfig);
+        fontAtlas.addFontFromFileTTF("Roboto-Regular.ttf", 16, fontConfig);
 //        fontAtlas.addFontFromFileTTF("src/test/resources/Righteous-Regular.ttf", 16, fontConfig);
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
@@ -198,7 +198,7 @@ public class ImGuiComponent {
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame();
         ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);
-        ImGui.setNextWindowSize(Main.getM().getWindowwidth(), Main.getM().getWindowheight());
+        ImGui.setNextWindowSize(Engine.getEngine().getWindowwidth(), Engine.getEngine().getWindowheight());
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
         int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
@@ -210,7 +210,7 @@ public class ImGuiComponent {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
         ImGui.end();
         ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.FirstUseEver);
-        ImGui.setNextWindowSize(Main.getM().getWindowwidth(), Main.getM().getWindowheight());
+        ImGui.setNextWindowSize(Engine.getEngine().getWindowwidth(), Engine.getEngine().getWindowheight());
         ImGui.begin("render", new ImBoolean(true));
         ImGui.end();
         ImGui.setNextWindowBgAlpha(1f);
@@ -225,8 +225,8 @@ public class ImGuiComponent {
 
     private void startFrame(final float deltaTime) {
         // Get window properties and mouse position
-        float[] winWidth = {Main.getM().getWindowwidth()};
-        float[] winHeight = {Main.getM().getWindowheight()};
+        float[] winWidth = {Engine.getEngine().getWindowwidth()};
+        float[] winHeight = {Engine.getEngine().getWindowheight()};
         double[] mousePosX = {0};
         double[] mousePosY = {0};
         GLFW.glfwGetCursorPos(glfwWindow, mousePosX, mousePosY);
