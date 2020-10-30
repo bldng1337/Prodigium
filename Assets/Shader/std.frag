@@ -10,8 +10,9 @@ uniform sampler2D u_Textures[7];
 void main()
 {
 	int index=int(v_Texture.z);
-	//o_Color=vec4(v_Texture.xyz,0.0);
-	
-	
-	o_Color=texture(u_Textures[index],v_Texture.xy);
+	if(index>7){
+		o_Color=v_Color;
+	}else{
+		o_Color=texture(u_Textures[index],v_Texture.xy)*v_Color;
+	}
 }
