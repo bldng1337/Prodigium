@@ -360,6 +360,8 @@ public class Engine {
 	}
 
 	public void setCurrlevel(GameLevel currlevel) {
+		if(this.currlevel!=null)
+			this.currlevel.destroy();
 		this.currlevel = currlevel;
 	}
 
@@ -368,7 +370,8 @@ public class Engine {
 	}
 
 	public void setGuiscreen(GuiScreen guiscreen) {
-		this.guiscreen.destroy();
+		if(this.guiscreen!=null)
+			this.guiscreen.destroy();
 		this.guiscreen = guiscreen;
 	}
 

@@ -22,15 +22,28 @@ public class KeyPressed extends Event{
 	public String getKey() {
 		return GLFW.glfwGetKeyName(key, scancode);
 	}
+	
 	public Action getAction() {
-		return action==GLFW.GLFW_PRESS?Action.PRESSED:Action.RELEASED;
+		for(Action a:Action.values()) {
+			if(a.action==action)
+				return a;
+		}
+		return Action.UNKOWN;
+	}
+	
+	public boolean isKeyDown() {
+		return action==GLFW.GLFW_PRESS||action==GLFW.GLFW_REPEAT;
 	}
 	
 	public int getMods() {
 		return mods;
 	}
 
-	enum Action{
-		PRESSED,RELEASED;
+	public enum Action{
+		PRESSED(GLFW.GLFW_PRESS),RELEASED(GLFW.GLFW_REPEAT),REPEAT(GLFW.GLFW_RELEASE),UNKOWN(-1);
+		int action;
+		Action(int i){
+			action=i;
+		}
 	}
 }

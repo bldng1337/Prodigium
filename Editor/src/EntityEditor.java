@@ -30,6 +30,7 @@ import com.google.gson.stream.JsonWriter;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
+import imgui.flag.ImGuiSliderFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import me.engine.Engine;
@@ -144,7 +145,7 @@ public class EntityEditor extends Entity{
 		v=new VertexBuffer(false);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 0, 3);
 		v.createBuffer(new float[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 1, 3);
-		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
+		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.vert"));
 		scriptID=entityID.replace("Entities", "Scripts")+":js";
 		entityID+=":json";
 	}
@@ -441,6 +442,7 @@ public class EntityEditor extends Entity{
 	        if(ImGui.sliderInt("AnimationDelay", imframe, 1, 500))
 	        	framedelay=imframe[0];
 	        float[] imhealth= {health};
+	        
 	        if(ImGui.sliderFloat("Health", imhealth, 1, 3000))
 	        	health=imhealth[0];
 	        float[] imspeed= {speed};
@@ -517,7 +519,6 @@ public class EntityEditor extends Entity{
         }
         ImGui.end();
         ImGui.setNextWindowBgAlpha(1f);
-        
         
         
         //Code Editor

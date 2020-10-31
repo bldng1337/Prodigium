@@ -108,6 +108,11 @@ public class GameLevel {
 	private Vector2f center(Rectanglef rect) {
 		return new Vector2f((rect.maxX+rect.minX)/2, (rect.maxY+rect.minY)/2);
 	}
+
+	public void destroy() {
+		for(Entity e: entitylist)
+			e.destroy();
+	}
 	
 	
 	
