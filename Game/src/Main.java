@@ -4,8 +4,10 @@ import me.engine.Engine;
 import me.engine.Entity.Entity;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
+import me.engine.Utils.Event.EventTarget.priority;
 import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
+import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Levels.SimpleLevel.SimpleLevel;
 
 public class Main {
@@ -22,29 +24,65 @@ public class Main {
 	@EventTarget
 	public void oninit(Initialization i) {
 		e=Engine.getEngine().getEntityManager().newEntity("Entities.Test.Testentity:json");
+		e.x=500;
+		e.y=500;
 		Engine.getEngine().setCurrlevel(new SimpleLevel(150, "Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png","Textures.Test.testground:png"));
 		Engine.getEngine().getCurrlevel().addEntity(e);
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
 	}
+	int xmo=0;
+	int ymo=0;
+	
+	@EventTarget(p=priority.HIGH)
+	public void onUpdate(Update u) {
+		if(Math.abs(e.motionX)<10)
+			e.motionX+=xmo*2;
+		if(Math.abs(e.motionY)<10)
+			e.motionY+=ymo*2;
+//		if(xmo!=0&&ymo!=0) {
+//			xmo/=1.4;
+//			ymo/=1.4;
+//		}
+	}
+	
 	
 	@EventTarget
 	public void onKeyPressed(KeyPressed k) {
 		switch(k.getKey()) {
+		case "r":
+			if(k.isKeyDown()) {
+				
+			}
+			break;
 		case "w":
-			if(e.motionY>-10)
-				e.motionY-=5;
+			if(k.isKeyDown()) {
+				ymo=-1;
+			}else {
+				ymo=0;
+			}
 			break;
 		case "a":
-			if(e.motionX>-10)
-				e.motionX-=5;
+			if(k.isKeyDown()) {
+				xmo=-1;
+			}else {
+				xmo=0;
+			}
+			e.setRenderflipped(true);
 			break;
 		case "s":
-			if(e.motionY<10)
-				e.motionY+=5;
+			if(k.isKeyDown()) {
+				ymo=1;
+			}else {
+				ymo=0;
+			}
 			break;
 		case "d":
-			if(e.motionX<10)
-				e.motionX+=5;
+			if(k.isKeyDown()) {
+				xmo=1;
+			}else {
+				xmo=0;
+			}
+			e.setRenderflipped(false);
 			break;
 		}
 	}

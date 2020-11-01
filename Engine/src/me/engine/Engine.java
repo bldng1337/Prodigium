@@ -29,6 +29,7 @@ import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.LoggerOutputStream;
+import me.engine.Utils.Profiler;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Texture;
 import me.engine.Utils.Event.EventManager;
@@ -84,6 +85,7 @@ public class Engine {
 	EntityManager em;
 	GameLevel currlevel;
 	GuiScreen guiscreen;
+	Profiler p;
 	
 	/**
 	 * Mouse Coordinates
@@ -188,40 +190,90 @@ public class Engine {
 			Callback debugProc = null;//GLUtil.setupDebugMessageCallback();
 			//Set an static transform on the camera so it centers
 			render.c.getStati().set(1920/2f, 1080/2f);
-			float dt=0;
-			long time=System.nanoTime();//Frametime for debug
 			//Call Event init
 			EventManager.call(new Initialization());
-			while ( !GLFW.glfwWindowShouldClose(window) ) {
-				GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-				
-				//Level Rendering
-				if(currlevel!=null) {
-					currlevel.render();
-					currlevel.update();
-					chunkrenderer.render();
-					render.flush();
-				}
-				//Call Event Update
-				EventManager.call(new Update());
-				//Call Event Render
-				EventManager.call(new Render(dt));
-				render.flush();
-				//Call Event Render2D
-				EventManager.call(new Render2D(dt));
-				uirender.flush();
-				GLFW.glfwSwapBuffers(window); // swap the color buffers
-				GLFW.glfwPollEvents(); // Poll for window events.
-				final float frametime=(System.nanoTime()-time)/1000000f;
-				log.finest(()->"Frametime "+frametime+"ms");// Log Frametime
-				dt=(float)(System.nanoTime()-time)/1000000000f;
-				time=System.nanoTime();//Frametime for debug
-			}
+			if(p!=null)
+				GLFW.glfwSwapInterval(0);
+			if(p==null)
+				mainGameLoop();
+			else
+				mainGameLoopwithProfiling();
+			
 			//Free Resources
 			if(debugProc!=null)
 				debugProc.free();
 			g.close();
 	}
+	
+	public void mainGameLoop() {
+		float dt=0;
+		long time=System.nanoTime();//Frametime for debug
+		while ( !GLFW.glfwWindowShouldClose(window) ) {
+			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+			
+			//Level Rendering
+			if(currlevel!=null) {
+				currlevel.render();
+				currlevel.update();
+				chunkrenderer.render();
+				render.flush();
+			}
+			//Call Event Update
+			EventManager.call(new Update());
+			//Call Event Render
+			EventManager.call(new Render(dt));
+			render.flush();
+			//Call Event Render2D
+			EventManager.call(new Render2D(dt));
+			uirender.flush();
+			GLFW.glfwSwapBuffers(window); // swap the color buffers
+			GLFW.glfwPollEvents(); // Poll for window events.
+			dt=(float)(System.nanoTime()-time)/1000000000f;
+			time=System.nanoTime();
+		}
+	}
+	
+	public void mainGameLoopwithProfiling() {
+		float dt=0;
+		long time=System.nanoTime();//Frametime for debug
+		while ( !GLFW.glfwWindowShouldClose(window) ) {
+			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+			//Call Event Update
+			p.time(()->{
+				EventManager.call(new Update());
+			}, "Update");
+			//Level Rendering
+			if(currlevel!=null) {
+				p.time(()->{
+					currlevel.render();
+					currlevel.update();
+				}, "ChunkUpdating");
+				p.time(()->{
+					chunkrenderer.render();
+					render.flush();
+				}, "ChunkRendering");
+			}
+			//Call Event Render
+			p.startTimer("Render");
+			EventManager.call(new Render(dt));
+			render.flush();
+			p.stopTimer("Render");
+			//Call Event Render2D
+			p.startTimer("Render2D");
+			EventManager.call(new Render2D(dt));
+			uirender.flush();
+			p.stopTimer("Render2D");
+			p.startTimer("End");
+			GLFW.glfwSwapBuffers(window); // swap the color buffers
+			p.stopTimer("End");
+			GLFW.glfwPollEvents(); // Poll for window events.
+			dt=(float)(System.nanoTime()-time)/1000000000f;
+			time=System.nanoTime();
+		}
+	}
+	
+	
+	
 	
 	/**
 	 * Initializes Callbacks for Window Clicks, Keyboard Presses
@@ -380,6 +432,10 @@ public class Engine {
 	 */
 	public long getWindow() {
 		return window;
+	}
+
+	public void setProfiler(Profiler p) {
+		this.p = p;
 	}
 	
 }
