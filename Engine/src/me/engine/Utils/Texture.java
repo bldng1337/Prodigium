@@ -183,12 +183,12 @@ public class Texture {
 			ib.put(a << 24 | b << 16 | g << 8 | r);
 		}
 		ib.flip();
-		try {
-			ImageIO.write(catlas, "png", new File(Engine.dir+"y.png"));
-			System.out.println(Engine.dir+"y.png");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			ImageIO.write(catlas, "png", new File(Engine.dir+"y.png"));
+//			System.out.println(Engine.dir+"y.png");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 		cy+=maxheight;
 		atlases[atlas]=GL45.glGenTextures();

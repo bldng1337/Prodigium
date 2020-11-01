@@ -17,6 +17,8 @@ public class Pathfinder {
 		open.add(new Searchtile(begin,dist(begin,end),0));
 		Searchtile current;
 		while(true) {
+			if(open.isEmpty())
+				return new Vector2i[0];
 			current=open.remove();
 			closed.add(current);
 			if(current.pos.equals(end.x, end.y))
@@ -28,13 +30,11 @@ public class Pathfinder {
 					   (x==0&&y==0)||
 					   Engine.getEngine().getCurrlevel().getTile(current.pos.x+x, current.pos.y+y).isCollideable())
 						continue;
-					
 					if(x!=0&&y!=0) {
 						if(Engine.getEngine().getCurrlevel().getTile(current.pos.x, current.pos.y+y).isCollideable()&&
 							Engine.getEngine().getCurrlevel().getTile(current.pos.x+x, current.pos.y).isCollideable())
 							continue;
 					}
-					
 					
 					
 					Searchtile neighbour=search(open, current.pos.x+x, current.pos.y+y);
