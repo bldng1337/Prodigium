@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "Name": "TEST",
   "Animation": {
     "INTERACTION":"Textures.skelett.Skelett_wakeln:gif",
@@ -13,4 +14,20 @@
   "Speed": 3,
   "Script": "Scripts.Test.Test:js",
   "FrameDelay": 90
+=======
+   "Name":"TEST",
+   "Animation":{
+      "INTERACTION":"Textures.skelett.Skelett_wakeln:gif",
+      "DEATH":"Textures.skelett.Skelett_tot:gif",
+      "ATTACKING":"Textures.skelett.Skelett_angriff:gif",
+      "IDLE":"Textures.skelett.Skelett_wakeln:gif",
+      "RUNNING":"Textures.skelett.Skelett_gehen:gif"
+   },
+   "Health":20.5,
+   "Width":90.0,
+   "Height":90.0,
+   "Speed":20.5,
+   "Script":"Scripts.Unamed_Entity:js",
+   "FrameDelay":120
+>>>>>>> refs/remotes/origin/main
 }

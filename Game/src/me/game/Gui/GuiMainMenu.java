@@ -3,9 +3,9 @@ package me.game.Gui;
 import me.engine.Gui.Button;
 import me.engine.Gui.GuiScreen;
 
-public class Gui extends GuiScreen
+public class GuiMainMenu extends GuiScreen
 {
-	public Gui() {
+	public GuiMainMenu() {
 		initGui();
 	}
 	
@@ -13,7 +13,7 @@ public class Gui extends GuiScreen
 	public void performAction(int action) {
 		switch (action) {
 			case 0:
-				System.out.println("button clicked");
+				//
 				break;
 		}
 	}
