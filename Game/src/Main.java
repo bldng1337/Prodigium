@@ -8,7 +8,8 @@ import me.engine.Utils.Event.EventTarget.priority;
 import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
 import me.engine.Utils.Event.Events.Update;
-import me.engine.World.Levels.SimpleLevel.SimpleLevel;
+import me.engine.World.Levels.Maze.MazeLevel;
+import me.game.Gui.GuiMainMenu;
 
 public class Main {
 	Entity e;
@@ -24,11 +25,12 @@ public class Main {
 	@EventTarget
 	public void oninit(Initialization i) {
 		e=Engine.getEngine().getEntityManager().newEntity("Entities.Test.Testentity:json");
-		e.x=500;
-		e.y=500;
-		Engine.getEngine().setCurrlevel(new SimpleLevel(150, "Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png","Textures.Test.testground:png"));
+		e.x=1000;
+		e.y=1000;
+		Engine.getEngine().setCurrlevel(new MazeLevel(150));
 		Engine.getEngine().getCurrlevel().addEntity(e);
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
+		//new GuiMainMenu();
 	}
 	int xmo=0;
 	int ymo=0;

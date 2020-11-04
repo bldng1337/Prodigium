@@ -10,6 +10,7 @@ public class Button
 	final long TEXTURE, HOVER_TEXTURE;
 	boolean hovering = false;
 	
+	//Custom textured button
 	public Button(int id, float x, float y, float width, float height, String textureName) {
 		this.id = id;
 		this.width = width;

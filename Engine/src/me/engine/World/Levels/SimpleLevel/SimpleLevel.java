@@ -11,7 +11,5 @@ public class SimpleLevel extends GameLevel{
 				this.chunks[x][y]=new SimpleChunk(x,y,tiletexture);
 			}
 		}
-		
 	}
-
 }
