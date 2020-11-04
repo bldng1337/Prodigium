@@ -9,11 +9,13 @@ import org.joml.Vector2i;
 import me.engine.Engine;
 import me.engine.Entity.Entity;
 
-public class GameLevel {
+public abstract class GameLevel {
 	/**
 	 * Loaded Entities of this Level
 	 */
 	ArrayList<Entity> entitylist=new ArrayList<>();
+	
+	Entity player;
 	
 	protected Chunk[][] chunks;
 	
@@ -43,8 +45,15 @@ public class GameLevel {
 		}
 	}
 	
+	public abstract void spawnEnemy(int x, int y);
+	
 	public void addEntity(Entity e) {
+		e.setLevel(this);
 		entitylist.add(e);
+	}
+	
+	public void removeEntity(Entity entity) {
+		entitylist.remove(entity);
 	}
 	
 	public void update() {
@@ -76,6 +85,10 @@ public class GameLevel {
 			resolveCollision(e);
 	}
 	
+	public void setPlayer(Entity e) {
+		player=e;
+	}
+	
 	private void resolveCollision(Entity e) {
 		Rectanglef entity=new Rectanglef(e.x,e.y,e.x+e.getWidth(), e.y+e.getHeight());
 		for(int x=(int) (entity.minX/Tile.SIZE-1);x<entity.maxX/Tile.SIZE+1;x++) {
@@ -105,6 +118,10 @@ public class GameLevel {
 	}
 	
 	
+	public Entity getPlayer() {
+		return player;
+	}
+
 	private Vector2f center(Rectanglef rect) {
 		return new Vector2f((rect.maxX+rect.minX)/2, (rect.maxY+rect.minY)/2);
 	}
@@ -113,8 +130,11 @@ public class GameLevel {
 		for(Entity e: entitylist)
 			e.destroy();
 	}
-	
-	
+
+	public ArrayList<Entity> getEntitys() {
+		return entitylist;
+	}
+
 	
 
 }

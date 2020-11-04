@@ -20,12 +20,21 @@ public class Tile {
 	 */
 	long texid;
 	
+	boolean spawn;
+	
 	public Tile(String tex) {
 		texid=Engine.getEngine().getTex().getTexture(tex);
 	}
+	
 	public Tile(String tex,boolean collideable) {
 		texid=Engine.getEngine().getTex().getTexture(tex);
 		this.collideable=collideable;
+	}
+	
+	public Tile(String tex,boolean collideable,boolean spawn) {
+		texid=Engine.getEngine().getTex().getTexture(tex);
+		this.collideable=collideable;
+		this.spawn=spawn;
 	}
 	
 	public boolean isCollideable() {

@@ -27,6 +27,7 @@ import me.engine.Entity.EntityManager;
 import me.engine.Gui.GuiScreen;
 import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
+import me.engine.Utils.FontRenderer;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.LoggerOutputStream;
 import me.engine.Utils.Profiler;
@@ -86,6 +87,7 @@ public class Engine {
 	GameLevel currlevel;
 	GuiScreen guiscreen;
 	Profiler p;
+	FontRenderer f;
 	
 	/**
 	 * Mouse Coordinates
@@ -169,7 +171,7 @@ public class Engine {
 			render=new Renderer();
 			uirender=new Renderer();
 			chunkrenderer=new ChunkRenderer();
-			
+			f=new FontRenderer();
 			//Setup Entity System
 			sm=new ScriptManager();
 			em=new EntityManager(sm);
@@ -192,6 +194,7 @@ public class Engine {
 			render.c.getStati().set(1920/2f, 1080/2f);
 			//Call Event init
 			EventManager.call(new Initialization());
+			tex.flush();
 			if(p!=null)
 				GLFW.glfwSwapInterval(0);
 			if(p==null)

@@ -106,5 +106,12 @@ public class EntityManager {
 		e.script=sm.getScript(ndata.scriptID, sc->{sc.put("Entity", e);sc.put("e", e);});
 		return e;
 	}
+	
+	public Entity newEntity(String id,int x,int y) {
+		Entity ret=newEntity(id);
+		ret.x=x;
+		ret.y=y;
+		return ret;
+	}
 
 }

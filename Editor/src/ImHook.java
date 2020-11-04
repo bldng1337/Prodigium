@@ -31,8 +31,10 @@ public class ImHook {
 	
 	@EventTarget(p=priority.LAST)
 	public void onRender(Render2D r) {
+		try {
 		enedit.render(1920/2, 1080/2);
 		imcomp.update(r.getDeltatime(), enedit::imGui);
+		}catch(Exception e) {}
 	}
 
 }

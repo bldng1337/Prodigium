@@ -58,7 +58,6 @@ public class Texture {
 		catlas=new BufferedImage(maxSize, maxSize, BufferedImage.TYPE_4BYTE_ABGR);
 		msize=maxSize;
 		registerTextures();
-		flush();
 	}
 	
 	/**
@@ -100,14 +99,36 @@ public class Texture {
 		return 0;
 	} 
 	
+	public void registerTexture(BufferedImage bfi,String ID) {
+		Graphics g=catlas.getGraphics();
+		if(cx+bfi.getWidth()>msize) {
+	    	cy+=maxheight;
+	    	maxheight=0;
+	    	cx=0;
+	    }
+	    if(cy+bfi.getHeight()>msize) {
+	    	flush();
+	    	registerTexture(bfi,ID);
+	    	return;
+	    }
+		g.drawImage(bfi, cx, cy, null);
+		int x=cx;
+		cx+=bfi.getWidth()+1;
+		if(maxheight<bfi.getHeight())
+	    	maxheight=bfi.getHeight();
+		texturemap.put(ID, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, ID));
+	}
+	
 	/**
 	 * Registers an Texture from an path
 	 * @param f
 	 * @throws IOException
 	 */
-	private void registerTexture(File f) throws IOException {
+	public void registerTexture(File f) throws IOException {
 		GlStateManager.enable(GL45.GL_TEXTURE_2D);
 		String p=FileUtils.getIDfromFile(f);
+		if(f.getName().endsWith(".ttf"))
+			return;
 		if(!f.exists())
 			throw new RuntimeException("Texture missing "+f.getAbsolutePath());
 		Graphics g=catlas.getGraphics();
@@ -183,12 +204,12 @@ public class Texture {
 			ib.put(a << 24 | b << 16 | g << 8 | r);
 		}
 		ib.flip();
-//		try {
-//			ImageIO.write(catlas, "png", new File(Engine.dir+"y.png"));
-//			System.out.println(Engine.dir+"y.png");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ImageIO.write(catlas, "png", new File(Engine.dir.getParentFile()+"\\y"+atlas+".png"));
+			System.out.println(Engine.dir+"y.png");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		cy+=maxheight;
 		atlases[atlas]=GL45.glGenTextures();

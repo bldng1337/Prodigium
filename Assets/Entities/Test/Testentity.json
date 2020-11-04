@@ -8,9 +8,9 @@
 	"RUNNING":"Textures.skelett.Skelett_gehen:gif"
   },
   "Health": 20.5,
-  "Width": 140,
-  "Height": 140,
-  "Speed": 20.5,
+  "Width": 90,
+  "Height": 90,
+  "Speed": 3,
   "Script": "Scripts.Test.Test:js",
-  "FrameDelay": 120
+  "FrameDelay": 90
 }

@@ -34,8 +34,10 @@ public class Chunk {
 	 * The Buffer where the Tiles get saved onto if the Chunk is loaded
 	 */
 	VertexBuffer render;
+	GameLevel l;
 	
-	public Chunk(int x,int y) {
+	public Chunk(int x,int y,GameLevel lvl) {
+		l=lvl;
 		pos=new Vector2i(x, y);
 		tiles=new Tile[SIZE][SIZE];
 	}
@@ -77,6 +79,8 @@ public class Chunk {
 		int vi=0,ti=0;
 		for(int cx=0;cx<SIZE;cx++) {
 			for(int cy=0;cy<SIZE;cy++) {
+				if(tiles[cx][cy].spawn)
+					l.spawnEnemy(pos.x+cx*Tile.SIZE,pos.y+cy*Tile.SIZE);
 				float tx=Texture.getx(tiles[cx][cy].texid);
 				float ty=Texture.gety(tiles[cx][cy].texid);
 				float tx2=Texture.getx(tiles[cx][cy].texid)+Texture.getdx(tiles[cx][cy].texid);
