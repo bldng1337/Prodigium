@@ -22,12 +22,12 @@ import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Tile;
 import me.engine.World.Levels.Maze.MazeLevel;
 import me.engine.World.Levels.SimpleLevel.SimpleLevel;
+import me.game.Gui.GuiMainMenu;
 
 public class Main {
 	Entity e;
 	public Main() {
 		EventManager.register(this);
-		Engine.dir=new File("C:\\Users\\Christian\\git\\Prodigium");
 		new Engine();
 	}
 	
@@ -45,15 +45,16 @@ public class Main {
 		e=Engine.getEngine().getEntityManager().newEntity("Entities.TestPlayer:json");
 		e.x=500;
 		e.y=500;
-		Engine.getEngine().setCurrlevel(new MazeLevel(50));
-		Engine.getEngine().getCurrlevel().setPlayer(e);
-		Engine.getEngine().getCurrlevel().addEntity(e);
-		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
-		pos=Pathfinder.AStar(new Vector2i((int)e.x/Tile.SIZE, (int)e.y/Tile.SIZE), new Vector2i(60,60));
-		posindex=0;
+//		Engine.getEngine().setCurrlevel(new MazeLevel(50));
+//		Engine.getEngine().getCurrlevel().setPlayer(e);
+//		Engine.getEngine().getCurrlevel().addEntity(e);
+//		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
+//		pos=Pathfinder.AStar(new Vector2i((int)e.x/Tile.SIZE, (int)e.y/Tile.SIZE), new Vector2i(60,60));
+//		posindex=0;
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
+		Engine.getEngine().setGuiscreen(new GuiMainMenu());
 	}
 	
 	@EventTarget
@@ -65,6 +66,8 @@ public class Main {
 	
 	@EventTarget
 	public void onRender(Render2D r) {
+		if(Engine.getEngine().getCurrlevel()==null)
+			return;
 		Engine.getEngine().getUIrender().setTexCoords(0.5f, 0.5f, 0.5f, 0.5f);
 		float rendersize=300;
 		int mapsize=60;
