@@ -1,6 +1,7 @@
 package me.engine.World;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.joml.Rectanglef;
 import org.joml.Vector2f;
@@ -63,6 +64,14 @@ public abstract class GameLevel {
 			e.update();
 			updatemotion(e);
 		}
+		if(entitylist.size()<40&&player!=null) {
+			Random r=new Random();
+			int x=(int) (r.nextInt(40)-20+player.x);
+			int y=(int) (r.nextInt(40)-20+player.y);
+			if(!getTile(x, y).isCollideable()) {
+				spawnEnemy(x, y);
+			}
+		}
 	}
 	
 	public Tile getTile(int x,int y) {
@@ -106,10 +115,10 @@ public abstract class GameLevel {
 					float intersectx=collision.lengthX()*((ce.x-ct.x)>0?1:-1);
 					float intersecty=collision.lengthY()*((ce.y-ct.y)>0?1:-1);
 					if(Math.abs(intersectx)<Math.abs(intersecty)) {
-						e.motionX=0;
+//						e.motionX=0;
 						e.x+=intersectx;
 					}else {
-						e.motionY=0;
+//						e.motionY=0;
 						e.y+=intersecty;
 					}
 				}

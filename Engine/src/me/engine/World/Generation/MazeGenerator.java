@@ -23,7 +23,7 @@ public class MazeGenerator
 	public Tile[][] generate() {
 		tiles = new Tile[width][height];
 		Deque<Vector2i> stack = new LinkedList<>();
-		
+		String[] s= {"Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png"};
 		Random r = new Random();
 		stack.push(new Vector2i(0, width/2));
 		Vector2i currentCell = stack.peek();
@@ -60,8 +60,8 @@ public class MazeGenerator
 			Vector2i median = new Vector2i();
 			currentCell.add(randN, median);
 			median.set(median.x/2, median.y/2);
-			tiles[median.x][median.y] = new Tile("Textures.Boden.Bodenplatte_1:png", false);
-			tiles[currentCell.x][currentCell.y] = new Tile("Textures.Boden.Bodenplatte_1:png", false);
+			tiles[median.x][median.y] = new Tile(s[r.nextInt(s.length)], false);
+			tiles[currentCell.x][currentCell.y] = new Tile(s[r.nextInt(s.length)], false);
 			
 			//Set the current cell for the next cycle
 			currentCell = stack.peek();

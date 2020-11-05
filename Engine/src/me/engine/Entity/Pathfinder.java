@@ -54,7 +54,20 @@ public class Pathfinder {
 			}
 		}
 		ArrayList<Vector2i> ret=new ArrayList<>();
+		ret.add(current.pos);
+		current=current.parent;
 		while(current!=null) {
+			Vector2i lastpos=ret.get(ret.size()-1);
+			Vector2i curr=current.pos;
+			if(curr.x-lastpos.x!=0&&curr.y-lastpos.y!=0) {
+				boolean coll=Engine.getEngine().getCurrlevel().getTile(curr.x, lastpos.y).isCollideable();
+				boolean coll2=Engine.getEngine().getCurrlevel().getTile(lastpos.x, curr.y).isCollideable();
+				if(!coll&&coll2) {
+					ret.add(new Vector2i(curr.x, lastpos.y));
+				}else if(coll&&!coll2){
+					ret.add(new Vector2i(lastpos.x, curr.y));
+				}
+			}
 			ret.add(current.pos);
 			current=current.parent;
 		}

@@ -18,7 +18,7 @@ public class SimpleChunk extends Chunk{
 					}
 				}else {
 					int txt=(int) (Math.random()*(tiletexture.length-1));
-					getTiles()[xx][yy]=new Tile(tiletexture[txt],false,Math.random()>0.999);
+					getTiles()[xx][yy]=new Tile(tiletexture[txt],false);
 				}
 			}
 		}

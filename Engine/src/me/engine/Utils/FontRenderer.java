@@ -26,6 +26,14 @@ public class FontRenderer {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+		for(int i=48;i<124;i++)
+			System.out.println((char)i);
+		System.out.println((int)'ä');
+		System.out.println((int)'ö');
+		System.out.println((int)'ü');
+		System.out.println((int)'Ä');
+		System.out.println((int)'Ö');
+		System.out.println((int)'Ü');
 		
 		for(char c:abc.toCharArray()) {
 			BufferedImage bfi=new BufferedImage(200, 200, BufferedImage.TYPE_4BYTE_ABGR);

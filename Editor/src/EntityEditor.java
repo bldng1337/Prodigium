@@ -417,7 +417,7 @@ public class EntityEditor extends Entity{
 		ImGui.setNextWindowSize(400, Engine.getEngine().getWindowheight());
 		ImGui.begin("Editor");
 		if(ImGui.collapsingHeader("Attributes")) {
-			ImString imname=new ImString(name,50);
+			ImString imname=new ImString(name,300);
 			if(ImGui.inputText("Name", imname)) {
 				if(imname.get().isEmpty()) {
 					entityID=entityID.replace(name, "Unamed_Entity");
@@ -435,7 +435,7 @@ public class EntityEditor extends Entity{
 				}
 				name=imname.get();
 			}
-			ImString imentityID=new ImString(entityID,50);
+			ImString imentityID=new ImString(entityID,300);
 			if(ImGui.inputText("EntityID", imentityID))
 				entityID=imentityID.get();
 	        int[] imframe= {framedelay};
@@ -485,7 +485,7 @@ public class EntityEditor extends Entity{
 			        			   "e.g. Assets\\Textures\\Test\\testpng.png becomes Assets.Textures.Test.testpng:png");
 			        	ImGui.endTooltip();
 		        	}
-		        	ImString imtxtid=new ImString(textureSaveid[i],50);
+		        	ImString imtxtid=new ImString(textureSaveid[i],300);
 		    		if(ImGui.inputText("TextureID", imtxtid))
 		    			textureSaveid[i]=imtxtid.get();
 		        	ImGui.treePop();

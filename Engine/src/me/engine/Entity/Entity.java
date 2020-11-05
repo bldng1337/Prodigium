@@ -85,6 +85,10 @@ public class Entity{
 			l.removeEntity(this);
 	}
 	
+	public void damageEntity(float dmg) {
+		health-=dmg;
+	}
+	
 	public float getWidth() {
 		return width;
 	}

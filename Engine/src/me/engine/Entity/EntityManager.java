@@ -80,7 +80,7 @@ public class EntityManager {
 			}
 			entitylist.put(FileUtils.getIDfromFile(f), ndata);
 		} catch (IOException e) {
-			Engine.log.severe(()->"Error loading Entity "+e.toString());
+			Engine.log.severe(()->"Error loading Entity "+f.getName()+" "+e.toString());
 		}
 	}
 	
@@ -102,6 +102,7 @@ public class EntityManager {
 				Engine.log.warning(()->"Error creating Entity "+e1.toString());
 			}
 		}
+		e.speed*=1+(Math.random()-0.5f)/10f;
 		e.currTexture=Animation.IDLE;
 		e.script=sm.getScript(ndata.scriptID, sc->{sc.put("Entity", e);sc.put("e", e);});
 		return e;

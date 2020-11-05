@@ -79,8 +79,8 @@ public class Chunk {
 		int vi=0,ti=0;
 		for(int cx=0;cx<SIZE;cx++) {
 			for(int cy=0;cy<SIZE;cy++) {
-				if(tiles[cx][cy].spawn)
-					l.spawnEnemy(pos.x+cx*Tile.SIZE,pos.y+cy*Tile.SIZE);
+				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
+				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
 				float tx=Texture.getx(tiles[cx][cy].texid);
 				float ty=Texture.gety(tiles[cx][cy].texid);
 				float tx2=Texture.getx(tiles[cx][cy].texid)+Texture.getdx(tiles[cx][cy].texid);
@@ -90,8 +90,6 @@ public class Chunk {
 				ty/=Engine.getEngine().getTex().getMsize();
 				tx2/=Engine.getEngine().getTex().getMsize();
 				ty2/=Engine.getEngine().getTex().getMsize();
-				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
-				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
 				
 				vertecies[vi++]=x;
 				vertecies[vi++]=y+Tile.SIZE;
