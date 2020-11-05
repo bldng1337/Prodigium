@@ -248,6 +248,15 @@ public class Renderer {
 		this.rgba=rgba;
 	}
 	
+	public void setColor(int r,int g,int b,int a) {
+		this.rgba=(a << 24)
+				| (b << 16)
+				| (g << 8)
+				| (r << 0);
+		
+		
+	}
+	
 	public void setTexCoords(float x,float y,float x2,float y2) {
 		texcoords.set(x,y,x2,y2);
 	}
