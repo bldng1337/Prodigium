@@ -58,6 +58,7 @@ public abstract class GameLevel {
 	}
 	
 	Random r=new Random();
+	long time=0;
 	public void update() {
 		for(Entity e:entitylist) {
 			if(Engine.getEngine().getRender().c.getdistfromcamera(e.x, e.y)>3000)
@@ -65,10 +66,16 @@ public abstract class GameLevel {
 			e.update();
 			updatemotion(e);
 		}
-		if(entitylist.size()<40&&player!=null) {
-			int x=(int) (r.nextInt(40)-20+player.x);
-			int y=(int) (r.nextInt(40)-20+player.y);
-			
+		if(entitylist.size()<40&&player!=null&&System.currentTimeMillis()-time>5000) {
+			time=System.currentTimeMillis();
+			int x=(r.nextInt(1000));
+			int y=(r.nextInt(1000));
+			x*=r.nextInt(1)-1;
+			y*=r.nextInt(1)-1;
+			x+=player.x;
+			y+=player.y;
+			if(x<0||y<0)
+				return;
 			if(!getTile(x/Tile.SIZE, y/Tile.SIZE).isCollideable())
 				spawnEnemy(x, y);
 		}

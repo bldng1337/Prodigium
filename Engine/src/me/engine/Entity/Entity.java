@@ -45,6 +45,7 @@ public class Entity{
 	long animationstamp;
 	
 	GameLevel l;
+	float hurttime;
 	
 	boolean renderflipped;
 	
@@ -71,6 +72,11 @@ public class Entity{
 			r.setTexCoords(1, 0, 0, 1);
 		long elapsed=System.currentTimeMillis()-animationstamp;
 		elapsed/=framedelay;
+		if(hurttime>0)
+			hurttime-=0.1f;
+		else hurttime=0;
+//		int d=(int)(255-hurttime*255f);
+		r.setColor(255,(int)(255-hurttime*255f),(int)(255-hurttime*255f),255);
 		r.renderRect(x, y, width, height, getTextureid(), (int)elapsed%Texture.getaniframes(getTextureid()));
 		if(elapsed>Texture.getaniframes(getTextureid()))
 			finishedanimation();
@@ -86,6 +92,7 @@ public class Entity{
 	}
 	
 	public void damageEntity(float dmg) {
+		hurttime=1;
 		health-=dmg;
 	}
 	
