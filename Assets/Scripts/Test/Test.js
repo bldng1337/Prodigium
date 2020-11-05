@@ -7,6 +7,7 @@ function update(){
 	var player=e.getLevel().getPlayer();
 	if(e.intersects(player)){
 		e.setAnimation(Animation.ATTACKING);
+		e.damageEntity(10);
 		e.resetPath();
 		return;
 	}
