@@ -51,8 +51,9 @@ public class MazeChunk extends Chunk
 	private void genRoom(int x,int y,int x2,int y2) {
 		String[] txt = {"Textures.Wand.wand_Banner:png"};
 		String[] s= {"Textures.Test.testground:png"};
-		
-		if(x>1) {
+		if(x==0||y==0)
+			return;
+		if(x>1&&y>1) {
 			for(int yy=y;yy<=y2;yy++) {
 				if((yy>Chunk.SIZE&&yy<1)||((getTiles()[x-1][yy-1].isCollideable()^getTiles()[x-1][yy+1].isCollideable())&&r.nextBoolean()))
 					getTiles()[x][yy] = new Tile(txt[r.nextInt(txt.length)],true);
@@ -63,7 +64,7 @@ public class MazeChunk extends Chunk
 			}
 		}
 	
-		if(x2<Chunk.SIZE-2) {
+		if(x2<Chunk.SIZE-2&&y>1) {
 			for(int yy=y;yy<=y2;yy++) {
 				if((yy>Chunk.SIZE&&yy<1)||(getTiles()[x2+1][yy-1].isCollideable()^getTiles()[x2+1][yy+1].isCollideable())&&r.nextBoolean())
 					getTiles()[x2][yy] = new Tile(txt[r.nextInt(txt.length)],true);
@@ -74,7 +75,7 @@ public class MazeChunk extends Chunk
 			}
 		}
 		
-		if(y>1) {
+		if(y>1&&x>1) {
 			for(int xx=x;xx<=x2;xx++) {
 				if((xx>Chunk.SIZE&&xx<1)||(getTiles()[xx-1][y-1].isCollideable()^getTiles()[xx+1][y-1].isCollideable())&&r.nextBoolean())
 					getTiles()[xx][y] = new Tile(txt[r.nextInt(txt.length)],true);
@@ -85,7 +86,7 @@ public class MazeChunk extends Chunk
 			}
 		}
 		
-		if(y2<Chunk.SIZE-2) {
+		if(y2<Chunk.SIZE-2&&x>1) {
 			for(int xx=x;xx<=x2;xx++) {
 				if((xx>Chunk.SIZE&&xx<1)||(getTiles()[xx-1][y2+1].isCollideable()^getTiles()[xx+1][y2+1].isCollideable())&&r.nextBoolean())
 					getTiles()[xx][y2] = new Tile(txt[r.nextInt(txt.length)],true);

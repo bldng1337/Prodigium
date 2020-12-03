@@ -56,9 +56,9 @@ public class Tile {
 		txt[ti++]=tx;
 		txt[ti++]=ty2;
 		txt[ti++]=atlas;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
+		col[ci++]=1f;
+		col[ci++]=1f;
+		col[ci++]=1f;
 		col[ci++]=1f;
 		
 		vertecies[vi++]=pos.x;
@@ -89,9 +89,9 @@ public class Tile {
 		txt[ti++]=tx;
 		txt[ti++]=ty2;
 		txt[ti++]=atlas;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
+		col[ci++]=1f;
+		col[ci++]=1f;
+		col[ci++]=1f;
 		col[ci++]=1f;
 		
 		vertecies[vi++]=pos.x+Tile.SIZE;
@@ -100,9 +100,9 @@ public class Tile {
 		txt[ti++]=tx2;
 		txt[ti++]=ty2;
 		txt[ti++]=atlas;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
-		col[ci++]=0.5f;
+		col[ci++]=1f;
+		col[ci++]=1f;
+		col[ci++]=1f;
 		col[ci++]=1f;
 		
 		vertecies[vi++]=pos.x+Tile.SIZE;
