@@ -35,7 +35,8 @@ public class ChunkRenderer {
 		projection=Renderer.projection;
 		scale=Renderer.scale;
 		c=Engine.getEngine().getRender().c;
-		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.vert"));
+		s=Engine.getEngine().getRender().s;
+//		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.vert"));
 	}
 	
 	/**
@@ -51,6 +52,7 @@ public class ChunkRenderer {
 			Engine.getEngine().getTex().bind();
 			vb.bind(0);
 			vb.bind(1);
+			vb.bind(2);
 			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
 			vb.unbind();
 			s.unbind();

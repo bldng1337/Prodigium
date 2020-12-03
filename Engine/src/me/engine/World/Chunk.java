@@ -2,6 +2,7 @@ package me.engine.World;
 
 import java.util.Arrays;
 
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import me.engine.Engine;
@@ -74,68 +75,21 @@ public class Chunk {
 	 */
 	public VertexBuffer renderChunk() {
 		VertexBuffer vb=new VertexBuffer(true);
-		float[] vertecies=new float[SIZE*SIZE*18];
-		float[] txt=new float[SIZE*SIZE*18];
-		int vi=0,ti=0;
+		float[] vertecies=new float[SIZE*SIZE*6*3];
+		float[] txt=new float[SIZE*SIZE*6*3];
+		float[] col=new float[SIZE*SIZE*6*4];
+		int i=0;
 		for(int cx=0;cx<SIZE;cx++) {
 			for(int cy=0;cy<SIZE;cy++) {
 				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
 				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
-				float tx=Texture.getx(tiles[cx][cy].texid);
-				float ty=Texture.gety(tiles[cx][cy].texid);
-				float tx2=Texture.getx(tiles[cx][cy].texid)+Texture.getdx(tiles[cx][cy].texid);
-				float ty2=Texture.gety(tiles[cx][cy].texid)+Texture.getdy(tiles[cx][cy].texid);
-				int atlas=Texture.getatlas(tiles[cx][cy].texid);
-				tx/=Engine.getEngine().getTex().getMsize();
-				ty/=Engine.getEngine().getTex().getMsize();
-				tx2/=Engine.getEngine().getTex().getMsize();
-				ty2/=Engine.getEngine().getTex().getMsize();
-				
-				vertecies[vi++]=x;
-				vertecies[vi++]=y+Tile.SIZE;
-				vertecies[vi++]=1;
-				txt[ti++]=tx;
-				txt[ti++]=ty2;
-				txt[ti++]=atlas;
-				
-				vertecies[vi++]=x;
-				vertecies[vi++]=y;
-				vertecies[vi++]=1;
-				txt[ti++]=tx;
-				txt[ti++]=ty;
-				txt[ti++]=atlas;
-				
-				vertecies[vi++]=x+Tile.SIZE;
-				vertecies[vi++]=y;
-				vertecies[vi++]=1;
-				txt[ti++]=tx2;
-				txt[ti++]=ty;
-				txt[ti++]=atlas;
-				
-				vertecies[vi++]=x;
-				vertecies[vi++]=y+Tile.SIZE;
-				vertecies[vi++]=1;
-				txt[ti++]=tx;
-				txt[ti++]=ty2;
-				txt[ti++]=atlas;
-				
-				vertecies[vi++]=x+Tile.SIZE;
-				vertecies[vi++]=y+Tile.SIZE;
-				vertecies[vi++]=1;
-				txt[ti++]=tx2;
-				txt[ti++]=ty2;
-				txt[ti++]=atlas;
-				
-				vertecies[vi++]=x+Tile.SIZE;
-				vertecies[vi++]=y;
-				vertecies[vi++]=1;
-				txt[ti++]=tx2;
-				txt[ti++]=ty;
-				txt[ti++]=atlas;
+				tiles[cx][cy].render(new Vector2f(x,y),vertecies,txt,col,i);
+				i++;
 			}
 		}
-		vb.createBuffer(Arrays.copyOfRange(vertecies, 0,vi), 0, 3);
-		vb.createBuffer(Arrays.copyOfRange(txt, 0,ti), 1, 3);
+		vb.createBuffer(vertecies, 0, 3);
+		vb.createBuffer(txt, 1, 3);
+		vb.createBuffer(col, 2, 4);
 		return vb;
 	}
 }

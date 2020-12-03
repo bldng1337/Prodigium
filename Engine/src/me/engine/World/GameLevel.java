@@ -38,7 +38,8 @@ public abstract class GameLevel {
 					c.loadChunk(Engine.getEngine().getChunkrenderer());
 			}
 		}
-		for(Entity e:entitylist) {
+		for(int i=entitylist.size()-1;i>=0;i--) {
+			Entity e=entitylist.get(i);
 			if(Engine.getEngine().getRender().c.getdistfromcamera(e.x, e.y)>3000)
 				return;
 			if(Engine.getEngine().getRender().c.shouldberendered(e.x, e.y, e.getWidth(), e.getHeight()))
@@ -89,6 +90,8 @@ public abstract class GameLevel {
 	
 
 	private void updatemotion(Entity e) {
+		e.motionX=Math.max(Math.min(e.motionX, 150), -150);
+		e.motionY=Math.max(Math.min(e.motionY, 150), -150);
 		e.x+=e.motionX;
 		e.y+=e.motionY;
 		e.motionX/=1.4f;

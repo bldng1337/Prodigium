@@ -244,8 +244,12 @@ public class Renderer {
 		rgba=0xFFFFFFFF;
 	}
 	
-	public void setColor(int rgba) {
-		this.rgba=rgba;
+	public void setColor(int argb) {
+		int b = (argb)&0xFF;
+		int g = (argb>>8)&0xFF;
+		int r = (argb>>16)&0xFF;
+		int a = (argb>>24)&0xFF;
+		this.setColor(r, g, b, a);
 	}
 	
 	public void setColor(int r,int g,int b,int a) {

@@ -99,7 +99,7 @@ public class Texture {
 		return 0;
 	} 
 	
-	public void registerTexture(BufferedImage bfi,String ID) {
+	public long registerTexture(BufferedImage bfi,String ID) {
 		Graphics g=catlas.getGraphics();
 		if(cx+bfi.getWidth()>msize) {
 	    	cy+=maxheight;
@@ -108,15 +108,16 @@ public class Texture {
 	    }
 	    if(cy+bfi.getHeight()>msize) {
 	    	flush();
-	    	registerTexture(bfi,ID);
-	    	return;
+	    	return registerTexture(bfi,ID);
 	    }
 		g.drawImage(bfi, cx, cy, null);
 		int x=cx;
 		cx+=bfi.getWidth()+1;
 		if(maxheight<bfi.getHeight())
 	    	maxheight=bfi.getHeight();
-		texturemap.put(ID, gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, ID));
+		long lid=gentexid(x, cy, bfi.getWidth(), bfi.getHeight(), atlas, 1, ID);
+		texturemap.put(ID, lid);
+		return lid;
 	}
 	
 	/**

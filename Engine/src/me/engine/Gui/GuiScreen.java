@@ -16,6 +16,7 @@ public class GuiScreen implements IGuiScreen
 	
 	public GuiScreen() {
 		EventManager.register(this);
+		initGui();
 	}
 
 	@Override
@@ -43,9 +44,5 @@ public class GuiScreen implements IGuiScreen
 	public void drawScreen(Render2D update) {
 		for (Button button : buttonlist)
 			button.drawButton();
-	}
-	
-	public void destroy() {
-		EventManager.unregister(this);
 	}
 }

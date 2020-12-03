@@ -283,17 +283,28 @@ public class Engine {
 	 */
 	public void setupCallbacks() {
 		GLFW.glfwSetMouseButtonCallback(window, (wwindow,key,pressed,args)->{
-			  EventManager.call(new MousePressed(mx, my, key,pressed));
+			double x=mx,y=my,sx=mx,sy=my;
+			
+			
+			x=Math.max(x-offsetx, 0);
+			y=Math.max(y-offsety, 0);
+			x=x/(windowwidth-offsetx*2)*1920;
+			y=y/(windowheight-offsety*2)*1080;
+			
+			sx=(sx/windowwidth)*1920;
+			sy=(sy/windowheight)*1080;
+			
+			EventManager.call(new MousePressed(x, y,sx,sy, key,pressed));
 		});
 		GLFW.glfwSetCursorPosCallback(window, (wwindow,x,y)->{
+			mx=x;
+			my=y;
 			//Scale the Mouse Coordinates from Screenspace to World/Renderspace
 			x=Math.max(x-offsetx, 0);
 			y=Math.max(y-offsety, 0);
 			x=x/(windowwidth-offsetx*2)*1920;
 			y=y/(windowheight-offsety*2)*1080;
 			
-			mx=x;
-			my=y;
 			EventManager.call(new MouseMoved(x, y));
 		});
 		GLFW.glfwSetWindowSizeCallback(window, (wwindow, width, height)->{
@@ -425,8 +436,8 @@ public class Engine {
 	}
 
 	public void setGuiscreen(GuiScreen guiscreen) {
-		if(this.guiscreen!=null)
-			this.guiscreen.destroy();
+		EventManager.unregister(this.guiscreen);
+		EventManager.register(guiscreen);
 		this.guiscreen = guiscreen;
 	}
 
@@ -441,4 +452,8 @@ public class Engine {
 		this.p = p;
 	}
 	
+	public FontRenderer getFontRenderer() {
+		return f;
+	}
+
 }

@@ -75,7 +75,6 @@ public class Entity{
 		if(hurttime>0)
 			hurttime-=0.1f;
 		else hurttime=0;
-//		int d=(int)(255-hurttime*255f);
 		r.setColor(255,(int)(255-hurttime*255f),(int)(255-hurttime*255f),255);
 		r.renderRect(x, y, width, height, getTextureid(), (int)elapsed%Texture.getaniframes(getTextureid()));
 		if(elapsed>Texture.getaniframes(getTextureid()))
@@ -85,10 +84,21 @@ public class Entity{
 	}
 	
 	public void finishedanimation() {
-		if(currTexture.equals(Animation.ATTACKING))
+		if(currTexture.equals(Animation.ATTACKING)) {
 			currTexture=Animation.IDLE;
+		}
 		if(currTexture.equals(Animation.DEATH))
 			l.removeEntity(this);
+		animationstamp=System.currentTimeMillis();	
+	}
+	
+	public void attackEntity(Entity other) {
+		float angle=(float) Math.atan2(x-other.x, y-other.y);
+		float knockback=20f;
+		other.motionX-=Math.sin(angle)*knockback;
+		other.motionY-=Math.cos(angle)*knockback;
+		motionX+=Math.sin(angle)*knockback/4;
+		motionY+=Math.cos(angle)*knockback/4;
 	}
 	
 	public void damageEntity(float dmg) {
@@ -96,6 +106,11 @@ public class Entity{
 		health-=dmg;
 	}
 	
+	
+	public Animation getAnimation() {
+		return currTexture;
+	}
+
 	public float getWidth() {
 		return width;
 	}
@@ -135,6 +150,10 @@ public class Entity{
 				resetPath();
 			}
 			if(pos.length==0){
+				if(Math.abs(x-en.x)<100&&Math.abs(y-en.y)<100) {
+					motionX=en.x-x<0?-1:1;
+					motionY=en.y-y<0?-1:1;
+				}
 				pathfind((int)en.x,(int)en.y);
 				posindex=0;
 			}else{
@@ -168,6 +187,16 @@ public class Entity{
 	
 	public GameLevel getLevel() {
 		return l;
+	}
+	
+	public long getelapsed() {
+		return System.currentTimeMillis()-animationstamp;
+	}
+	
+	public int getFrame() {
+		long elapsed=getelapsed();
+		elapsed/=framedelay;
+		return (int)elapsed%Texture.getaniframes(getTextureid());
 	}
 
 	public int getFramedelay() {

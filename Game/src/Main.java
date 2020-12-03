@@ -1,14 +1,8 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 
 import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
-import me.engine.Entity.Pathfinder;
 import me.engine.Utils.Profiler;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
@@ -16,25 +10,23 @@ import me.engine.Utils.Event.EventTarget.priority;
 import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
 import me.engine.Utils.Event.Events.KeyPressed.Action;
+import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Tile;
 import me.engine.World.Levels.Maze.MazeLevel;
-import me.engine.World.Levels.SimpleLevel.SimpleLevel;
 
 public class Main {
 	Entity e;
 	public Main() {
 		EventManager.register(this);
-		Engine.dir=new File("C:\\Users\\Christian\\git\\Prodigium");
 		new Engine();
 	}
 	
 	public static void main(String[] args) {
 		new Main();
 	}
-	Vector2i[] pos;
 	int posindex;
 	long txt;
 	Profiler p;
@@ -49,7 +41,6 @@ public class Main {
 		Engine.getEngine().getCurrlevel().setPlayer(e);
 		Engine.getEngine().getCurrlevel().addEntity(e);
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
-		pos=Pathfinder.AStar(new Vector2i((int)e.x/Tile.SIZE, (int)e.y/Tile.SIZE), new Vector2i(60,60));
 		posindex=0;
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
@@ -59,6 +50,14 @@ public class Main {
 	@EventTarget
 	public void onRender(Render r) {
 		
+	}
+	
+	@EventTarget
+	public void onMouse(MousePressed mp) {
+		Vector2f m=new Vector2f((float)mp.getX(),(float)mp.getY());
+		m.add(Engine.getEngine().getRender().c.getTranslate());
+		e.x=m.x-e.getWidth()/2;
+		e.y=m.y-e.getHeight()/2;
 	}
 	
 	boolean AdjustScales=false;
@@ -129,11 +128,17 @@ public class Main {
 	
 	@EventTarget
 	public void onKeyPressed(KeyPressed k) {
-		switch(k.getKey()) {
+		switch(k.getKey().toLowerCase()) {
 		case "r":
 			try {
-			if(k.getAction().equals(Action.PRESSED)) {
+			if(k.getAction().equals(Action.PRESSED)&&e.getAnimation()!=Animation.ATTACKING) {
 				e.setAnimation(Animation.ATTACKING);
+				for(Entity e: Engine.getEngine().getCurrlevel().getEntitys()) {
+					if(e.intersects(this.e)&&e!=this.e) {
+						e.damageEntity(10);
+						this.e.attackEntity(e);
+					}
+				}
 			}
 			}catch(Exception e) {
 				e.printStackTrace();
