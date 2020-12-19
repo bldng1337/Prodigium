@@ -309,13 +309,17 @@ public class Renderer {
 		vertices=null;
 	}
 	
+	public static void createTransforms() {
+		scale=new Matrix4f();
+		projection=new Matrix4f();
+	}
+	
 	/**
 	 * Clears the Transforms
 	 */
 	public static void clearTransform() {
-		//TODO: Clear them more efficiently
-		scale=new Matrix4f();
-		projection=new Matrix4f();
+		scale.set(new float[]  {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1});
+		projection.set(new float[]  {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1});
 	}
 
 	/**

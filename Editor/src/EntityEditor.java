@@ -30,7 +30,6 @@ import com.google.gson.stream.JsonWriter;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
-import imgui.flag.ImGuiSliderFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import me.engine.Engine;

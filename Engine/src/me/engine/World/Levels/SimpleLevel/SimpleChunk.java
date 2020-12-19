@@ -2,7 +2,7 @@ package me.engine.World.Levels.SimpleLevel;
 
 import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
-import me.engine.World.Tile;
+import me.engine.World.Tiles.Tile;
 
 public class SimpleChunk extends Chunk{
 

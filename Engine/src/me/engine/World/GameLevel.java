@@ -6,9 +6,12 @@ import java.util.Random;
 import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 
 import me.engine.Engine;
 import me.engine.Entity.Entity;
+import me.engine.World.Tiles.ITile;
+import me.engine.World.Tiles.Tile;
 
 public abstract class GameLevel {
 	/**
@@ -29,8 +32,9 @@ public abstract class GameLevel {
 		final int scansize=5;
 		for(int x=-scansize;x<scansize;x++) {
 			for(int y=-scansize;y<scansize;y++) {
-				if(cpos.x+x<0||cpos.y+y<0||cpos.x+x>chunks.length||cpos.y+y>chunks.length)
+				if(cpos.x+x<0||cpos.y+y<0||cpos.x+x>chunks.length-1||cpos.y+y>chunks.length-1)
 					continue;
+				
 				Chunk c=chunks[cpos.x+x][cpos.y+y];
 				if(c.shouldunload(cpos))
 					c.unloadChunk(Engine.getEngine().getChunkrenderer());
@@ -82,7 +86,7 @@ public abstract class GameLevel {
 		}
 	}
 	
-	public Tile getTile(int x,int y) {
+	public ITile getTile(int x,int y) {
 		int cx=x/Chunk.SIZE;
 		int cy=y/Chunk.SIZE;
 		return chunks[cx][cy].getTiles()[x-cx*Chunk.SIZE][y-cy*Chunk.SIZE];
@@ -107,14 +111,21 @@ public abstract class GameLevel {
 	public void setPlayer(Entity e) {
 		player=e;
 	}
+	public int getsize() {
+		return chunks.length;
+	}
 	
 	private void resolveCollision(Entity e) {
 		Rectanglef entity=new Rectanglef(e.x,e.y,e.x+e.getWidth(), e.y+e.getHeight());
 		for(int x=(int) (entity.minX/Tile.SIZE-1);x<entity.maxX/Tile.SIZE+1;x++) {
 			for(int y=(int) (entity.minY/Tile.SIZE-1);y<entity.maxY/Tile.SIZE+1;y++) {
-				if((x<0||y<0||y>Chunk.SIZE*chunks.length*Tile.SIZE||x>Chunk.SIZE*chunks.length*Tile.SIZE)||!getTile(x,y).collideable)
+				if(x<0||y<0)
 					continue;
-				Rectanglef tile=new Rectanglef(x*(float)Tile.SIZE, y*(float)Tile.SIZE, (x+1)*(float)Tile.SIZE, (y+1)*(float)Tile.SIZE);
+				ITile t=getTile(x,y);
+				if((y>Chunk.SIZE*chunks.length*Tile.SIZE||x>Chunk.SIZE*chunks.length*Tile.SIZE)||!t.isCollideable())
+					continue;
+				Vector4f v=t.getBB(new Vector2f(x,y));
+				Rectanglef tile=new Rectanglef(v.x*Tile.SIZE, v.y*Tile.SIZE, v.z*Tile.SIZE, v.w*Tile.SIZE);
 				if(tile.intersectsRectangle(entity)) {
 					Rectanglef collision =new Rectanglef();
 					entity.intersection(tile, collision);
@@ -125,10 +136,10 @@ public abstract class GameLevel {
 					float intersectx=collision.lengthX()*((ce.x-ct.x)>0?1:-1);
 					float intersecty=collision.lengthY()*((ce.y-ct.y)>0?1:-1);
 					if(Math.abs(intersectx)<Math.abs(intersecty)) {
-//						e.motionX=0;
+						e.motionX=0;
 						e.x+=intersectx;
 					}else {
-//						e.motionY=0;
+						e.motionY=0;
 						e.y+=intersecty;
 					}
 				}

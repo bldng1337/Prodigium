@@ -4,14 +4,22 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.script.ScriptEngine;
 
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
+import me.engine.Engine;
 import me.engine.Scripting.ScriptManager;
+import me.engine.Utils.MathUtils;
 import me.engine.Utils.Renderer;
+import me.engine.Utils.Space;
 import me.engine.Utils.Texture;
 import me.engine.World.GameLevel;
-import me.engine.World.Tile;
+import me.engine.World.Tiles.Tile;
 
+/**
+ * @author Christian 3BHET
+ * @version 03.12.2020
+ */
 public class Entity{
 	/**
 	 * Array of Textures of that Entity
@@ -24,7 +32,7 @@ public class Entity{
 	/**
 	 * Stats of that Entity
 	 */
-	public float x,y,health,speed,motionX,motionY;
+	public float x,y,health,maxhealth,speed,motionX,motionY;
 	/**
 	 * The Dimension of the Entity
 	 */
@@ -72,6 +80,10 @@ public class Entity{
 			r.setTexCoords(1, 0, 0, 1);
 		long elapsed=System.currentTimeMillis()-animationstamp;
 		elapsed/=framedelay;
+		Vector2f pos=Space.worldtoscreen(new Vector2f(x, y));
+//		Engine.getEngine().getFontRenderer().draw(this.name, pos.x+width/2-Engine.getEngine().getFontRenderer().getWidth(this.name, 15)/2, pos.y-10-Engine.getEngine().getFontRenderer().getHeight(this.name, 15), 15);
+//		r.renderRect(x, y, width, height, 0x22FFFFFF);
+		Engine.getEngine().getUIrender().renderRect(pos.x, pos.y-10, width*(Math.max(health,0)/maxhealth), 5, MathUtils.torgba(1-(Math.max(health,0)/maxhealth), (Math.max(health,0)/maxhealth), 0f, 2f));
 		if(hurttime>0)
 			hurttime-=0.1f;
 		else hurttime=0;

@@ -95,7 +95,6 @@ public class FontRenderer {
 	}
 	
 	public void draw(String s,float x,float y,float size) {
-		
 		float dx=0;
 		float dy=0;
 		char[] ca=s.toCharArray();

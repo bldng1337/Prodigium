@@ -5,10 +5,10 @@ import java.util.Arrays;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
-import me.engine.Engine;
 import me.engine.Utils.ChunkRenderer;
-import me.engine.Utils.Texture;
 import me.engine.Utils.VertexBuffer;
+import me.engine.World.Tiles.ITile;
+import me.engine.World.Tiles.Tile;
 
 /**
  * @author Christian
@@ -30,7 +30,7 @@ public class Chunk {
 	/**
 	 * List of Tiles of the Chunk
 	 */
-	Tile[][] tiles;
+	ITile[][] tiles;
 	/**
 	 * The Buffer where the Tiles get saved onto if the Chunk is loaded
 	 */
@@ -40,13 +40,13 @@ public class Chunk {
 	public Chunk(int x,int y,GameLevel lvl) {
 		l=lvl;
 		pos=new Vector2i(x, y);
-		tiles=new Tile[SIZE][SIZE];
+		tiles=new ITile[SIZE][SIZE];
 	}
 	
 	/**
 	 * @return A Array of all Tiles in this Chunk
 	 */
-	public Tile[][] getTiles() {
+	public ITile[][] getTiles() {
 		return tiles;
 	}
 	
@@ -75,21 +75,21 @@ public class Chunk {
 	 */
 	public VertexBuffer renderChunk() {
 		VertexBuffer vb=new VertexBuffer(true);
-		float[] vertecies=new float[SIZE*SIZE*6*3];
-		float[] txt=new float[SIZE*SIZE*6*3];
-		float[] col=new float[SIZE*SIZE*6*4];
+		float[] vertecies=new float[(SIZE*SIZE*6*3)*4];
+		float[] txt=new float[(SIZE*SIZE*6*3)*4];
+		float[] col=new float[(SIZE*SIZE*6*4)*4];
 		int i=0;
 		for(int cx=0;cx<SIZE;cx++) {
 			for(int cy=0;cy<SIZE;cy++) {
 				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
 				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
-				tiles[cx][cy].render(new Vector2f(x,y),vertecies,txt,col,i);
-				i++;
+				i=tiles[cx][cy].render(new Vector2f(x,y),vertecies,txt,col,i,l);
 			}
 		}
-		vb.createBuffer(vertecies, 0, 3);
-		vb.createBuffer(txt, 1, 3);
-		vb.createBuffer(col, 2, 4);
+		
+		vb.createBuffer(Arrays.copyOfRange(vertecies, 0, i*(3*6)), 0, 3);
+		vb.createBuffer(Arrays.copyOfRange(txt, 0, i*(3*6)), 1, 3);
+		vb.createBuffer(Arrays.copyOfRange(col, 0, i*(4*6)), 2, 4);
 		return vb;
 	}
 }

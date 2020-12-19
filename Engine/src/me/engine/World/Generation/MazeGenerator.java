@@ -6,11 +6,13 @@ import java.util.Random;
 
 import org.joml.Vector2i;
 
-import me.engine.World.Tile;
+import me.engine.World.Tiles.ITile;
+import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.WallTile;
 
 public class MazeGenerator
 {
-	public Tile[][] tiles;
+	public ITile[][] tiles;
 	public final int width, height;
 	
 	public MazeGenerator(int tileRows, int tileColumns) {
@@ -20,8 +22,8 @@ public class MazeGenerator
 	}
 
 	//Generate maze using recursive backtracking
-	public Tile[][] generate() {
-		tiles = new Tile[width][height];
+	public ITile[][] generate() {
+		tiles = new ITile[width][height];
 		Deque<Vector2i> stack = new LinkedList<>();
 		String[] s= {"Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png"};
 		Random r = new Random();
@@ -71,10 +73,11 @@ public class MazeGenerator
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (tiles[x][y] == null) {
-					String txt = "Textures.Wand.wand_leer:png";
-					if (Math.random() > 0.5)
-						txt = "Textures.Wand.wand_moos:png";
-					tiles[x][y] = new Tile(txt, true);
+//					String txt = "Textures.Wand.wand_leer:png";
+//					if (Math.random() > 0.5)
+//						txt = "Textures.Wand.wand_moos:png";
+//					tiles[x][y] = new Tile(txt, true);
+					tiles[x][y] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 				}
 			}
 		}

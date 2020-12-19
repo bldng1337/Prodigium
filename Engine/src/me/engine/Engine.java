@@ -24,7 +24,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import me.engine.Entity.EntityManager;
-import me.engine.Gui.GuiScreen;
+import me.engine.Gui.Menu.GuiScreen;
 import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.FontRenderer;
@@ -98,6 +98,7 @@ public class Engine {
 	 * Offset from the Window to the Renderspace
 	 */
 	int offsetx,offsety;
+
 	/**
 	 * Placeholder PlayerPos
 	 */
@@ -118,7 +119,7 @@ public class Engine {
 	 */
 	public void init() {
 			m=this;
-			Renderer.clearTransform();
+			Renderer.createTransforms();
 			GLFWErrorCallback g=GLFWErrorCallback.createPrint(new PrintStream(new LoggerOutputStream(log))).set();
 			
 			if (!GLFW.glfwInit())
@@ -454,6 +455,14 @@ public class Engine {
 	
 	public FontRenderer getFontRenderer() {
 		return f;
+	}
+	
+	public int getOffsetx() {
+		return offsetx;
+	}
+
+	public int getOffsety() {
+		return offsety;
 	}
 
 }

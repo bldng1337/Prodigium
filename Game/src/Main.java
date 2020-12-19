@@ -1,4 +1,7 @@
+
+
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
 import me.engine.Engine;
 import me.engine.Entity.Animation;
@@ -14,8 +17,8 @@ import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
-import me.engine.World.Tile;
 import me.engine.World.Levels.Maze.MazeLevel;
+import me.engine.World.Tiles.Tile;
 
 public class Main {
 	Entity e;
@@ -54,6 +57,8 @@ public class Main {
 	
 	@EventTarget
 	public void onMouse(MousePressed mp) {
+		if(mp.getPressed()==GLFW.GLFW_RELEASE)
+			return;
 		Vector2f m=new Vector2f((float)mp.getX(),(float)mp.getY());
 		m.add(Engine.getEngine().getRender().c.getTranslate());
 		e.x=m.x-e.getWidth()/2;
@@ -64,8 +69,9 @@ public class Main {
 	
 	@EventTarget
 	public void onRender(Render2D r) {
+//		Engine.getEngine().getFontRenderer().draw("Testus", 200, 200, 20);
 		Engine.getEngine().getUIrender().setTexCoords(0.5f, 0.5f, 0.5f, 0.5f);
-		float rendersize=300;
+		float rendersize=200;
 		int mapsize=60;
 		mapsize=Math.min(mapsize, (int)rendersize);
 		float res=rendersize/mapsize;
@@ -77,7 +83,7 @@ public class Main {
 			for(int y=sy;y<e.y/Tile.SIZE+mapsize/2f;y++) {
 				if(x<0||y<0)
 					continue;
-				long txt=Engine.getEngine().getCurrlevel().getTile(x, y).getTexid();
+				long txt=Engine.getEngine().getCurrlevel().getTile(x, y).getPrimaryTex();
 				Engine.getEngine().getUIrender().renderRect(1+(x-sx)*res, 1+(y-sy)*res, res, res, txt,0);
 			}
 		}
@@ -86,9 +92,8 @@ public class Main {
 		for(Entity en:Engine.getEngine().getCurrlevel().getEntitys()) {
 			float rx=e.x/Tile.SIZE-en.x/Tile.SIZE+mapsize/2f;
 			float ry=e.y/Tile.SIZE-en.y/Tile.SIZE+mapsize/2f;
-			if(rx<0||ry<0||rx>rendersize||ry>rendersize) {
+			if(rx<0||ry<0||rx>rendersize||ry>rendersize)
 				Engine.getEngine().getUIrender().renderRect(rx, ry, res, res, 0xFF0000FF);
-			}
 		}
 //		p.stopTimer("FrameTime");
 //		try {
@@ -128,6 +133,7 @@ public class Main {
 	
 	@EventTarget
 	public void onKeyPressed(KeyPressed k) {
+		System.out.println(k.getKey().toLowerCase()+" "+k.getAction());
 		switch(k.getKey().toLowerCase()) {
 		case "r":
 			try {
@@ -178,3 +184,4 @@ public class Main {
 	}
 	
 }
+

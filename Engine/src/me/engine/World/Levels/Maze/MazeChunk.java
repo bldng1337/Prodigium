@@ -8,8 +8,9 @@ import org.joml.Vector2i;
 
 import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
-import me.engine.World.Tile;
 import me.engine.World.Generation.MazeGenerator;
+import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.WallTile;
 
 public class MazeChunk extends Chunk
 {
@@ -56,44 +57,44 @@ public class MazeChunk extends Chunk
 		if(x>1&&y>1) {
 			for(int yy=y;yy<=y2;yy++) {
 				if((yy>Chunk.SIZE&&yy<1)||((getTiles()[x-1][yy-1].isCollideable()^getTiles()[x-1][yy+1].isCollideable())&&r.nextBoolean()))
-					getTiles()[x][yy] = new Tile(txt[r.nextInt(txt.length)],true);
+					getTiles()[x][yy] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}else {
 			for(int yy=y;yy<=y2;yy++) {
-				getTiles()[x][yy] = new Tile(txt[r.nextInt(txt.length)],true);
+				getTiles()[x][yy] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}
 	
 		if(x2<Chunk.SIZE-2&&y>1) {
 			for(int yy=y;yy<=y2;yy++) {
 				if((yy>Chunk.SIZE&&yy<1)||(getTiles()[x2+1][yy-1].isCollideable()^getTiles()[x2+1][yy+1].isCollideable())&&r.nextBoolean())
-					getTiles()[x2][yy] = new Tile(txt[r.nextInt(txt.length)],true);
+					getTiles()[x2][yy] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}else {
 			for(int yy=y;yy<=y2;yy++) {
-				getTiles()[x2][yy] = new Tile(txt[r.nextInt(txt.length)],true);
+				getTiles()[x2][yy] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}
 		
 		if(y>1&&x>1) {
 			for(int xx=x;xx<=x2;xx++) {
 				if((xx>Chunk.SIZE&&xx<1)||(getTiles()[xx-1][y-1].isCollideable()^getTiles()[xx+1][y-1].isCollideable())&&r.nextBoolean())
-					getTiles()[xx][y] = new Tile(txt[r.nextInt(txt.length)],true);
+					getTiles()[xx][y] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}else {
 			for(int xx=x;xx<=x2;xx++) {
-				getTiles()[xx][y] = new Tile(txt[r.nextInt(txt.length)],true);
+				getTiles()[xx][y] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}
 		
 		if(y2<Chunk.SIZE-2&&x>1) {
 			for(int xx=x;xx<=x2;xx++) {
 				if((xx>Chunk.SIZE&&xx<1)||(getTiles()[xx-1][y2+1].isCollideable()^getTiles()[xx+1][y2+1].isCollideable())&&r.nextBoolean())
-					getTiles()[xx][y2] = new Tile(txt[r.nextInt(txt.length)],true);
+					getTiles()[xx][y2] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}else {
 			for(int xx=x;xx<=x2;xx++) {
-				getTiles()[xx][y2] = new Tile(txt[r.nextInt(txt.length)],true);
+				getTiles()[xx][y2] = new WallTile(new String[] {"Textures.Wand.wand_leer:png"},new String[] {"Textures.Wand.Wand_V:png"},new String[] {"Textures.Boden.Bodenplatte_1:png"},"Textures.Wand.Wall_Stop_H:png","Textures.Wand.wand_Stop_V:png");
 			}
 		}
 		

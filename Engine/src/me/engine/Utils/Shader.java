@@ -63,6 +63,7 @@ public class Shader {
 	 * Compiles and links the Shader Program
 	 * @param farg Preprocessor arguments Fragment Shader
 	 * @param varg Preprocessor arguments Vertex Shader
+	 * @author Christian
 	 */
 	private void compile(String farg,String varg) {
 		vertexShader=createShader(v, GL45.GL_VERTEX_SHADER,varg);

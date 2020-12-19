@@ -11,7 +11,5 @@ void main()
 {
 	int index=int(v_Texture.z);
 	//o_Color=vec4(v_Texture.xyz,0.0);
-	
-	
-	o_Color=texture(u_Textures[index],v_Texture.xy);
+	o_Color=texture(u_Textures[index],fract(v_Texture.xy));
 }

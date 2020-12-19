@@ -24,10 +24,9 @@ public class KeyPressed extends Event{
 	}
 	
 	public Action getAction() {
-		for(Action a:Action.values()) {
+		for(Action a:Action.values())
 			if(a.action==action)
 				return a;
-		}
 		return Action.UNKOWN;
 	}
 	
@@ -40,7 +39,7 @@ public class KeyPressed extends Event{
 	}
 
 	public enum Action{
-		PRESSED(GLFW.GLFW_PRESS),RELEASED(GLFW.GLFW_REPEAT),REPEAT(GLFW.GLFW_RELEASE),UNKOWN(-1);
+		PRESSED(GLFW.GLFW_PRESS),RELEASED(GLFW.GLFW_RELEASE),REPEAT(GLFW.GLFW_REPEAT),UNKOWN(-1);
 		int action;
 		Action(int i){
 			action=i;

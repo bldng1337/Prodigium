@@ -102,6 +102,7 @@ public class EntityManager {
 				Engine.log.warning(()->"Error creating Entity "+e1.toString());
 			}
 		}
+		e.maxhealth=e.health;
 		e.speed*=1+(Math.random()-0.5f)/10f;
 		e.currTexture=Animation.IDLE;
 		e.script=sm.getScript(ndata.scriptID, sc->{sc.put("Entity", e);sc.put("e", e);});

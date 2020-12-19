@@ -1,4 +1,4 @@
-package me.engine.Gui;
+package me.engine.Gui.Menu;
 
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.Events.Render2D;

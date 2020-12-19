@@ -1,4 +1,4 @@
-package me.engine.Gui;
+package me.engine.Gui.Menu;
 
 import java.util.ArrayList;
 

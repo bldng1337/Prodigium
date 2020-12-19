@@ -26,6 +26,7 @@ public class FileUtils {
 	 * Gets a Files Content
 	 * @param f The File to read from
 	 * @return The Content from the File
+	 * @author Christian
 	 */
 	public static String stringfromFile(File f) {
 		StringBuilder s = new StringBuilder();

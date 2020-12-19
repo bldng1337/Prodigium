@@ -1,14 +1,12 @@
 var Animation = Java.type("me.engine.Entity.Animation");
 var Vector2i = Java.type("org.joml.Vector2i");
-var Tile = Java.type("me.engine.World.Tile");
 var Texture = Java.type("me.engine.Utils.Texture");
 var Math = Java.type("java.lang.Math");
 
 
 function update(){
-	if(e.getAnimation()==Animation.DEATH){
+	if(e.getAnimation()==Animation.DEATH)
 		return;
-	}
 	var player=e.getLevel().getPlayer();
 	if(e.health<=0){
 		e.setAnimation(Animation.DEATH);
