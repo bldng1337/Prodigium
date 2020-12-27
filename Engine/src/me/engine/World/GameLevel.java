@@ -22,6 +22,7 @@ public abstract class GameLevel {
 	Entity player;
 	
 	protected Chunk[][] chunks;
+	protected static Random rand=new Random();
 	
 	public GameLevel(int size) {
 		chunks=new Chunk[size][size];
@@ -65,6 +66,7 @@ public abstract class GameLevel {
 	Random r=new Random();
 	long time=0;
 	public void update() {
+		Engine.getEngine().getFontRenderer().draw(""+entitylist.size(),500,500,20);
 		for(Entity e:entitylist) {
 			if(Engine.getEngine().getRender().c.getdistfromcamera(e.x, e.y)>3000)
 				return;

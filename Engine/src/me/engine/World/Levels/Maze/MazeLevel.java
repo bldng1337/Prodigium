@@ -15,6 +15,10 @@ public class MazeLevel extends GameLevel {
 
 	@Override
 	public void spawnEnemy(int x, int y) {
-		addEntity(Engine.getEngine().getEntityManager().newEntity("Entities.Test.Testentity:json",x,y));
+		if(rand.nextBoolean()) {
+			addEntity(Engine.getEngine().getEntityManager().newEntity("Entities.Enemies.Skeleton:json",x,y));
+		}else {
+			addEntity(Engine.getEngine().getEntityManager().newEntity("Entities.Enemies.Slime:json",x,y));
+		}
 	}
 }
