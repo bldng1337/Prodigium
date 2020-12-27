@@ -10,6 +10,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import me.engine.Engine;
 import me.engine.Utils.FileUtils;
 
@@ -20,13 +21,14 @@ public class ScriptManager {
 	private HashMap<String, String> scripts=new HashMap<>();
 	
 	/**
-	 * Used to compile Scripts
+	 * Used to compile Scripts using
 	 * {@link ScriptEngineManager}
 	 */
 	ScriptEngineManager sem;
 	
 	public ScriptManager() {
-		sem= new ScriptEngineManager();
+		sem=new ScriptEngineManager();
+		sem.registerEngineExtension("js", new NashornScriptEngineFactory());
 		registerScripts();
 	}
 	
@@ -66,6 +68,7 @@ public class ScriptManager {
 	
 	
 	public static Object invoke(ScriptEngine se,String func,Object... args) {
+		
 		try {
 			return ((Invocable) se).invokeFunction(func,args);
 		} catch (NoSuchMethodException e) {

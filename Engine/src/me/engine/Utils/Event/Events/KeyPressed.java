@@ -20,6 +20,9 @@ public class KeyPressed extends Event{
 	}
 
 	public String getKey() {
+		String s=GLFW.glfwGetKeyName(key, scancode);
+		if(s==null)
+			return "Unknown";
 		return GLFW.glfwGetKeyName(key, scancode);
 	}
 	

@@ -42,7 +42,9 @@ public class EventManager {
 				try {
 					m.m.invoke(m.c, e);
 				} catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException e1) {
-					Engine.log.severe(e1.getMessage()+" "+e.getClass().getSimpleName()+" at "+m.c.getClass().getSimpleName());
+//					Engine.log.severe(e1.getMessage()+" "+e.getClass().getSimpleName()+" at "+m.c.getClass().getSimpleName());
+					e1.printStackTrace();
+//					e1.printStackTrace(Engine.getEngine().getLogprintstream());
 				}
 			}
 		}

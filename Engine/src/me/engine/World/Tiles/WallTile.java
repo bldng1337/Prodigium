@@ -41,6 +41,11 @@ public class WallTile implements ITile{
 		float[][] ren=new float[][] {vertecies,txt,col};
 		Vector2f tpos=new Vector2f();
 		pos.div(ITile.SIZE, tpos);
+		int walls=0;
+		if(tpos.y>0)
+		for(int m=-1;m<1;m++)
+			if(tpos.x-1>=0&&lvl.getTile((int)tpos.x+m, (int)tpos.y-1) instanceof WallTile)
+				walls++;
 		final float shade=0.5f;
 		float wthick=6;
 		if(tpos.x>0&&tpos.x<lvl.getsize()-1&&lvl.getTile((int)tpos.x-1, (int)tpos.y) instanceof WallTile&&lvl.getTile((int)tpos.x+1, (int)tpos.y) instanceof WallTile) {
