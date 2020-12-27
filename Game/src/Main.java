@@ -3,6 +3,8 @@
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+import UI.Minimap;
+import UI.Test;
 import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
@@ -45,6 +47,8 @@ public class Main {
 		Engine.getEngine().getCurrlevel().addEntity(e);
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
 		posindex=0;
+		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
+		Engine.getEngine().getHud().add(new Test(0,0,0, 0));
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
@@ -70,31 +74,31 @@ public class Main {
 	@EventTarget
 	public void onRender(Render2D r) {
 //		Engine.getEngine().getFontRenderer().draw("Testus", 200, 200, 20);
-		Engine.getEngine().getUIrender().setTexCoords(0.5f, 0.5f, 0.5f, 0.5f);
-		float rendersize=200;
-		int mapsize=60;
-		mapsize=Math.min(mapsize, (int)rendersize);
-		float res=rendersize/mapsize;
-		
-		Engine.getEngine().getUIrender().renderRect(0, 0, rendersize, rendersize, 0xFF000000);
-		int sx=(int) (e.x/Tile.SIZE-mapsize/2f);
-		int sy=(int) (e.y/Tile.SIZE-mapsize/2f);
-		for(int x=sx;x<e.x/Tile.SIZE+mapsize/2f;x++) {
-			for(int y=sy;y<e.y/Tile.SIZE+mapsize/2f;y++) {
-				if(x<0||y<0)
-					continue;
-				long txt=Engine.getEngine().getCurrlevel().getTile(x, y).getPrimaryTex();
-				Engine.getEngine().getUIrender().renderRect(1+(x-sx)*res, 1+(y-sy)*res, res, res, txt,0);
-			}
-		}
-		Engine.getEngine().getUIrender().resetTexCoords();
-		Engine.getEngine().getUIrender().renderRect(1+mapsize/2f*res-res/2f, 1+mapsize/2f*res-res/2, res, res, 0xFF00FF00);
-		for(Entity en:Engine.getEngine().getCurrlevel().getEntitys()) {
-			float rx=e.x/Tile.SIZE-en.x/Tile.SIZE+mapsize/2f;
-			float ry=e.y/Tile.SIZE-en.y/Tile.SIZE+mapsize/2f;
-			if(rx<0||ry<0||rx>rendersize||ry>rendersize)
-				Engine.getEngine().getUIrender().renderRect(rx, ry, res, res, 0xFF0000FF);
-		}
+//		Engine.getEngine().getUIrender().setTexCoords(0.5f, 0.5f, 0.5f, 0.5f);
+//		float rendersize=200;
+//		int mapsize=60;
+//		mapsize=Math.min(mapsize, (int)rendersize);
+//		float res=rendersize/mapsize;
+//		
+//		Engine.getEngine().getUIrender().renderRect(0, 0, rendersize, rendersize, 0xFF000000);
+//		int sx=(int) (e.x/Tile.SIZE-mapsize/2f);
+//		int sy=(int) (e.y/Tile.SIZE-mapsize/2f);
+//		for(int x=sx;x<e.x/Tile.SIZE+mapsize/2f;x++) {
+//			for(int y=sy;y<e.y/Tile.SIZE+mapsize/2f;y++) {
+//				if(x<0||y<0)
+//					continue;
+//				long txt=Engine.getEngine().getCurrlevel().getTile(x, y).getPrimaryTex();
+//				Engine.getEngine().getUIrender().renderRect(1+(x-sx)*res, 1+(y-sy)*res, res, res, txt,0);
+//			}
+//		}
+//		Engine.getEngine().getUIrender().resetTexCoords();
+//		Engine.getEngine().getUIrender().renderRect(1+mapsize/2f*res-res/2f, 1+mapsize/2f*res-res/2, res, res, 0xFF00FF00);
+//		for(Entity en:Engine.getEngine().getCurrlevel().getEntitys()) {
+//			float rx=e.x/Tile.SIZE-en.x/Tile.SIZE+mapsize/2f;
+//			float ry=e.y/Tile.SIZE-en.y/Tile.SIZE+mapsize/2f;
+//			if(rx<0||ry<0||rx>rendersize||ry>rendersize)
+//				Engine.getEngine().getUIrender().renderRect(rx, ry, res, res, 0xFF0000FF);
+//		}
 //		p.stopTimer("FrameTime");
 //		try {
 //		imcomp.update(r.getDeltatime(), ()->{
@@ -133,7 +137,6 @@ public class Main {
 	
 	@EventTarget
 	public void onKeyPressed(KeyPressed k) {
-		System.out.println(k.getKey().toLowerCase()+" "+k.getAction());
 		switch(k.getKey().toLowerCase()) {
 		case "r":
 			try {

@@ -24,6 +24,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import me.engine.Entity.EntityManager;
+import me.engine.Gui.InGame.HUD;
 import me.engine.Gui.Menu.GuiScreen;
 import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
@@ -88,6 +89,8 @@ public class Engine {
 	GuiScreen guiscreen;
 	Profiler p;
 	FontRenderer f;
+	HUD hud;
+	PrintStream logprintstream;
 	
 	/**
 	 * Mouse Coordinates
@@ -120,7 +123,8 @@ public class Engine {
 	public void init() {
 			m=this;
 			Renderer.createTransforms();
-			GLFWErrorCallback g=GLFWErrorCallback.createPrint(new PrintStream(new LoggerOutputStream(log))).set();
+			logprintstream=new PrintStream(new LoggerOutputStream(log));
+			GLFWErrorCallback g=GLFWErrorCallback.createPrint(logprintstream).set();
 			
 			if (!GLFW.glfwInit())
 				throw new IllegalStateException("Unable to initialize GLFW");
@@ -176,6 +180,7 @@ public class Engine {
 			//Setup Entity System
 			sm=new ScriptManager();
 			em=new EntityManager(sm);
+			hud=new HUD();
 			
 			//Setup the Projection and Aspect Ratio
 			setAspectRatio(windowwidth, windowheight);
@@ -453,6 +458,10 @@ public class Engine {
 		this.p = p;
 	}
 	
+	public PrintStream getLogprintstream() {
+		return logprintstream;
+	}
+	
 	public FontRenderer getFontRenderer() {
 		return f;
 	}
@@ -463,6 +472,14 @@ public class Engine {
 
 	public int getOffsety() {
 		return offsety;
+	}
+	
+	public HUD getHud() {
+		return hud;
+	}
+
+	public void setHud(HUD hud) {
+		this.hud = hud;
 	}
 
 }
