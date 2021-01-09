@@ -31,6 +31,7 @@ import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.FontRenderer;
 import me.engine.Utils.GlStateManager;
 import me.engine.Utils.LoggerOutputStream;
+import me.engine.Utils.ParticleManager;
 import me.engine.Utils.Profiler;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Texture;
@@ -91,7 +92,8 @@ public class Engine {
 	FontRenderer f;
 	HUD hud;
 	PrintStream logprintstream;
-	
+	ParticleManager pm;
+
 	/**
 	 * Mouse Coordinates
 	 */
@@ -181,6 +183,7 @@ public class Engine {
 			sm=new ScriptManager();
 			em=new EntityManager(sm);
 			hud=new HUD();
+			pm=new ParticleManager();
 			
 			//Setup the Projection and Aspect Ratio
 			setAspectRatio(windowwidth, windowheight);
@@ -482,4 +485,7 @@ public class Engine {
 		this.hud = hud;
 	}
 
+	public ParticleManager getPm() {
+		return pm;
+	}
 }

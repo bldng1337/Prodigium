@@ -34,7 +34,7 @@ public class FontRenderer {
 	
 	public FontRenderer() {
 		File f=FileUtils.getFilefromID("Textures.Quintet:ttf");
-		String abc="QWERTZUIOPÜASDFGHJKLYXCVBNMqwertzuiopasdfghklyxcvbnm1234567890? /\\";
+		String abc="QWERTZUIOPÜASDFGHJKLYXCVBNMqwertzuiopasdfghklyxcvbnm1234567890? /\\.,";
 		Font font=null;
 		try {
 			font=Font.createFont(Font.PLAIN, f).deriveFont(100f);

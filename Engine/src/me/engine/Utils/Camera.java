@@ -66,8 +66,8 @@ public class Camera {
 	}
 	
 	public boolean shouldberendered(float x,float y,float width,float height) {
-		return (x+width)>translate.x||x<(1920+translate.x)||
-			   (y+height)>translate.y||y>(1080+translate.y);
+		return (x+width)>translate.x&&x<(1920+translate.x)&&
+			   (y+height)>translate.y&&y<(1080+translate.y);
 	}
 	
 	public float getdistfromcamera(float x,float y) {

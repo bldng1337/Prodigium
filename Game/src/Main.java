@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import UI.Minimap;
-import UI.Test;
+import UI.Statbar;
 import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
@@ -20,7 +20,6 @@ import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Levels.Maze.MazeLevel;
-import me.engine.World.Tiles.Tile;
 
 public class Main {
 	Entity e;
@@ -48,7 +47,8 @@ public class Main {
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
 		posindex=0;
 		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
-		Engine.getEngine().getHud().add(new Test(0,0,0, 0));
+		Engine.getEngine().getHud().add(new Statbar(-60,1080-140,800,140,e));
+		Engine.getEngine().getPm().addParticleSystem((a)->{a.getMotion().set(0, -0.1);a.setSize(4);}).setColor(0x35FFFFFF).setMax(20).setMaxLifetime(6000).setSpawndelay(30);
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");

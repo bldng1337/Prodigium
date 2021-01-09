@@ -10,6 +10,8 @@ import org.joml.Vector2i;
 import me.engine.Engine;
 import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.MathUtils;
+import me.engine.Utils.ParticleManager;
+import me.engine.Utils.ParticleManager.ParticleSystem;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Space;
 import me.engine.Utils.Texture;
@@ -50,6 +52,8 @@ public class Entity{
 	 */
 	protected ScriptEngine script;
 	
+	private static ParticleSystem bloodpart=Engine.getEngine().getPm().addParticleSystem(ParticleManager.GRAVITY).addSpawningLogic((a)->{a.setSize(3);a.getMotion().set((Math.random()-0.5)*10, Math.random()*-10);return new Vector2f();}).disableNaturalSpawning().nonpersistant().setColor(0xFF0000FF).setMaxLifetime(20);
+	
 	long animationstamp;
 	
 	GameLevel l;
@@ -57,6 +61,9 @@ public class Entity{
 	
 	boolean renderflipped;
 	
+	public boolean isRenderflipped() {
+		return renderflipped;
+	}
 	CompletableFuture<Vector2i[]> pathfind;
 	Vector2i[] path;
 
@@ -106,18 +113,23 @@ public class Entity{
 	
 	public void attackEntity(Entity other) {
 		float angle=(float) Math.atan2(x-other.x, y-other.y);
-		float knockback=20f;
+		float knockback=40f;
 		other.motionX-=Math.sin(angle)*knockback;
 		other.motionY-=Math.cos(angle)*knockback;
-		motionX+=Math.sin(angle)*knockback/4;
-		motionY+=Math.cos(angle)*knockback/4;
+		motionX+=Math.sin(angle)*knockback/5;
+		motionY+=Math.cos(angle)*knockback/5;
 	}
 	
 	public void damageEntity(float dmg) {
+		for(int i=0;i<10;i++)
+			bloodpart.addParticle(new Vector2f(this.x+this.width/2+(float)(Math.random()-0.5f)*5,this.y+this.height/2+(float)(Math.random()-0.5f)*5));
 		hurttime=1;
 		health-=dmg;
 	}
 	
+	public Object getField(String Name) {
+		return script.get(Name);
+	}
 	
 	public Animation getAnimation() {
 		return currTexture;
