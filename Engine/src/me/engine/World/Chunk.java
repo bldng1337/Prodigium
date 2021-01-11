@@ -1,14 +1,18 @@
 package me.engine.World;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.VertexBuffer;
-import me.engine.World.Tiles.ITile;
+import me.engine.World.Tiles.STile;
 import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.Tile.Edges;
 
 /**
  * @author Christian
@@ -30,23 +34,25 @@ public class Chunk {
 	/**
 	 * List of Tiles of the Chunk
 	 */
-	ITile[][] tiles;
+	Tile[][] tiles;
 	/**
 	 * The Buffer where the Tiles get saved onto if the Chunk is loaded
 	 */
 	VertexBuffer render;
 	GameLevel l;
+	List<Vector4f> edges;
 	
 	public Chunk(int x,int y,GameLevel lvl) {
 		l=lvl;
+		edges=new ArrayList<>();
 		pos=new Vector2i(x, y);
-		tiles=new ITile[SIZE][SIZE];
+		tiles=new Tile[SIZE][SIZE];
 	}
 	
 	/**
 	 * @return A Array of all Tiles in this Chunk
 	 */
-	public ITile[][] getTiles() {
+	public Tile[][] getTiles() {
 		return tiles;
 	}
 	
@@ -74,6 +80,8 @@ public class Chunk {
 	 * @return The Buffer
 	 */
 	public VertexBuffer renderChunk() {
+		long dt=System.nanoTime();
+		edges.clear();
 		VertexBuffer vb=new VertexBuffer(true);
 		float[] vertecies=new float[(SIZE*SIZE*6*3)*4];
 		float[] txt=new float[(SIZE*SIZE*6*3)*4];
@@ -81,15 +89,21 @@ public class Chunk {
 		int i=0;
 		for(int cx=0;cx<SIZE;cx++) {
 			for(int cy=0;cy<SIZE;cy++) {
-				float x=cx*Tile.SIZE+(pos.x*SIZE*Tile.SIZE);
-				float y=cy*Tile.SIZE+(pos.y*SIZE*Tile.SIZE);
-				i=tiles[cx][cy].render(new Vector2f(x,y),vertecies,txt,col,i,l);
+				float x=cx*STile.SIZE+(pos.x*SIZE*STile.SIZE);
+				float y=cy*STile.SIZE+(pos.y*SIZE*STile.SIZE);
+				Tile ctile=tiles[cx][cy];
+				
+				
+				i=ctile.render(new Vector2f(x,y),vertecies,txt,col,i,l);
 			}
 		}
 		
 		vb.createBuffer(Arrays.copyOfRange(vertecies, 0, i*(3*6)), 0, 3);
 		vb.createBuffer(Arrays.copyOfRange(txt, 0, i*(3*6)), 1, 3);
 		vb.createBuffer(Arrays.copyOfRange(col, 0, i*(4*6)), 2, 4);
+		System.out.println("Rendering took "+(System.nanoTime()-dt)/1000000);
 		return vb;
 	}
+	
+	
 }

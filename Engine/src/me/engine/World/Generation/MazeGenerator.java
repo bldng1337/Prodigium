@@ -6,13 +6,13 @@ import java.util.Random;
 
 import org.joml.Vector2i;
 
-import me.engine.World.Tiles.ITile;
 import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 import me.engine.World.Tiles.WallTile;
 
 public class MazeGenerator
 {
-	public ITile[][] tiles;
+	public Tile[][] tiles;
 	public final int width, height;
 	
 	public MazeGenerator(int tileRows, int tileColumns) {
@@ -22,8 +22,8 @@ public class MazeGenerator
 	}
 
 	//Generate maze using recursive backtracking
-	public ITile[][] generate() {
-		tiles = new ITile[width][height];
+	public Tile[][] generate() {
+		tiles = new Tile[width][height];
 		Deque<Vector2i> stack = new LinkedList<>();
 		String[] s= {"Textures.Boden.Bodenplatte_1:png","Textures.Boden.Bodenplatte_2:png","Textures.Boden.Bodenplatte_3:png"};
 		Random r = new Random();
@@ -62,13 +62,13 @@ public class MazeGenerator
 			Vector2i median = new Vector2i();
 			currentCell.add(randN, median);
 			median.set(median.x/2, median.y/2);
-			tiles[median.x][median.y] = new Tile(s[r.nextInt(s.length)], false);
-			tiles[currentCell.x][currentCell.y] = new Tile(s[r.nextInt(s.length)], false);
+			tiles[median.x][median.y] = new STile(s[r.nextInt(s.length)], false);
+			tiles[currentCell.x][currentCell.y] = new STile(s[r.nextInt(s.length)], false);
 			
 			//Set the current cell for the next cycle
 			currentCell = stack.peek();
 		}
-		tiles[currentCell.x][currentCell.y] = new Tile("Textures.Boden.Bodenplatte_1:png", false);
+		tiles[currentCell.x][currentCell.y] = new STile("Textures.Boden.Bodenplatte_1:png", false);
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {

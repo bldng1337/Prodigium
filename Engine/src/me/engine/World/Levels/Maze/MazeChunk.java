@@ -9,7 +9,7 @@ import org.joml.Vector2i;
 import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
 import me.engine.World.Generation.MazeGenerator;
-import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 import me.engine.World.Tiles.WallTile;
 
 public class MazeChunk extends Chunk
@@ -100,7 +100,7 @@ public class MazeChunk extends Chunk
 		
 		for(int xx=x+1;xx<x2;xx++) {
 			for(int yy=y+1;yy<y2;yy++) {
-				getTiles()[xx][yy] =new Tile(s[r.nextInt(s.length)],false);
+				getTiles()[xx][yy] =new STile(s[r.nextInt(s.length)],false);
 			}
 		}
 	}

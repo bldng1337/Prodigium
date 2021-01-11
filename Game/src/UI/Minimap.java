@@ -4,7 +4,7 @@ import me.engine.Engine;
 import me.engine.Entity.Entity;
 import me.engine.Gui.InGame.UIElement;
 import me.engine.Utils.Renderer;
-import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 
 public class Minimap extends UIElement{
 
@@ -20,11 +20,11 @@ public class Minimap extends UIElement{
 		float res=rendersize/mapsize;
 		Entity e=Engine.getEngine().getCurrlevel().getPlayer();
 		r.renderRect(0, 0, rendersize, rendersize, 0xFF000000);
-		int sx=(int) (e.x/Tile.SIZE-mapsize/2f);
-		int sy=(int) (e.y/Tile.SIZE-mapsize/2f);
+		int sx=(int) (e.x/STile.SIZE-mapsize/2f);
+		int sy=(int) (e.y/STile.SIZE-mapsize/2f);
 		r.setTexCoords(0.5f, 0.5f, 0.5f, 0.5f);
-		for(int x=sx;x<e.x/Tile.SIZE+mapsize/2f;x++) {
-			for(int y=sy;y<e.y/Tile.SIZE+mapsize/2f;y++) {
+		for(int x=sx;x<e.x/STile.SIZE+mapsize/2f;x++) {
+			for(int y=sy;y<e.y/STile.SIZE+mapsize/2f;y++) {
 				if(x<0||y<0)
 					continue;
 				long txt=Engine.getEngine().getCurrlevel().getTile(x, y).getPrimaryTex();
@@ -34,8 +34,8 @@ public class Minimap extends UIElement{
 		r.resetTexCoords();
 		r.renderRect(1+mapsize/2f*res-res/2f, 1+mapsize/2f*res-res/2, res, res, 0xFF00FF00);
 		for(Entity en:Engine.getEngine().getCurrlevel().getEntitys()) {
-			float rx=e.x/Tile.SIZE-en.x/Tile.SIZE+mapsize/2f;
-			float ry=e.y/Tile.SIZE-en.y/Tile.SIZE+mapsize/2f;
+			float rx=e.x/STile.SIZE-en.x/STile.SIZE+mapsize/2f;
+			float ry=e.y/STile.SIZE-en.y/STile.SIZE+mapsize/2f;
 			rx*=res;
 			ry*=res;
 			if(rx<0||ry<0||rx>rendersize||ry>rendersize)

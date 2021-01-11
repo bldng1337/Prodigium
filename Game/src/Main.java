@@ -1,5 +1,8 @@
 
 
+import org.joml.AABBf;
+import org.joml.Intersectionf;
+import org.joml.Rayf;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -49,6 +52,7 @@ public class Main {
 		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
 		Engine.getEngine().getHud().add(new Statbar(-60,1080-140,800,140,e));
 		Engine.getEngine().getPm().addParticleSystem((a)->{a.getMotion().set(0, -0.1);a.setSize(4);}).setColor(0x35FFFFFF).setMax(20).setMaxLifetime(6000).setSpawndelay(30);
+		
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
@@ -57,6 +61,12 @@ public class Main {
 	@EventTarget
 	public void onRender(Render r) {
 		
+		Vector2f v=new Vector2f();
+		v=Engine.getEngine().getCurrlevel().raycastgeometry(new Vector2f(0,0), new Vector2f(100,100));
+		
+//		Intersectionf.intersectRayAab(new Rayf(0,0,0,5,5,0), new AABBf(1, 1, 0, 4, 4,0), v);
+		if(v!=null)
+			System.out.println(v.x+" "+v.y);
 	}
 	
 	@EventTarget

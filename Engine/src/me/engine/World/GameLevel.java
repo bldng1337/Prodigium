@@ -10,8 +10,8 @@ import org.joml.Vector4f;
 
 import me.engine.Engine;
 import me.engine.Entity.Entity;
-import me.engine.World.Tiles.ITile;
 import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 
 public abstract class GameLevel {
 	/**
@@ -29,7 +29,7 @@ public abstract class GameLevel {
 	}
 	
 	public void render() {
-		Vector2i cpos=new Vector2i((int)Engine.getEngine().getRender().c.getTranslate().x/(Chunk.SIZE*Tile.SIZE),(int)Engine.getEngine().getRender().c.getTranslate().y/(Chunk.SIZE*Tile.SIZE));
+		Vector2i cpos=new Vector2i((int)Engine.getEngine().getRender().c.getTranslate().x/(Chunk.SIZE*STile.SIZE),(int)Engine.getEngine().getRender().c.getTranslate().y/(Chunk.SIZE*STile.SIZE));
 		final int scansize=5;
 		for(int x=-scansize;x<scansize;x++) {
 			for(int y=-scansize;y<scansize;y++) {
@@ -83,12 +83,12 @@ public abstract class GameLevel {
 			y+=player.y;
 			if(x<0||y<0)
 				return;
-			if(!getTile(x/Tile.SIZE, y/Tile.SIZE).isCollideable())
+			if(!getTile(x/STile.SIZE, y/STile.SIZE).isCollideable())
 				spawnEnemy(x, y);
 		}
 	}
 	
-	public ITile getTile(int x,int y) {
+	public Tile getTile(int x,int y) {
 		int cx=x/Chunk.SIZE;
 		int cy=y/Chunk.SIZE;
 		return chunks[cx][cy].getTiles()[x-cx*Chunk.SIZE][y-cy*Chunk.SIZE];
@@ -119,15 +119,15 @@ public abstract class GameLevel {
 	
 	private void resolveCollision(Entity e) {
 		Rectanglef entity=new Rectanglef(e.x,e.y,e.x+e.getWidth(), e.y+e.getHeight());
-		for(int x=(int) (entity.minX/Tile.SIZE-1);x<entity.maxX/Tile.SIZE+1;x++) {
-			for(int y=(int) (entity.minY/Tile.SIZE-1);y<entity.maxY/Tile.SIZE+1;y++) {
+		for(int x=(int) (entity.minX/STile.SIZE-1);x<entity.maxX/STile.SIZE+1;x++) {
+			for(int y=(int) (entity.minY/STile.SIZE-1);y<entity.maxY/STile.SIZE+1;y++) {
 				if(x<0||y<0)
 					continue;
-				ITile t=getTile(x,y);
-				if((y>Chunk.SIZE*chunks.length*Tile.SIZE||x>Chunk.SIZE*chunks.length*Tile.SIZE)||!t.isCollideable())
+				Tile t=getTile(x,y);
+				if((y>Chunk.SIZE*chunks.length*STile.SIZE||x>Chunk.SIZE*chunks.length*STile.SIZE)||!t.isCollideable())
 					continue;
 				Vector4f v=t.getBB(new Vector2f(x,y));
-				Rectanglef tile=new Rectanglef(v.x*Tile.SIZE, v.y*Tile.SIZE, v.z*Tile.SIZE, v.w*Tile.SIZE);
+				Rectanglef tile=new Rectanglef(v.x*STile.SIZE, v.y*STile.SIZE, v.z*STile.SIZE, v.w*STile.SIZE);
 				if(tile.intersectsRectangle(entity)) {
 					Rectanglef collision =new Rectanglef();
 					entity.intersection(tile, collision);
@@ -147,6 +147,21 @@ public abstract class GameLevel {
 				}
 			}
 		}
+	}
+	
+	
+	public Vector2f raycastgeometry(Vector2f s,Vector2f e) {
+		Vector2f c = null;
+		for(int x=(int) s.x;x<e.x;x++){
+			for(int y=(int) s.y;y<e.y;y++){
+				if(!getTile(x, y).isCollideable())
+					continue;
+				Vector2f v=getTile(x, y).raycast(s, e, new Vector2f(x,y));
+				if(v!=null&&(c==null||c.distance(s)>v.distance(s)))
+					c=v;
+			}
+		}
+		return c;
 	}
 	
 	

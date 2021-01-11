@@ -2,7 +2,7 @@ package me.engine.World.Levels.SimpleLevel;
 
 import me.engine.World.Chunk;
 import me.engine.World.GameLevel;
-import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 
 public class SimpleChunk extends Chunk{
 
@@ -12,13 +12,13 @@ public class SimpleChunk extends Chunk{
 			for(int yy=0;yy<Chunk.SIZE;yy++) {
 				if((xx==Chunk.SIZE-1||xx==0||yy==0||y==Chunk.SIZE-1)) {
 					if(Math.random()<0.7f) {
-						getTiles()[xx][yy]=new Tile(tiletexture[tiletexture.length-1],true);
+						getTiles()[xx][yy]=new STile(tiletexture[tiletexture.length-1],true);
 					}else {
-						getTiles()[xx][yy]=new Tile(tiletexture[(int) (Math.random()*(tiletexture.length-1))],false);
+						getTiles()[xx][yy]=new STile(tiletexture[(int) (Math.random()*(tiletexture.length-1))],false);
 					}
 				}else {
 					int txt=(int) (Math.random()*(tiletexture.length-1));
-					getTiles()[xx][yy]=new Tile(tiletexture[txt],false);
+					getTiles()[xx][yy]=new STile(tiletexture[txt],false);
 				}
 			}
 		}

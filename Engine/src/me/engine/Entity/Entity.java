@@ -16,7 +16,7 @@ import me.engine.Utils.Renderer;
 import me.engine.Utils.Space;
 import me.engine.Utils.Texture;
 import me.engine.World.GameLevel;
-import me.engine.World.Tiles.Tile;
+import me.engine.World.Tiles.STile;
 
 /**
  * @author Christian 3BHET
@@ -144,12 +144,12 @@ public class Entity{
 	}
 	
 	public void pathfind(int x,int y) {
-		if(dist(x, y)<Tile.SIZE*2) {
-			path=new Vector2i[]{new Vector2i(x/Tile.SIZE,y/Tile.SIZE)};
+		if(dist(x, y)<STile.SIZE*2) {
+			path=new Vector2i[]{new Vector2i(x/STile.SIZE,y/STile.SIZE)};
 			return;
 		}
 		if(!ispathfinding()) {
-			pathfind = CompletableFuture.supplyAsync(() -> Pathfinder.AStar(new Vector2i((int)(this.x/Tile.SIZE),(int)(this.y/Tile.SIZE)), new Vector2i(x/Tile.SIZE,y/Tile.SIZE)));
+			pathfind = CompletableFuture.supplyAsync(() -> Pathfinder.AStar(new Vector2i((int)(this.x/STile.SIZE),(int)(this.y/STile.SIZE)), new Vector2i(x/STile.SIZE,y/STile.SIZE)));
 			pathfind.whenComplete((a,b)->{
 				path=a;
 				if(path==null)
@@ -181,15 +181,15 @@ public class Entity{
 				pathfind((int)en.x,(int)en.y);
 				posindex=0;
 			}else{
-				if(Math.abs(pos[posindex].x*Tile.SIZE-x)>10){
-					motionX=pos[posindex].x*Tile.SIZE-x<0?-1:1;
+				if(Math.abs(pos[posindex].x*STile.SIZE-x)>10){
+					motionX=pos[posindex].x*STile.SIZE-x<0?-1:1;
 					motionX*=speed;
 				}
-				if(Math.abs(pos[posindex].y*Tile.SIZE-y)>10){
-					motionY=pos[posindex].y*Tile.SIZE-y<0?-1:1;
+				if(Math.abs(pos[posindex].y*STile.SIZE-y)>10){
+					motionY=pos[posindex].y*STile.SIZE-y<0?-1:1;
 					motionY*=speed;
 				}
-				if(Math.abs((x-pos[posindex].x*Tile.SIZE)+(y-pos[posindex].y*Tile.SIZE))<50)
+				if(Math.abs((x-pos[posindex].x*STile.SIZE)+(y-pos[posindex].y*STile.SIZE))<50)
 					posindex++;
 			}
 		}

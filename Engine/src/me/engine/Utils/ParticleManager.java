@@ -37,6 +37,9 @@ public class ParticleManager {
 		l.add(new ParticleSystem(update));
 		return l.get(l.size()-1);
 	}
+	public void removeParticleSystem(ParticleSystem psys) {
+		l.remove(psys);
+	}
 	public static final Consumer<Particle> NOTHING=new Consumer<ParticleManager.Particle>() {
 		@Override
 		public void accept(Particle t) {}
