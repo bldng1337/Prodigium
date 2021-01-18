@@ -48,13 +48,12 @@ public abstract class Tile {
 	}
 	
 	
-	public Vector2f raycast(Vector2f s,Vector2f e,Vector2f pos) {
+	public Vector2f raycast(Rayf f,Vector2f pos) {
 		Vector4f AABB=getBB(pos);
 		Vector2f r=new Vector2f();
-		if(Intersectionf.intersectRayAab(new Rayf(s.x,s.y,0.5f,e.x-s.x,e.y-s.y,0.5f), new AABBf(AABB.x, AABB.y, 0, AABB.z, AABB.w,1), r)) {
-//			System.out.println(r);
+		Engine.getEngine().getRender().renderRect(AABB.x*Tile.SIZE, AABB.y*Tile.SIZE, (AABB.z-AABB.x)*Tile.SIZE, (AABB.w-AABB.y)*Tile.SIZE, 0x60FFFFFF);
+		if(Intersectionf.intersectRayAab(f, new AABBf(AABB.x, AABB.y, 0, AABB.z, AABB.w,1), r))
 			return r;
-		}
 		return null;
 	}
 

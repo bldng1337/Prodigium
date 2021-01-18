@@ -3,6 +3,7 @@ package me.engine.World;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.joml.Rayf;
 import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -10,6 +11,7 @@ import org.joml.Vector4f;
 
 import me.engine.Engine;
 import me.engine.Entity.Entity;
+import me.engine.Utils.MathUtils;
 import me.engine.World.Tiles.Tile;
 import me.engine.World.Tiles.STile;
 
@@ -149,18 +151,20 @@ public abstract class GameLevel {
 		}
 	}
 	
-	
-	public Vector2f raycastgeometry(Vector2f s,Vector2f e) {
-		Vector2f c = null;
-		for(int x=(int) s.x;x<e.x;x++){
-			for(int y=(int) s.y;y<e.y;y++){
-				if(!getTile(x, y).isCollideable())
-					continue;
-				Vector2f v=getTile(x, y).raycast(s, e, new Vector2f(x,y));
-				if(v!=null&&(c==null||c.distance(s)>v.distance(s)))
-					c=v;
-			}
-		}
+	Vector2f c = null;
+	public Vector2f raycastgeometry(Vector2f s,Vector2f dir) {
+		Rayf r=new Rayf(s.x,s.y,0.5f,dir.x,dir.y,0);
+//		System.out.println(s.x+" "+s.y);
+		c = null;
+		MathUtils.drawLine((a)->{
+			Tile t=getTile((int)a.x,(int)a.y);
+			if(!t.isCollideable())
+				return;
+//			Engine.getEngine().getRender().renderRect(a.x*Tile.SIZE, a.y*Tile.SIZE, Tile.SIZE, Tile.SIZE, 0x50FFFFFF);
+			Vector2f v=t.raycast(r, new Vector2f(a.x,a.y));
+			if(v!=null&&(c==null||c.distance(s)>v.distance(s)))
+				c=v;
+		}, s.x, s.y, s.x+dir.x, s.y+dir.y);
 		return c;
 	}
 	

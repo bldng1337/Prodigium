@@ -300,6 +300,9 @@ public class Renderer {
 		cindex=0;
 		vindex=0;
 		tindex=0;
+		vertices=new float[MAXDRAW];
+		txt=new float[MAXDRAW];
+		col=new float[MAXDRAW/3*4];
 	}
 	
 	/**

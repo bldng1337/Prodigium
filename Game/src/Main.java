@@ -1,8 +1,5 @@
 
 
-import org.joml.AABBf;
-import org.joml.Intersectionf;
-import org.joml.Rayf;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -23,6 +20,7 @@ import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Render2D;
 import me.engine.Utils.Event.Events.Update;
 import me.engine.World.Levels.Maze.MazeLevel;
+import me.engine.World.Tiles.Tile;
 
 public class Main {
 	Entity e;
@@ -61,12 +59,21 @@ public class Main {
 	@EventTarget
 	public void onRender(Render r) {
 		
-		Vector2f v=new Vector2f();
-		v=Engine.getEngine().getCurrlevel().raycastgeometry(new Vector2f(0,0), new Vector2f(100,100));
+//		Vector2f v=new Vector2f();
+////		Engine.getEngine().getRender().renderRect(e.x, e.y, 10*Tile.SIZE, 10*Tile.SIZE, 0x10FFFFFF);
+//		try{
+//			v=Engine.getEngine().getCurrlevel().raycastgeometry(new Vector2f(e.x/Tile.SIZE,e.y/Tile.SIZE), new Vector2f(0, 10));
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		if(v==null)
+//			return;
+//		v.mul(Tile.SIZE);
+//		Engine.getEngine().getRender().renderRect(e.x+v.x, e.y+v.y, 10, 10, 0xFFFFFFFF);
 		
 //		Intersectionf.intersectRayAab(new Rayf(0,0,0,5,5,0), new AABBf(1, 1, 0, 4, 4,0), v);
-		if(v!=null)
-			System.out.println(v.x+" "+v.y);
+//		if(v!=null)
+//			System.out.println(v.x+" "+v.y);
 	}
 	
 	@EventTarget
