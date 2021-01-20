@@ -1,6 +1,7 @@
 package me.engine.World;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import org.joml.Rayf;
@@ -153,14 +154,14 @@ public abstract class GameLevel {
 	
 	Vector2f c = null;
 	public Vector2f raycastgeometry(Vector2f s,Vector2f dir) {
-		Rayf r=new Rayf(s.x,s.y,0.5f,dir.x,dir.y,0);
-//		System.out.println(s.x+" "+s.y);
-		c = null;
+		Vector4f r=new Vector4f(s.x,s.y,dir.x,dir.y);
+		c = new Vector2f(s.x+dir.x,s.y+dir.y);
 		MathUtils.drawLine((a)->{
+			if(a.x<0||a.y<0)
+				return;
 			Tile t=getTile((int)a.x,(int)a.y);
 			if(!t.isCollideable())
 				return;
-//			Engine.getEngine().getRender().renderRect(a.x*Tile.SIZE, a.y*Tile.SIZE, Tile.SIZE, Tile.SIZE, 0x50FFFFFF);
 			Vector2f v=t.raycast(r, new Vector2f(a.x,a.y));
 			if(v!=null&&(c==null||c.distance(s)>v.distance(s)))
 				c=v;

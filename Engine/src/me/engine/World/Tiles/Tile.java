@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import me.engine.Engine;
+import me.engine.Utils.MathUtils;
 import me.engine.Utils.Texture;
 import me.engine.World.GameLevel;
 
@@ -48,13 +49,8 @@ public abstract class Tile {
 	}
 	
 	
-	public Vector2f raycast(Rayf f,Vector2f pos) {
-		Vector4f AABB=getBB(pos);
-		Vector2f r=new Vector2f();
-		Engine.getEngine().getRender().renderRect(AABB.x*Tile.SIZE, AABB.y*Tile.SIZE, (AABB.z-AABB.x)*Tile.SIZE, (AABB.w-AABB.y)*Tile.SIZE, 0x60FFFFFF);
-		if(Intersectionf.intersectRayAab(f, new AABBf(AABB.x, AABB.y, 0, AABB.z, AABB.w,1), r))
-			return r;
-		return null;
+	public Vector2f raycast(Vector4f ray,Vector2f pos) {
+		return MathUtils.rayrect(getBB(pos), ray);
 	}
 
 	protected int render(Vector4f pos,Vector4f txtc,long txt,Vector4f b,int i,float[][] ren) {

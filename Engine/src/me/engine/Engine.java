@@ -241,6 +241,7 @@ public class Engine {
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 			GLFW.glfwPollEvents(); // Poll for window events.
 			dt=(float)(System.nanoTime()-time)/1000000000f;
+			System.out.println(System.nanoTime()-time);
 			time=System.nanoTime();
 		}
 	}

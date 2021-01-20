@@ -8,13 +8,16 @@ import UI.Statbar;
 import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
+import me.engine.Utils.MathUtils;
 import me.engine.Utils.Profiler;
+import me.engine.Utils.Space;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.EventTarget.priority;
 import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
 import me.engine.Utils.Event.Events.KeyPressed.Action;
+import me.engine.Utils.Event.Events.MouseMoved;
 import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.Utils.Event.Events.Render;
 import me.engine.Utils.Event.Events.Render2D;
@@ -55,25 +58,33 @@ public class Main {
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
 	}
+	Vector2f m=new Vector2f();
+	@EventTarget
+	public void onRender(MouseMoved m) {
+		this.m.set(m.getX(), m.getY());
+		Space.screentoworld(this.m);
+		
+	}
 	
 	@EventTarget
 	public void onRender(Render r) {
-		
-//		Vector2f v=new Vector2f();
-////		Engine.getEngine().getRender().renderRect(e.x, e.y, 10*Tile.SIZE, 10*Tile.SIZE, 0x10FFFFFF);
+		Vector2f v=new Vector2f();
+		long s=System.nanoTime();
 //		try{
-//			v=Engine.getEngine().getCurrlevel().raycastgeometry(new Vector2f(e.x/Tile.SIZE,e.y/Tile.SIZE), new Vector2f(0, 10));
 //		}catch(Exception e) {
 //			e.printStackTrace();
 //		}
-//		if(v==null)
-//			return;
-//		v.mul(Tile.SIZE);
-//		Engine.getEngine().getRender().renderRect(e.x+v.x, e.y+v.y, 10, 10, 0xFFFFFFFF);
-		
-//		Intersectionf.intersectRayAab(new Rayf(0,0,0,5,5,0), new AABBf(1, 1, 0, 4, 4,0), v);
-//		if(v!=null)
-//			System.out.println(v.x+" "+v.y);
+			Vector2f mt=new Vector2f();
+			m.div(Tile.SIZE, mt);
+			
+			v=Engine.getEngine().getCurrlevel().raycastgeometry(mt, new Vector2f(10, 10));
+			
+			
+			
+		if(v==null)
+			return;
+		v.mul(Tile.SIZE);
+		Engine.getEngine().getRender().renderRect(v.x, v.y, 10, 10, 0xFFFFFF1F);
 	}
 	
 	@EventTarget

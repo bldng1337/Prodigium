@@ -1,9 +1,9 @@
 package me.engine.Utils;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public class MathUtils {
 	private MathUtils() {}
@@ -39,6 +39,20 @@ public class MathUtils {
      * @param y1
      */
     public static void drawLine(Consumer<Vector2f> d,float x0, float y0, float x1, float y1) {
+    	final float t=0.45f;
+    	final float dt=1-t;
+    	if(fpart(x0)>t)
+    		x0+=dt;
+    	if(fpart(y0)>t)
+    		y0+=dt;
+    	if(fpart(x1)>t)
+    		x1+=dt;
+    	if(fpart(y1)>t)
+    		y1+=dt;
+    	x0=(float) Math.floor(x0);
+    	y0=(float) Math.floor(y0);
+    	x1=(float) Math.floor(x1);
+    	y1=(float) Math.floor(y1);
         boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
         if (steep)
         	 drawLine(d,y0, x0, y1, x1);
@@ -91,5 +105,27 @@ public class MathUtils {
             }
             intery = intery + gradient;
         }
+    }
+    
+    public static Vector2f rayrect(Vector4f AABB,Vector4f ray) {
+    	float nx=(AABB.x-ray.x)/ray.z;
+    	float ny=(AABB.y-ray.y)/ray.w;
+    	float fx=(AABB.z-ray.x)/ray.z;
+    	float fy=(AABB.w-ray.y)/ray.w;
+    	if(nx>fx) {
+    		float a=nx;
+    		nx=fx;
+    		fx=a;
+    	}
+    	if(ny>fy) {
+    		float a=ny;
+    		ny=fy;
+    		fy=a;
+    	}
+    	float nhit=Math.max(nx, ny);
+    	float fhit=Math.min(fx, fy);
+    	if(nx>fy||ny>fx||fhit<0)
+    		return null;
+    	return new Vector2f(ray.x+ray.z*nhit,ray.y+ray.w*nhit);
     }
 }
