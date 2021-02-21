@@ -67,21 +67,24 @@ public class WallTile extends Tile{
 	
 	public Vector4f getBB(Vector2f pos) {
 		if(bb==null) {
+			final float extend=0.1f;
 			GameLevel lvl=Engine.getEngine().getCurrlevel();
 			if(pos.x>0&&pos.x<lvl.getsize()-1&&
 					lvl.getTile((int)pos.x-1, 
 							(int)pos.y) instanceof WallTile&&
 					lvl.getTile((int)pos.x+1, (int)pos.y) instanceof WallTile) {
 				// X-T-X
-				bb=new Vector4f(pos.x,pos.y,pos.x+1,pos.y+1);
+				bb=new Vector4f(pos.x-extend,pos.y,pos.x+1+extend,pos.y+1);
 			}else if(pos.x>0&&lvl.getTile((int)pos.x-1, (int)pos.y) instanceof WallTile){
 				// X-T-.
-				bb=new Vector4f(pos.x,pos.y,pos.x+1/2f,pos.y+1);
+				bb=new Vector4f(pos.x-extend,pos.y,pos.x+1/2f,pos.y+1);
 			}else if(pos.x<lvl.getsize()-1&&lvl.getTile((int)pos.x+1, (int)pos.y) instanceof WallTile){
 				// .-T-X
-				bb=new Vector4f(pos.x+1/2f,pos.y,pos.x+1,pos.y+1);
+				bb=new Vector4f(pos.x+1/2f,pos.y,pos.x+1+extend,pos.y+1);
+			}else if(pos.y<lvl.getsize()-1&&lvl.getTile((int)pos.x, (int)pos.y+1) instanceof WallTile) {
+				bb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y,pos.x+1/2f+3f/STile.SIZE,pos.y+1+extend);
 			}else {
-				bb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y,pos.x+1/2f+3f/STile.SIZE,pos.y+1);
+				bb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y-extend/10,pos.x+1/2f+3f/STile.SIZE+extend/10,pos.y+1);
 			}
 		}
 		return bb;

@@ -92,8 +92,6 @@ public class Chunk {
 				float x=cx*STile.SIZE+(pos.x*SIZE*STile.SIZE);
 				float y=cy*STile.SIZE+(pos.y*SIZE*STile.SIZE);
 				Tile ctile=tiles[cx][cy];
-				
-				
 				i=ctile.render(new Vector2f(x,y),vertecies,txt,col,i,l);
 			}
 		}
@@ -103,6 +101,21 @@ public class Chunk {
 		vb.createBuffer(Arrays.copyOfRange(col, 0, i*(4*6)), 2, 4);
 		System.out.println("Rendering took "+(System.nanoTime()-dt)/1000000);
 		return vb;
+	}
+	
+	public void batchHitboxes() {
+		for(int cx=0;cx<SIZE;cx++) {
+			for(int cy=0;cy<SIZE;cy++) {
+				
+			}
+		}
+	}
+	
+	private void mergeHitbox(Vector2f a,Vector2f b,Tile.Edges e) {
+		Tile ta=tiles[(int) a.x][(int) a.y];
+		Tile tb=tiles[(int) b.x][(int) b.y];
+		
+		
 	}
 	
 	

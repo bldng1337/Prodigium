@@ -9,7 +9,7 @@ import org.joml.Vector4f;
 
 import me.engine.Engine;
 import me.engine.Utils.MathUtils;
-import me.engine.Utils.Texture;
+import me.engine.Utils.TextureAtlas;
 import me.engine.World.GameLevel;
 
 public abstract class Tile {
@@ -21,6 +21,16 @@ public abstract class Tile {
 	public abstract int render(Vector2f pos,float[] vertecies, float[] txt, float[] col, int i,GameLevel l);
 
 	public abstract Vector4f getBB(Vector2f pos);
+	
+	public float[][] getEdges(Vector2f pos) {
+		Vector4f bb=getBB(pos);
+		float[][] e=new float[4][2];
+		e[0]=new float[] {bb.x,bb.y};
+		e[1]=new float[] {bb.x,bb.w};
+		e[2]=new float[] {bb.z,bb.w};
+		e[3]=new float[] {bb.z,bb.y};
+		return e;
+	}
 	
 	public abstract boolean isCollideable();
 	
@@ -55,11 +65,11 @@ public abstract class Tile {
 
 	protected int render(Vector4f pos,Vector4f txtc,long txt,Vector4f b,int i,float[][] ren) {
 		int vi=i*(3*6),ti=i*(3*6),ci=i*(4*6);
-		float tx=Texture.getx(txt)+Texture.getdx(txt)*txtc.x;
-		float ty=Texture.gety(txt)+Texture.getdy(txt)*txtc.y;
-		float tx2=Texture.getx(txt)+Texture.getdx(txt)*txtc.z;
-		float ty2=Texture.gety(txt)+Texture.getdy(txt)*txtc.w;
-		int atlas=Texture.getatlas(txt);
+		float tx=TextureAtlas.getx(txt)+TextureAtlas.getdx(txt)*txtc.x;
+		float ty=TextureAtlas.gety(txt)+TextureAtlas.getdy(txt)*txtc.y;
+		float tx2=TextureAtlas.getx(txt)+TextureAtlas.getdx(txt)*txtc.z;
+		float ty2=TextureAtlas.gety(txt)+TextureAtlas.getdy(txt)*txtc.w;
+		int atlas=TextureAtlas.getatlas(txt);
 		tx/=Engine.getEngine().getTex().getMsize();
 		ty/=Engine.getEngine().getTex().getMsize();
 		tx2/=Engine.getEngine().getTex().getMsize();

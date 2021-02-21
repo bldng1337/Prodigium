@@ -14,7 +14,7 @@ import me.engine.Utils.ParticleManager;
 import me.engine.Utils.ParticleManager.ParticleSystem;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Space;
-import me.engine.Utils.Texture;
+import me.engine.Utils.TextureAtlas;
 import me.engine.World.GameLevel;
 import me.engine.World.Tiles.STile;
 
@@ -95,8 +95,8 @@ public class Entity{
 			hurttime-=0.1f;
 		else hurttime=0;
 		r.setColor(255,(int)(255-hurttime*255f),(int)(255-hurttime*255f),255);
-		r.renderRect(x, y, width, height, getTextureid(), (int)elapsed%Texture.getaniframes(getTextureid()));
-		if(elapsed>Texture.getaniframes(getTextureid()))
+		r.renderRect(x, y, width, height, getTextureid(), (int)elapsed%TextureAtlas.getaniframes(getTextureid()));
+		if(elapsed>TextureAtlas.getaniframes(getTextureid()))
 			finishedanimation();
 		if(renderflipped)
 			r.resetTexCoords();
@@ -220,7 +220,7 @@ public class Entity{
 	public int getFrame() {
 		long elapsed=getelapsed();
 		elapsed/=framedelay;
-		return (int)elapsed%Texture.getaniframes(getTextureid());
+		return (int)elapsed%TextureAtlas.getaniframes(getTextureid());
 	}
 
 	public int getFramedelay() {

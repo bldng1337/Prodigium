@@ -38,7 +38,7 @@ public class Renderer {
 	/**
 	 * The VertexBuffer which gets populated with the Vertex data
 	 */
-	private VertexBuffer v;
+	VertexBuffer v;
 	/**
 	 * Scale and Projection Matrices
 	 */
@@ -78,11 +78,11 @@ public class Renderer {
 	 * @param frame The Frame of Animation
 	 */
 	public void renderRect(float x, float y, float width, float height, long texid,int frame) {
-		float tx=Texture.getx(texid)+Texture.getdx(texid)*frame+Texture.getdx(texid)*texcoords.x;
-		float ty=Texture.gety(texid)+Texture.getdy(texid)*texcoords.y;
-		float tx2=Texture.getx(texid)+Texture.getdx(texid)*frame+Texture.getdx(texid)*texcoords.z;
-		float ty2=Texture.gety(texid)+Texture.getdy(texid)*texcoords.w;
-		int atlas=Texture.getatlas(texid);
+		float tx=TextureAtlas.getx(texid)+TextureAtlas.getdx(texid)*frame+TextureAtlas.getdx(texid)*texcoords.x;
+		float ty=TextureAtlas.gety(texid)+TextureAtlas.getdy(texid)*texcoords.y;
+		float tx2=TextureAtlas.getx(texid)+TextureAtlas.getdx(texid)*frame+TextureAtlas.getdx(texid)*texcoords.z;
+		float ty2=TextureAtlas.gety(texid)+TextureAtlas.getdy(texid)*texcoords.w;
+		int atlas=TextureAtlas.getatlas(texid);
 		
 		tx/=Engine.getEngine().getTex().msize;
 		ty/=Engine.getEngine().getTex().msize;

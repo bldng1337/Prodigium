@@ -1,5 +1,7 @@
 package me.engine;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -11,6 +13,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -30,11 +34,12 @@ import me.engine.Scripting.ScriptManager;
 import me.engine.Utils.ChunkRenderer;
 import me.engine.Utils.FontRenderer;
 import me.engine.Utils.GlStateManager;
+import me.engine.Utils.LightRenderer;
 import me.engine.Utils.LoggerOutputStream;
 import me.engine.Utils.ParticleManager;
 import me.engine.Utils.Profiler;
 import me.engine.Utils.Renderer;
-import me.engine.Utils.Texture;
+import me.engine.Utils.TextureAtlas;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.Events.Initialization;
 import me.engine.Utils.Event.Events.KeyPressed;
@@ -73,7 +78,7 @@ public class Engine {
 	/**
 	 * TextureManager for loading and rendering Textures
 	 */
-	Texture tex;
+	TextureAtlas tex;
 	/**
 	 * ChunkRenderer used to Render Chunks
 	 */
@@ -93,6 +98,11 @@ public class Engine {
 	HUD hud;
 	PrintStream logprintstream;
 	ParticleManager pm;
+	LightRenderer lr;
+
+	public LightRenderer getLightRenderer() {
+		return lr;
+	}
 
 	/**
 	 * Mouse Coordinates
@@ -174,7 +184,7 @@ public class Engine {
 			//Enable GL
 			GL.createCapabilities();
 			//Setup Texture and Renderer
-			tex=new Texture();
+			tex=new TextureAtlas();
 			render=new Renderer();
 			uirender=new Renderer();
 			chunkrenderer=new ChunkRenderer();
@@ -184,7 +194,7 @@ public class Engine {
 			em=new EntityManager(sm);
 			hud=new HUD();
 			pm=new ParticleManager();
-			
+			lr=new LightRenderer();
 			//Setup the Projection and Aspect Ratio
 			setAspectRatio(windowwidth, windowheight);
 			
@@ -241,7 +251,6 @@ public class Engine {
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 			GLFW.glfwPollEvents(); // Poll for window events.
 			dt=(float)(System.nanoTime()-time)/1000000000f;
-			System.out.println(System.nanoTime()-time);
 			time=System.nanoTime();
 		}
 	}
@@ -356,14 +365,13 @@ public class Engine {
 		offsetx = (windowwidth  / 2) - (width / 2);
 		offsety = (windowheight / 2) - (height / 2);
 		
-		GL45.glViewport(offsetx,offsety,width,height);
+		GlStateManager.Viewport(offsetx,offsety,width,height);
 		// Now we use Ortho
 		render.ortho(0, windowwidth, windowheight, 0, -1, 1);
 		
 		//Now to calculate the scale considering the screen size and virtual size
 		float scalex = ((float)(windowwidth) / (float)virtualwidth);
 		float scaley = ((float)(windowheight) / (float)virtualheight);
-		GL45.glScalef(scalex, scaley, 1.0f);
 		render.scale(scalex, scaley, 1.0f);
 	}
 	
@@ -395,7 +403,7 @@ public class Engine {
 		}
 	}
 	
-	public Texture getTex() {
+	public TextureAtlas getTex() {
 		return tex;
 	}
 	

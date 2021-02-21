@@ -31,6 +31,7 @@ public class MathUtils {
         return (float) (1.0 - fpart(x));
     }
     
+    
     /**
      * https://rosettacode.org/wiki/Xiaolin_Wu%27s_line_algorithm#Java
      * @param x0
@@ -39,20 +40,12 @@ public class MathUtils {
      * @param y1
      */
     public static void drawLine(Consumer<Vector2f> d,float x0, float y0, float x1, float y1) {
-    	final float t=0.45f;
-    	final float dt=1-t;
-    	if(fpart(x0)>t)
-    		x0+=dt;
-    	if(fpart(y0)>t)
-    		y0+=dt;
-    	if(fpart(x1)>t)
-    		x1+=dt;
-    	if(fpart(y1)>t)
-    		y1+=dt;
-    	x0=(float) Math.floor(x0);
-    	y0=(float) Math.floor(y0);
-    	x1=(float) Math.floor(x1);
-    	y1=(float) Math.floor(y1);
+    	System.out.println(y0);
+    	final float m=0.2f;
+    	x0=(float) Math.floor(x0+m);
+    	y0=(float) Math.floor(y0-m);
+    	x1=(float) Math.floor(x1+m);
+    	y1=(float) Math.floor(y1-m);
         boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
         if (steep)
         	 drawLine(d,y0, x0, y1, x1);
@@ -105,6 +98,19 @@ public class MathUtils {
             }
             intery = intery + gradient;
         }
+    }
+    
+    
+    
+    public static void drawCircle(Consumer<Vector2f> d,int x,int y,int r) {
+		for (int i = y-r; i < y+r; i++) {
+		    for (int j = x; (j-x)*(j-x) + (i-y)*(i-y) <= r*r; j--) {
+		    	d.accept(new Vector2f(j,i));
+		    }
+		    for (int j = x+1; (j-x)*(j-x) + (i-y)*(i-y) <= r*r; j++) {
+		    	d.accept(new Vector2f(j,i));
+		    }
+		}
     }
     
     public static Vector2f rayrect(Vector4f AABB,Vector4f ray) {

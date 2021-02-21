@@ -8,6 +8,8 @@ import UI.Statbar;
 import me.engine.Engine;
 import me.engine.Entity.Animation;
 import me.engine.Entity.Entity;
+import me.engine.Utils.LightRenderer;
+import me.engine.Utils.LightRenderer.Light;
 import me.engine.Utils.MathUtils;
 import me.engine.Utils.Profiler;
 import me.engine.Utils.Space;
@@ -38,6 +40,7 @@ public class Main {
 	int posindex;
 	long txt;
 	Profiler p;
+	Light l;
 	@EventTarget
 	public void oninit(Initialization i) {
 //		imcomp=new ImGuiComponent();
@@ -53,7 +56,7 @@ public class Main {
 		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
 		Engine.getEngine().getHud().add(new Statbar(-60,1080-140,800,140,e));
 		Engine.getEngine().getPm().addParticleSystem((a)->{a.getMotion().set(0, -0.1);a.setSize(4);}).setColor(0x35FFFFFF).setMax(20).setMaxLifetime(6000).setSpawndelay(30);
-		
+		l=Engine.getEngine().getLightRenderer().createLight(new Vector2f(400,400), 900, 0x5FFFA1FF);
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
@@ -70,17 +73,11 @@ public class Main {
 	public void onRender(Render r) {
 		Vector2f v=new Vector2f();
 		long s=System.nanoTime();
-//		try{
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
-			Vector2f mt=new Vector2f();
-			m.div(Tile.SIZE, mt);
-			
-			v=Engine.getEngine().getCurrlevel().raycastgeometry(mt, new Vector2f(10, 10));
-			
-			
-			
+		Vector2f mt=new Vector2f();
+		m.div(Tile.SIZE, mt);
+		
+		v=Engine.getEngine().getCurrlevel().raycastgeometry(mt, new Vector2f(10, 10));
+		
 		if(v==null)
 			return;
 		v.mul(Tile.SIZE);
@@ -142,6 +139,7 @@ public class Main {
 	
 	@EventTarget(p=priority.HIGH)
 	public void onUpdate(Update u) {
+		l.getPos().set(e.x+e.getWidth()/2,e.y+e.getHeight()/2);
 //		if(posindex>=pos.length)
 //			return;
 //		e.motionX=pos[posindex].x*Tile.SIZE-e.x<0?-1:1;
