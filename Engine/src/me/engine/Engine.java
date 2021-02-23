@@ -195,6 +195,8 @@ public class Engine {
 			hud=new HUD();
 			pm=new ParticleManager();
 			lr=new LightRenderer();
+			render.setLightmap(lr.getLightMap());
+			uirender.setLightmap(lr.getLightMap());
 			//Setup the Projection and Aspect Ratio
 			setAspectRatio(windowwidth, windowheight);
 			
@@ -230,9 +232,13 @@ public class Engine {
 	public void mainGameLoop() {
 		float dt=0;
 		long time=System.nanoTime();//Frametime for debug
+		uirender.disableLightning();
+		lr.disableLightning();
 		while ( !GLFW.glfwWindowShouldClose(window) ) {
 			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			
+			render.disableLightning();
+			lr.updateLightmap();
+			render.enableLightning();
 			//Level Rendering
 			if(currlevel!=null) {
 				currlevel.render();
@@ -248,8 +254,10 @@ public class Engine {
 			//Call Event Render2D
 			EventManager.call(new Render2D(dt));
 			uirender.flush();
+			//lr.drawLightmap(0x79FFFFFF);
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 			GLFW.glfwPollEvents(); // Poll for window events.
+			System.out.println("Took "+(float)(System.nanoTime()-time)/1_000_000f);
 			dt=(float)(System.nanoTime()-time)/1000000000f;
 			time=System.nanoTime();
 		}

@@ -34,7 +34,8 @@ public class Renderer {
 	/**
 	 * The write pos from the vertices and texcoords Arrays 
 	 */
-	int vindex=0,tindex=0,cindex=0;
+	float[] ligh;
+	int vindex=0,tindex=0,cindex=0,lindex;
 	/**
 	 * The VertexBuffer which gets populated with the Vertex data
 	 */
@@ -51,14 +52,16 @@ public class Renderer {
 	 * The Shader Program used for Rendering
 	 */
 	Shader s;
+	int lightmap;
 	
 	int rgba;
-	
+	boolean lightning;
 	Vector4f texcoords;
 	
 	public Renderer() {
 		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\std.vert"));
 		vertices=new float[MAXDRAW];
+		ligh=new float[MAXDRAW/3];
 		txt=new float[MAXDRAW];
 		col=new float[MAXDRAW/3*4];
 		c=new Camera();
@@ -66,6 +69,18 @@ public class Renderer {
 		texcoords=new Vector4f();
 		resetTexCoords();
 		resetColor();
+	}
+	
+	public void setLightmap(int ID) {
+		lightmap=ID;
+	}
+	
+	public void enableLightning() {
+		lightning=true;
+	}
+	
+	public void disableLightning() {
+		lightning=false;
 	}
 	
 	/**
@@ -104,6 +119,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x;
 		vertices[vindex++]=y;
@@ -115,6 +131,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x+width;
 		vertices[vindex++]=y;
@@ -126,6 +143,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x;
 		vertices[vindex++]=y+height;
@@ -137,6 +155,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x+width;
 		vertices[vindex++]=y+height;
@@ -159,6 +178,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		if(vindex>MAXDRAW-19)
 			flush();
@@ -180,6 +200,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x;
 		vertices[vindex++]=y;
@@ -191,6 +212,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x+width;
 		vertices[vindex++]=y;
@@ -202,6 +224,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x;
 		vertices[vindex++]=y+height;
@@ -213,6 +236,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x+width;
 		vertices[vindex++]=y+height;
@@ -224,6 +248,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		vertices[vindex++]=x+width;
 		vertices[vindex++]=y;
@@ -235,6 +260,7 @@ public class Renderer {
 		col[cindex++]=green/255f;
 		col[cindex++]=red/255f;
 		col[cindex++]=alpha/255f;
+		ligh[lindex++]=lightning?1:0;
 		
 		if(vindex>MAXDRAW-19)
 			flush();
@@ -280,26 +306,32 @@ public class Renderer {
 			v.createBuffer(vertices, 0, 3);
 			v.createBuffer(txt, 1, 3);
 			v.createBuffer(col, 2, 4);
+			v.createBuffer(ligh, 3, 1);
 		}else {
 			v.updateBuffer(vertices, 0, 3);
 			v.updateBuffer(txt, 1, 3);
 			v.updateBuffer(col, 2, 4);
+			v.updateBuffer(ligh, 3, 1);
 		}
 		s.bind();
 		s.useUniform("projection", projection);
 		s.useUniform("scale", scale);
-		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
+		s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6, 7);
 		s.useUniform("u_Transform", c.translate);
+		s.useUniform("u_Resolution", Engine.getEngine().getWindowwidth(),Engine.getEngine().getWindowheight());
 		Engine.getEngine().getTex().bind();
+		GL45.glBindTextureUnit(7, lightmap);
 		v.bind(0);
 		v.bind(1);
 		v.bind(2);
+		v.bind(3);
 		GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vindex);
 		v.unbind();
 		s.unbind();
 		cindex=0;
 		vindex=0;
 		tindex=0;
+		lindex=0;
 		vertices=new float[MAXDRAW];
 		txt=new float[MAXDRAW];
 		col=new float[MAXDRAW/3*4];

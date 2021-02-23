@@ -46,12 +46,14 @@ public class ChunkRenderer {
 			s.bind();
 			Engine.getEngine().getRender().s.useUniform("projection", Renderer.projection);
 			Engine.getEngine().getRender().s.useUniform("scale", Renderer.scale);
-			Engine.getEngine().getRender().s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6);
+			Engine.getEngine().getRender().s.useUniform("u_Textures", 0, 1, 2, 3, 4, 5, 6, 7);
 			Engine.getEngine().getRender().s.useUniform("u_Transform", Engine.getEngine().getRender().c.translate);
-			Engine.getEngine().getTex().bind();
+			Engine.getEngine().getRender().s.useUniform("u_Resolution", Engine.getEngine().getWindowwidth(),Engine.getEngine().getWindowheight());Engine.getEngine().getTex().bind();
+			GL45.glBindTextureUnit(7, Engine.getEngine().getRender().lightmap);
 			vb.bind(0);
 			vb.bind(1);
 			vb.bind(2);
+			vb.bind(3);
 			GL45.glDrawArrays(GL45.GL_TRIANGLES, 0, vb.getbuffersize(0));
 			vb.unbind();
 			s.unbind();

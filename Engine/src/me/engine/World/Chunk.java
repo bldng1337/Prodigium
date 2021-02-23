@@ -95,11 +95,14 @@ public class Chunk {
 				i=ctile.render(new Vector2f(x,y),vertecies,txt,col,i,l);
 			}
 		}
+		float[] l=new float[i*6];
+		for(int ind=0;ind<i*6;ind++)
+			l[ind]=1;
 		
 		vb.createBuffer(Arrays.copyOfRange(vertecies, 0, i*(3*6)), 0, 3);
 		vb.createBuffer(Arrays.copyOfRange(txt, 0, i*(3*6)), 1, 3);
 		vb.createBuffer(Arrays.copyOfRange(col, 0, i*(4*6)), 2, 4);
-		System.out.println("Rendering took "+(System.nanoTime()-dt)/1000000);
+		vb.createBuffer(l, 3, 1);
 		return vb;
 	}
 	

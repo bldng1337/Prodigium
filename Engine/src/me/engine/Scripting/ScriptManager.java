@@ -10,7 +10,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import me.engine.Engine;
 import me.engine.Utils.FileUtils;
 
@@ -28,7 +27,7 @@ public class ScriptManager {
 	
 	public ScriptManager() {
 		sem=new ScriptEngineManager();
-		sem.registerEngineExtension("js", new NashornScriptEngineFactory());
+		//sem.registerEngineExtension("js", new NashornScriptEngineFactory());
 		registerScripts();
 	}
 	

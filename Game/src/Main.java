@@ -56,7 +56,7 @@ public class Main {
 		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
 		Engine.getEngine().getHud().add(new Statbar(-60,1080-140,800,140,e));
 		Engine.getEngine().getPm().addParticleSystem((a)->{a.getMotion().set(0, -0.1);a.setSize(4);}).setColor(0x35FFFFFF).setMax(20).setMaxLifetime(6000).setSpawndelay(30);
-		l=Engine.getEngine().getLightRenderer().createLight(new Vector2f(400,400), 900, 0x5FFFA1FF);
+		l=Engine.getEngine().getLightRenderer().createLight(new Vector2f(400,400), 900, 0xFFFFA1FF);
 //		p=new Profiler();
 //		Engine.getEngine().setProfiler(p);
 //		p.startTimer("FrameTime");
@@ -88,10 +88,11 @@ public class Main {
 	public void onMouse(MousePressed mp) {
 		if(mp.getPressed()==GLFW.GLFW_RELEASE)
 			return;
-		Vector2f m=new Vector2f((float)mp.getX(),(float)mp.getY());
-		m.add(Engine.getEngine().getRender().c.getTranslate());
-		e.x=m.x-e.getWidth()/2;
-		e.y=m.y-e.getHeight()/2;
+		Engine.getEngine().getLightRenderer().createLight(Space.screentoworldr(new Vector2f((float)mp.getX(),(float)mp.getY())), 1400, 0xFF000000|(int)(Math.random()*0x00FFFFFF));
+//		Vector2f m=new Vector2f((float)mp.getX(),(float)mp.getY());
+//		m.add(Engine.getEngine().getRender().c.getTranslate());
+//		e.x=m.x-e.getWidth()/2;
+//		e.y=m.y-e.getHeight()/2;
 	}
 	
 	boolean AdjustScales=false;
