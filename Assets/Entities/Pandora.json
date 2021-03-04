@@ -1,0 +1,1 @@
+{"Name":"Pandora","Animation":{"INTERACTION":"Textures.missing:png","DEATH":"Textures.missing:png","ATTACKING":"Textures.Pandora.Angriff_Explosion.Pandora_Angriff_1:gif","IDLE":"Textures.missing:png","RUNNING":"Textures.Pandora.Pandora_gehen:gif"},"Health":100.0,"Width":50.0,"Height":50.0,"Speed":2.0,"Script":"Scripts.Pandora:js","FrameDelay":120}

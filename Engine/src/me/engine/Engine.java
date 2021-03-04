@@ -206,7 +206,7 @@ public class Engine {
 			//Blend for Alpha
 			GlStateManager.enable(GL45.GL_BLEND);
 			// Set the clear color
-			GL45.glClearColor(0.239f, 0.239f, 0.239f, 0.0f);
+			GL45.glClearColor(0, 0, 0, 0);
 			GL45.glBlendColor(1.0f, 1.0f, 1.0f, 1.0f);
 			GL45.glBlendFunc(GL45.GL_SRC_ALPHA, GL45.GL_ONE_MINUS_SRC_ALPHA);  
 			//Error Callback
@@ -236,11 +236,11 @@ public class Engine {
 		lr.disableLightning();
 		while ( !GLFW.glfwWindowShouldClose(window) ) {
 			GL45.glClear(GL45.GL_COLOR_BUFFER_BIT | GL45.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			render.disableLightning();
-			lr.updateLightmap();
-			render.enableLightning();
 			//Level Rendering
 			if(currlevel!=null) {
+				render.disableLightning();
+				lr.updateLightmap();
+				render.enableLightning();
 				currlevel.render();
 				currlevel.update();
 				chunkrenderer.render();
@@ -257,7 +257,6 @@ public class Engine {
 			//lr.drawLightmap(0x79FFFFFF);
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 			GLFW.glfwPollEvents(); // Poll for window events.
-			System.out.println("Took "+(float)(System.nanoTime()-time)/1_000_000f);
 			dt=(float)(System.nanoTime()-time)/1000000000f;
 			time=System.nanoTime();
 		}
@@ -462,8 +461,10 @@ public class Engine {
 	}
 
 	public void setGuiscreen(GuiScreen guiscreen) {
-		EventManager.unregister(this.guiscreen);
-		EventManager.register(guiscreen);
+		if(this.guiscreen!=null)
+			EventManager.unregister(this.guiscreen);
+		if(guiscreen!=null)
+			EventManager.register(guiscreen);
 		this.guiscreen = guiscreen;
 	}
 

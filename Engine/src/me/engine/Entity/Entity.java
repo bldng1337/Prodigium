@@ -240,7 +240,8 @@ public class Entity{
 	}
 
 	public void destroy() {
-		pathfind.cancel(true);
+		if(pathfind!=null)
+			pathfind.cancel(true);
 	}
 
 	public void setLevel(GameLevel gameLevel) {

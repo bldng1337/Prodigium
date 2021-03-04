@@ -31,7 +31,7 @@ void main()
 		col=texture(u_Textures[index],v_Texture.xy)*v_Color;
 	}
 	if(v_renderargs!=0)
-		col*=blur(u_Textures[7],v_Position)+vec4(0.3,0.3,0.3,1);
+		col*=blur(u_Textures[7],v_Position)*2.5f+vec4(0.1,0.1,0.1,1);
 		//col*=(texture(u_Textures[7],v_Position)+vec4(0.3,0.3,0.3,1));
 	o_Color=col;
 }

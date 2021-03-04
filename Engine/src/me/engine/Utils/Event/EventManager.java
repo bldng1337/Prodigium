@@ -47,6 +47,8 @@ public class EventManager {
 //					e1.printStackTrace(Engine.getEngine().getLogprintstream());
 				}
 			}
+			if(i>=clist.size())
+				i=clist.size()-1;
 		}
 		
 	}

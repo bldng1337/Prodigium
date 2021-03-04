@@ -184,6 +184,103 @@ public class Renderer {
 			flush();
 	}
 	
+	public void renderRectAR(float x, float y, float width, float height, long texid,int frame) {
+		float w=TextureAtlas.getdx(texid);
+		float h=TextureAtlas.getdy(texid);
+		float tar=w/h;
+		float maxh=width/tar;
+		if (maxh > height )
+		    width = (int)(height * tar + 0.5f);
+		renderRect(x, y, width, maxh, texid, frame);
+	}
+	
+	public void renderVGradient(float x, float y, float width, float height, int bottom,int top) {
+		int bblue = bottom & 0xff;
+		int bgreen = (bottom & 0xff00) >> 8;
+		int bred = (bottom & 0xff0000) >> 16;
+		int balpha = (bottom & 0xff000000) >>> 24;
+		
+		int tblue = top & 0xff;
+		int tgreen = (top & 0xff00) >> 8;
+		int tred = (top & 0xff0000) >> 16;
+		int talpha = (top & 0xff000000) >>> 24;
+		
+		vertices[vindex++]=x;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=bblue/255f;
+		col[cindex++]=bgreen/255f;
+		col[cindex++]=bred/255f;
+		col[cindex++]=balpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		vertices[vindex++]=x;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=tblue/255f;
+		col[cindex++]=tgreen/255f;
+		col[cindex++]=tred/255f;
+		col[cindex++]=talpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=tblue/255f;
+		col[cindex++]=tgreen/255f;
+		col[cindex++]=tred/255f;
+		col[cindex++]=talpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		vertices[vindex++]=x;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=bblue/255f;
+		col[cindex++]=bgreen/255f;
+		col[cindex++]=bred/255f;
+		col[cindex++]=balpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y+height;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=bblue/255f;
+		col[cindex++]=bgreen/255f;
+		col[cindex++]=bred/255f;
+		col[cindex++]=balpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		vertices[vindex++]=x+width;
+		vertices[vindex++]=y;
+		vertices[vindex++]=1;
+		txt[tindex++]=0;
+		txt[tindex++]=0;
+		txt[tindex++]=8;
+		col[cindex++]=tblue/255f;
+		col[cindex++]=tgreen/255f;
+		col[cindex++]=tred/255f;
+		col[cindex++]=talpha/255f;
+		ligh[lindex++]=lightning?1:0;
+		
+		if(vindex>MAXDRAW-19)
+			flush();
+	}
+	
 	public void renderRect(float x, float y, float width, float height, int rgba) {
 		int blue = rgba & 0xff;
 		int green = (rgba & 0xff00) >> 8;

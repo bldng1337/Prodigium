@@ -3,6 +3,7 @@ package me.engine.Gui.InGame;
 import java.util.ArrayList;
 
 import me.engine.Engine;
+import me.engine.Gui.UIElement;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.Events.MousePressed;

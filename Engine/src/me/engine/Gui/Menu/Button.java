@@ -2,43 +2,49 @@ package me.engine.Gui.Menu;
 
 
 import me.engine.Engine;
+import me.engine.Gui.UIElement;
+import me.engine.Utils.Renderer;
+import me.engine.Utils.Event.Events.MousePressed;
 
-public class Button
+public class Button extends UIElement
 {
-	int id;
-	public float posX, posY;
-	public final float width, height;
 	final long TEXTURE, HOVER_TEXTURE;
-	boolean hovering = false;
+	int rgb;
+	Runnable pressev;
 	String Name;
 	
-	//Custom textured button
-	public Button(int id, float x, float y, float width, float height, String Name) {
-		this.id = id;
-		this.width = width;
-		this.height = height;
+	public Button(Runnable onPress, float x, float y, float width, float height,String Name, int abgr) {
+		super(x,y,width,height);
 		this.Name = Name;
-		posX = x;
-		posY = y;
-		TEXTURE = Engine.getEngine().getTex().getTexture("Textures.Gui.Button:png");
-		HOVER_TEXTURE = Engine.getEngine().getTex().getTexture("Textures.Gui.Button_hover:png");
+		pressev=onPress;
+		TEXTURE = 0;
+		this.HOVER_TEXTURE = 0;
+		rgb=abgr;
 	}
-
-	public void drawButton() {
-		Engine.getEngine().getUIrender().renderRect(posX, posY, width, height, hovering ? HOVER_TEXTURE : TEXTURE, 0);
-		try {
-			float f=height/4;
-			if(hovering)
-				f/=1.1;
-			Engine.getEngine().getFontRenderer().draw(Name, posX+width/2-Engine.getEngine().getFontRenderer().getWidth(Name, f)/2, posY+height/2-Engine.getEngine().getFontRenderer().getHeight(Name, f)/2, f);
-			
-		}catch(Exception e) {
-			e.printStackTrace();
+	
+	public Button(Runnable onPress, float x, float y, float width, float height, String Name,String Texture) {
+		super(x,y,width,height);
+		this.Name = Name;
+		pressev=onPress;
+		TEXTURE = Engine.getEngine().getTex().getTexture(Texture);
+		HOVER_TEXTURE = Engine.getEngine().getTex().getTexture(Texture.replace("_button", "_hovered"));
+	}
+	
+	@Override
+	public boolean onClicked(MousePressed a) {
+		if(this.isHovered(a.getX(), a.getX())) {
+			pressev.run();
+			return true;
 		}
+		return false;
 	}
 
-	public boolean isHovered(double x, double y) {
-		return ((x >= posX && x <= posX+width)
-				&& (y >= posY && y <= posY+height));
+	@Override
+	public void render(Renderer r) {
+		if(TEXTURE==0) {
+			Engine.getEngine().getUIrender().renderRect(x, y, width, height, rgb);
+		}else {
+			Engine.getEngine().getUIrender().renderRect(x, y, width, height, (hovered && HOVER_TEXTURE!=0) ? HOVER_TEXTURE : TEXTURE, 0);
+		}
 	}
 }

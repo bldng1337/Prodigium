@@ -77,10 +77,10 @@ public class WallTile extends Tile{
 				bb=new Vector4f(pos.x-extend,pos.y,pos.x+1+extend,pos.y+1);
 			}else if(pos.x>0&&lvl.getTile((int)pos.x-1, (int)pos.y) instanceof WallTile){
 				// X-T-.
-				bb=new Vector4f(pos.x-extend,pos.y,pos.x+1/2f,pos.y+1);
+				bb=new Vector4f(pos.x-extend,pos.y,pos.x+0.5f+3f/STile.SIZE,pos.y+1);
 			}else if(pos.x<lvl.getsize()-1&&lvl.getTile((int)pos.x+1, (int)pos.y) instanceof WallTile){
 				// .-T-X
-				bb=new Vector4f(pos.x+1/2f,pos.y,pos.x+1+extend,pos.y+1);
+				bb=new Vector4f(pos.x+0.5f-3f/STile.SIZE,pos.y,pos.x+1+extend,pos.y+1);
 			}else if(pos.y<lvl.getsize()-1&&lvl.getTile((int)pos.x, (int)pos.y+1) instanceof WallTile) {
 				bb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y,pos.x+1/2f+3f/STile.SIZE,pos.y+1+extend);
 			}else {

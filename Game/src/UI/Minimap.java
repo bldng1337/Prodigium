@@ -2,7 +2,7 @@ package UI;
 
 import me.engine.Engine;
 import me.engine.Entity.Entity;
-import me.engine.Gui.InGame.UIElement;
+import me.engine.Gui.UIElement;
 import me.engine.Utils.Renderer;
 import me.engine.World.Tiles.STile;
 
