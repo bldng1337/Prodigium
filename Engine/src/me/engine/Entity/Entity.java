@@ -102,6 +102,7 @@ public class Entity{
 	public void render(Renderer r) {
 		if(renderflipped)
 			r.setTexCoords(1, 0, 0, 1);
+		
 		long elapsed=System.currentTimeMillis()-animationstamp;
 		elapsed/=framedelay;
 		Vector2f pos=Space.worldtoscreen(new Vector2f(x, y));

@@ -1,7 +1,6 @@
 var KeyPressed = Java.type("me.engine.Utils.Event.Events.KeyPressed");
 var Action = Java.type("me.engine.Utils.Event.Events.KeyPressed.Action");
 var Math = Java.type("java.lang.Math");
-
 var pm_dx=0,pm_dy=0;
 
 function pmupdate(){
@@ -24,7 +23,6 @@ function pmupdate(){
 		}
 	}
 }
-
 
 function pmkeypressed(key,state){
 	switch(key.toUpperCase()){

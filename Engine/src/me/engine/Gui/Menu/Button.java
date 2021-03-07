@@ -32,6 +32,17 @@ public class Button extends UIElement
 		HOVER_TEXTURE = Engine.getEngine().getTex().getTexture(Texture.replace("_button", "_hovered"));
 	}
 	
+	public Button(Runnable onPress, float x, float y, float width, float height, String Name,String Texture,boolean hover) {
+		super(x,y,width,height);
+		this.Name = Name;
+		pressev=onPress;
+		TEXTURE = Engine.getEngine().getTex().getTexture(Texture);
+		if(hover)
+			HOVER_TEXTURE = Engine.getEngine().getTex().getTexture(Texture.replace("_button", "_hovered"));
+		else
+			HOVER_TEXTURE=0;
+	}
+	
 	@Override
 	public boolean onClicked(MousePressed a) {
 		if(a.getPressed()!=GLFW.GLFW_PRESS)
@@ -50,5 +61,9 @@ public class Button extends UIElement
 		}else {
 			Engine.getEngine().getUIrender().renderRect(x, y, width, height, (hovered && HOVER_TEXTURE!=0) ? HOVER_TEXTURE : TEXTURE, 0);
 		}
+		if(hovered)
+			Engine.getEngine().getUIrender().setColor(180, 180, 180, 255);
+		Engine.getEngine().getFontRenderer().drawCentred(Name, x+width/2, y+height/2+5, Engine.getEngine().getFontRenderer().getSize(width*0.9f, height*0.9f,Name));
+		Engine.getEngine().getUIrender().resetColor();
 	}
 }
