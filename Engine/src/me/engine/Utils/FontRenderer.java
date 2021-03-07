@@ -78,6 +78,16 @@ public class FontRenderer {
 		return getWidth(fontmap.get(c), size);
 	}
 	
+	public float getSize(float width,float height,String s) {
+		float h=fontmap.get('W').height*(s.split("\\\\n").length+1);
+		float w = 0;
+		for(char ch:s.toCharArray())
+			w+=fontmap.get(ch).width;
+		float sh=height/h;
+		float sw=width/w;
+		return sh>sw?sw:sh;
+	}
+	
 	private float getWidth(Char c,float size) {
 		return c.width*size;
 	}
@@ -92,6 +102,10 @@ public class FontRenderer {
 	
 	private float getHeight(Char c,float size) {
 		return c.height*size;
+	}
+	
+	public void drawCentred(String s,float x,float y,float size) {
+		draw(s, x-getWidth(s, size)/2, y-getHeight(s, size)/2, size);
 	}
 	
 	public void draw(String s,float x,float y,float size) {
