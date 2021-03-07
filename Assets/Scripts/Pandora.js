@@ -1,9 +1,13 @@
+#i Scripts.PlayerMovement:js
 var Animation = Java.type("me.engine.Entity.Animation");
+var EventManager = Java.type("me.engine.Utils.Event.EventManager");
+EventManager.registerfor(KeyPressed.class,e);
 
 function update(){
 	if(e.getAnimation()==Animation.DEATH){
 		return;
 	}
+	pmupdate();
 	if(e.health<=0){
 		e.setAnimation(Animation.DEATH);
 		return;
@@ -16,3 +20,8 @@ function update(){
 		}
 	}
 }
+function keypressed(key,state){
+	pmkeypressed(key,state);
+	
+}
+	

@@ -47,5 +47,8 @@ public class KeyPressed extends Event{
 		Action(int i){
 			action=i;
 		}
+		public boolean isKeyDown() {
+			return action==GLFW.GLFW_PRESS||action==GLFW.GLFW_REPEAT;
+		}
 	}
 }

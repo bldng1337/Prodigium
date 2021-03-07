@@ -12,7 +12,7 @@ public class WallTile extends Tile{
 	long[] ftex;
 	long hwend;
 	long vwend;
-	Vector4f bb;
+	Vector4f bb,lbb;
 	
 	public WallTile(String[] hwalltex,String[] vwalltex,String[] floortex,String hwallend,String vwallend) {
 		hwtex=new long[hwalltex.length];
@@ -98,6 +98,32 @@ public class WallTile extends Tile{
 	@Override
 	public long getPrimaryTex() {
 		return hwtex[0];
+	}
+
+	@Override
+	public Vector4f getLightBB(Vector2f pos) {
+		if(lbb==null) {
+			final float extend=0.1f;
+			GameLevel lvl=Engine.getEngine().getCurrlevel();
+			if(pos.x>0&&pos.x<lvl.getsize()-1&&
+					lvl.getTile((int)pos.x-1, 
+							(int)pos.y) instanceof WallTile&&
+					lvl.getTile((int)pos.x+1, (int)pos.y) instanceof WallTile) {
+				// X-T-X
+				lbb=new Vector4f(pos.x-extend,pos.y,pos.x+1+extend,pos.y+1f);
+			}else if(pos.x>0&&lvl.getTile((int)pos.x-1, (int)pos.y) instanceof WallTile){
+				// X-T-.
+				lbb=new Vector4f(pos.x-extend,pos.y,pos.x+0.5f+3f/STile.SIZE,pos.y+1f);
+			}else if(pos.x<lvl.getsize()-1&&lvl.getTile((int)pos.x+1, (int)pos.y) instanceof WallTile){
+				// .-T-X
+				lbb=new Vector4f(pos.x+0.5f-3f/STile.SIZE,pos.y,pos.x+1+extend,pos.y+1f);
+			}else if(pos.y<lvl.getsize()-1&&lvl.getTile((int)pos.x, (int)pos.y+1) instanceof WallTile) {
+				lbb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y,pos.x+1/2f+3f/STile.SIZE,pos.y+1+extend);
+			}else {
+				lbb=new Vector4f(pos.x+1/2f-3f/STile.SIZE,pos.y-extend/10,pos.x+1/2f+3f/STile.SIZE+extend/10,pos.y+1);
+			}
+		}
+		return lbb;
 	}
 
 }

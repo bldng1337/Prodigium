@@ -57,6 +57,10 @@ public abstract class GameLevel {
 	
 	public abstract void spawnEnemy(int x, int y);
 	
+	public void addEntity(String id,int x,int y) {
+		this.addEntity(Engine.getEngine().getEntityManager().newEntity(id,x,y));
+	}
+	
 	public void addEntity(Entity e) {
 		e.setLevel(this);
 		entitylist.add(e);

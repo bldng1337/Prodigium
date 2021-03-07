@@ -17,7 +17,6 @@ public class SimpleLevel extends GameLevel{
 	@Override
 	public void spawnEnemy(int x, int y) {
 		addEntity(Engine.getEngine().getEntityManager().newEntity("Entities.Test.Testentity:json",x,y));
-		
 	}
 
 }

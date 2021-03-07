@@ -13,8 +13,8 @@ public class CharacterMenu extends GuiScreen{
 	long brick;
 	public CharacterMenu(Consumer<String> c) {
 		this.elementlist.add(new CharacterPreview(()->c.accept("Entities.Pandora:json"), 300, 0, 400, 1080, "Pandora", "Textures.Pandora.Pandora_Portrait:png"));
+		this.elementlist.add(new CharacterPreview(()->{System.out.println("Suta");c.accept("Entities.TestPlayer:json");}, 1300, 0, 400, 1080, "Suta", "Textures.Suta.Suta_Portrait:png"));
 		this.elementlist.add(new CharacterPreview(()->c.accept("Entities.Pandora:json"), 800, 0, 400, 1080, "Loki", "Textures.Loki.Loki_Portrait:png"));
-		this.elementlist.add(new CharacterPreview(()->c.accept("Entities.TestPlayer:json"), 1300, 0, 400, 1080, "Suta", "Textures.Suta.Suta_Portrait:png"));
 		brick=Engine.getEngine().getTex().getTexture("Textures.Wand.wand_leer:png");
 	}
 	@EventTarget

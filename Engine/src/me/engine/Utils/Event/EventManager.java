@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import me.engine.Engine;
-
 /**
  * @author Christian
  * Manages Events
@@ -23,7 +21,19 @@ public class EventManager {
 	 */
 	public static void register(Object o) {
 		for(Method m: o.getClass().getMethods()) {
-			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterTypes().length==1) {
+			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterTypes().length==1&&Event.class.isAssignableFrom(m.getParameterTypes()[0])) {
+				m.setAccessible(true);
+				clist.add(new MethodType(m, o,m.getAnnotationsByType(EventTarget.class)[0].p().getpri()));
+			}
+		}
+		Collections.sort(clist, (a,b)->{return a.p()-b.p();});
+	}
+	
+	public static void registerfor(Class e,Object o) {
+		if(!Event.class.isAssignableFrom(e))
+			return;
+		for(Method m: o.getClass().getMethods()) {
+			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterCount()==1&&m.getParameterTypes()[0].getSimpleName()==e.getSimpleName()) {
 				m.setAccessible(true);
 				clist.add(new MethodType(m, o,m.getAnnotationsByType(EventTarget.class)[0].p().getpri()));
 			}

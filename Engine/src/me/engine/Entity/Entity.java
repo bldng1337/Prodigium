@@ -9,12 +9,17 @@ import org.joml.Vector2i;
 
 import me.engine.Engine;
 import me.engine.Scripting.ScriptManager;
+import me.engine.Utils.FileUtils;
 import me.engine.Utils.MathUtils;
 import me.engine.Utils.ParticleManager;
 import me.engine.Utils.ParticleManager.ParticleSystem;
 import me.engine.Utils.Renderer;
 import me.engine.Utils.Space;
 import me.engine.Utils.TextureAtlas;
+import me.engine.Utils.Event.EventTarget;
+import me.engine.Utils.Event.Events.KeyPressed;
+import me.engine.Utils.Event.Events.MouseMoved;
+import me.engine.Utils.Event.Events.MousePressed;
 import me.engine.World.GameLevel;
 import me.engine.World.Tiles.STile;
 
@@ -77,6 +82,18 @@ public class Entity{
 	public long getTextureid() {
 		return textureids[currTexture.gettextureindex()];
 	}
+	@EventTarget
+	public void onMousePressed(MousePressed m) {
+		ScriptManager.invoke(script, "mousepressed",m.getX(),m.getY(),m.getPressed());
+	}
+	@EventTarget
+	public void onMouseMoved(MouseMoved m) {
+		ScriptManager.invoke(script, "mousemoved",m.getX(),m.getY());
+	}
+	@EventTarget
+	public void onKeyPressed(KeyPressed k) {
+		ScriptManager.invoke(script, "keypressed",k.getKey(),k.getAction());
+	}
 	
 	public void update() {
 		ScriptManager.invoke(script, "update");
@@ -109,6 +126,10 @@ public class Entity{
 		if(currTexture.equals(Animation.DEATH))
 			l.removeEntity(this);
 		animationstamp=System.currentTimeMillis();	
+	}
+	
+	public void include(String id) {
+		ScriptManager.append(script, FileUtils.stringfromFile(id));
 	}
 	
 	public void attackEntity(Entity other) {

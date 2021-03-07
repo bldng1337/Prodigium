@@ -1,6 +1,9 @@
 package me.engine.Utils.Event.Events;
 
+import org.lwjgl.glfw.GLFW;
+
 import me.engine.Utils.Event.Event;
+import me.engine.Utils.Event.Events.KeyPressed.Action;
 
 /**
  * @author Christian
@@ -36,5 +39,19 @@ public class MousePressed extends Event {
 	}
 	public int getPressed() {
 		return pressed;
+	}
+	public Action getAction() {
+		for(Action a:Action.values())
+			if(a.action==pressed)
+				return a;
+		return Action.UNKOWN;
+	}
+	
+	enum Action{
+		PRESSED(GLFW.GLFW_PRESS),RELEASE(GLFW.GLFW_RELEASE),UNKOWN(-1);
+		int action;
+		Action(int id){
+			this.action=id;
+		};
 	}
 }

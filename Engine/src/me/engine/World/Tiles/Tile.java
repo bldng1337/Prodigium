@@ -1,9 +1,5 @@
 package me.engine.World.Tiles;
 
-import org.joml.AABBf;
-import org.joml.Intersectionf;
-import org.joml.Rayf;
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -21,9 +17,20 @@ public abstract class Tile {
 	public abstract int render(Vector2f pos,float[] vertecies, float[] txt, float[] col, int i,GameLevel l);
 
 	public abstract Vector4f getBB(Vector2f pos);
+	public abstract Vector4f getLightBB(Vector2f pos);
 	
 	public float[][] getEdges(Vector2f pos) {
 		Vector4f bb=getBB(pos);
+		float[][] e=new float[4][2];
+		e[0]=new float[] {bb.x,bb.y};
+		e[1]=new float[] {bb.x,bb.w};
+		e[2]=new float[] {bb.z,bb.w};
+		e[3]=new float[] {bb.z,bb.y};
+		return e;
+	}
+	
+	public float[][] getLightEdges(Vector2f pos) {
+		Vector4f bb=getLightBB(pos);
 		float[][] e=new float[4][2];
 		e[0]=new float[] {bb.x,bb.y};
 		e[1]=new float[] {bb.x,bb.w};

@@ -1,6 +1,8 @@
 package me.engine.Gui.Menu;
 
 
+import org.lwjgl.glfw.GLFW;
+
 import me.engine.Engine;
 import me.engine.Gui.UIElement;
 import me.engine.Utils.Renderer;
@@ -32,7 +34,9 @@ public class Button extends UIElement
 	
 	@Override
 	public boolean onClicked(MousePressed a) {
-		if(this.isHovered(a.getX(), a.getX())) {
+		if(a.getPressed()!=GLFW.GLFW_PRESS)
+			return false;
+		if(hovered) {
 			pressev.run();
 			return true;
 		}

@@ -50,4 +50,9 @@ public class STile extends Tile {
 	public Vector4f getBB(Vector2f pos) {
 		return new Vector4f(pos.x,pos.y,pos.x+1,pos.y+1);
 	}
+
+	@Override
+	public Vector4f getLightBB(Vector2f pos) {
+		return new Vector4f(pos.x,pos.y,pos.x+1,pos.y+1);
+	}
 }

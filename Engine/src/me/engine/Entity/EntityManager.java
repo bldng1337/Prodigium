@@ -105,7 +105,8 @@ public class EntityManager {
 		e.maxhealth=e.health;
 		e.speed*=1+(Math.random()-0.5f)/10f;
 		e.currTexture=Animation.IDLE;
-		e.script=sm.getScript(ndata.scriptID, sc->{sc.put("Entity", e);sc.put("e", e);});
+		e.script=sm.newScript(ndata.scriptID);
+		sm.compileScript(e.script,ndata.scriptID, sc->{sc.put("Entity", e);sc.put("e", e);});
 		return e;
 	}
 	

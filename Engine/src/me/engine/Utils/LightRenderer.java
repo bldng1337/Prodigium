@@ -90,7 +90,7 @@ public class LightRenderer extends Renderer{
 					return;
 				Tile t=Engine.getEngine().getCurrlevel().getTile((int)v.x, (int)v.y);
 				if(t.isCollideable()) {
-					float[][] vl=t.getEdges(v.floor());
+					float[][] vl=t.getLightEdges(v.floor());
 					for(int i=0;i<4;i++)
 						for(int a=0;a<2;a++)
 							vl[i][a]*=Tile.SIZE;
