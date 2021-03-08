@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-import org.joml.Vector3f;
 import org.joml.Vector2f;
 
 import me.engine.Engine;

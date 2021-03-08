@@ -68,7 +68,7 @@ public class FrameBuffer {
 		if(!bound)
 			bind();
 		GL45.glClear(GL45.GL_COLOR_BUFFER_BIT|GL45.GL_STENCIL_BUFFER_BIT|GL45.GL_DEPTH_BUFFER_BIT);
-		if(!bound)
+		if(!b)
 			unbind();
 	}
 
@@ -104,6 +104,12 @@ public class FrameBuffer {
 			GlStateManager.Viewport(viewport);
 			bound=true;
 		}
+	}
+	
+	public float getDepth(int x,int y) {
+		float[] p=new float[1];
+		GL45.glReadnPixels(x, y, 1, 1, GL45.GL_DEPTH_COMPONENT, GL45.GL_FLOAT, p);
+		return p[0];
 	}
 
 	public void unbind() {

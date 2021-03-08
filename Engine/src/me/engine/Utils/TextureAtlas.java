@@ -207,7 +207,7 @@ public class TextureAtlas {
 			ib.put(a << 24 | b << 16 | g << 8 | r);
 		}
 		ib.flip();
-//		try {
+//		try {	
 //			ImageIO.write(catlas, "png", new File(Engine.dir.getParentFile()+"\\y"+atlas+".png"));
 //			System.out.println(Engine.dir+"y.png");
 //		} catch (IOException e) {

@@ -80,7 +80,6 @@ public class Chunk {
 	 * @return The Buffer
 	 */
 	public VertexBuffer renderChunk() {
-		long dt=System.nanoTime();
 		edges.clear();
 		VertexBuffer vb=new VertexBuffer(true);
 		float[] vertecies=new float[(SIZE*SIZE*6*3)*4];
@@ -105,21 +104,5 @@ public class Chunk {
 		vb.createBuffer(l, 3, 1);
 		return vb;
 	}
-	
-	public void batchHitboxes() {
-		for(int cx=0;cx<SIZE;cx++) {
-			for(int cy=0;cy<SIZE;cy++) {
-				
-			}
-		}
-	}
-	
-	private void mergeHitbox(Vector2f a,Vector2f b,Tile.Edges e) {
-		Tile ta=tiles[(int) a.x][(int) a.y];
-		Tile tb=tiles[(int) b.x][(int) b.y];
-		
-		
-	}
-	
 	
 }

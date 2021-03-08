@@ -82,14 +82,18 @@ public class Entity{
 	public long getTextureid() {
 		return textureids[currTexture.gettextureindex()];
 	}
+	
 	@EventTarget
 	public void onMousePressed(MousePressed m) {
-		ScriptManager.invoke(script, "mousepressed",m.getX(),m.getY(),m.getPressed());
+		ScriptManager.invoke(script, "mousepressed",m.getX()+Engine.getEngine().getRender().c.getTranslate().x,m.getY()+Engine.getEngine().getRender().c.getTranslate().y,m.getAction());
 	}
+	
+	
 	@EventTarget
 	public void onMouseMoved(MouseMoved m) {
-		ScriptManager.invoke(script, "mousemoved",m.getX(),m.getY());
+		ScriptManager.invoke(script, "mousemoved",m.getX()+Engine.getEngine().getRender().c.getTranslate().x,m.getY()+Engine.getEngine().getRender().c.getTranslate().y);
 	}
+	
 	@EventTarget
 	public void onKeyPressed(KeyPressed k) {
 		ScriptManager.invoke(script, "keypressed",k.getKey(),k.getAction());

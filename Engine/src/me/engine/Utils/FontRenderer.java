@@ -24,7 +24,7 @@ public class FontRenderer {
 		long renderid;
 		float width,height;
 	}
-	
+	//TODO: Implement
 	public enum Format {
 		RIGHT, LEFT, CENTERD, CENTERDDOWN, CENTERDUP, LEFTCENTER, LEFTUP, RIGHTCENTER, RIGHTUP
 	}

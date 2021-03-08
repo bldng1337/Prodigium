@@ -35,7 +35,6 @@ public class ChunkRenderer {
 		scale=Renderer.scale;
 		c=Engine.getEngine().getRender().c;
 		s=Engine.getEngine().getRender().s;
-//		s=new Shader(new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.frag"), new File(Engine.dir.getAbsolutePath()+"\\Assets\\Shader\\chunk.vert"));
 	}
 	
 	/**

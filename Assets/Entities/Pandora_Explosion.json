@@ -1,0 +1,1 @@
+{"Name":"Pandora_Explosion","Animation":{"INTERACTION":"Textures.missing:png","DEATH":"Textures.Pandora.Pandora_Explosion.Explosion:gif","ATTACKING":"Textures.missing:png","IDLE":"Textures.missing:png","RUNNING":"Textures.missing:png"},"Health":0.0,"Script":"Scripts.Pandora_Explosion:js","Width":100.0,"Height":100.0,"Speed":0.0,"FrameDelay":105}

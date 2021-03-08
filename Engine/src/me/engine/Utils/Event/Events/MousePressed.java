@@ -47,7 +47,7 @@ public class MousePressed extends Event {
 		return Action.UNKOWN;
 	}
 	
-	enum Action{
+	public enum Action{
 		PRESSED(GLFW.GLFW_PRESS),RELEASE(GLFW.GLFW_RELEASE),UNKOWN(-1);
 		int action;
 		Action(int id){
