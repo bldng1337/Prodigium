@@ -3,6 +3,10 @@ var Action = Java.type("me.engine.Utils.Event.Events.KeyPressed.Action");
 var Math = Java.type("java.lang.Math");
 var pm_dx=0,pm_dy=0;
 
+function death(){
+	
+}
+
 function pmupdate(){
 	if(Math.abs(e.motionX)<10)
 		e.motionX+=e.speed*pm_dx;

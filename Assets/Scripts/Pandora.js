@@ -8,13 +8,17 @@ var Space = Java.type("me.engine.Utils.Space");
 EventManager.registerfor(KeyPressed.class,e);
 EventManager.registerfor(MousePressed.class,e);
 var attackCooldown=0;
+
+function death(){
+	
+}
+
 function update(){
 	if(e.getAnimation()==Animation.DEATH){
 		return;
 	}
 	if(attackCooldown>0)
 		attackCooldown--;
-	print(attackCooldown);
 	pmupdate();
 	if(e.health<=0){
 		e.setAnimation(Animation.DEATH);

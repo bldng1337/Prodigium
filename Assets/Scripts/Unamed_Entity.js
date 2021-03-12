@@ -2,7 +2,9 @@ var Animation = Java.type("me.engine.Entity.Animation");
 var Vector2i = Java.type("org.joml.Vector2i");
 var Texture = Java.type("me.engine.Utils.TextureAtlas");
 var Math = Java.type("java.lang.Math");
-
+function death(){
+	
+}
 
 function update(){
 	if(e.getAnimation()==Animation.DEATH)

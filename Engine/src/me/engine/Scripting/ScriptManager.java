@@ -1,12 +1,14 @@
 package me.engine.Scripting;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -27,6 +29,17 @@ public class ScriptManager {
 	
 	public ScriptManager() {
 		sem=new ScriptEngineManager();
+		if(sem.getEngineByExtension("js")==null) {
+			try {
+				Class c=this.getClass().getClassLoader().loadClass("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+				ScriptEngineFactory sef=(ScriptEngineFactory) c.getConstructors()[0].newInstance();
+				sem.registerEngineExtension("js", sef);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 		//sem.registerEngineExtension("js", new NashornScriptEngineFactory());
 		registerScripts();
 	}

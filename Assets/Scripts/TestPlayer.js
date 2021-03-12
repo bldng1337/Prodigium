@@ -4,6 +4,10 @@ var Animation = Java.type("me.engine.Entity.Animation");
 var EventManager = Java.type("me.engine.Utils.Event.EventManager");
 EventManager.registerfor(KeyPressed.class,e);
 
+function death(){
+	
+}
+
 function update(){
 	if(e.getAnimation()==Animation.DEATH){
 		return;

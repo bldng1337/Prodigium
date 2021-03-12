@@ -83,6 +83,8 @@ public class Entity{
 		return textureids[currTexture.gettextureindex()];
 	}
 	
+	
+	
 	@EventTarget
 	public void onMousePressed(MousePressed m) {
 		ScriptManager.invoke(script, "mousepressed",m.getX()+Engine.getEngine().getRender().c.getTranslate().x,m.getY()+Engine.getEngine().getRender().c.getTranslate().y,m.getAction());
@@ -128,8 +130,12 @@ public class Entity{
 		if(currTexture.equals(Animation.ATTACKING)) {
 			currTexture=Animation.IDLE;
 		}
-		if(currTexture.equals(Animation.DEATH))
+		if(currTexture.equals(Animation.DEATH)) {
+			ScriptManager.invoke(script, "death");
+			
+			
 			l.removeEntity(this);
+		}
 		animationstamp=System.currentTimeMillis();	
 	}
 	

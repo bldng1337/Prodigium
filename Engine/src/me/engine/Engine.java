@@ -1,7 +1,5 @@
 package me.engine;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -13,8 +11,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
-import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;

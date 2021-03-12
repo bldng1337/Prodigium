@@ -38,6 +38,9 @@ public class LightRenderer extends Renderer{
 		lightshader=new Shader(FileUtils.getFilefromID("Shader.light:frag"), FileUtils.getFilefromID("Shader.std:vert"));
 		lights.add(new Light(new Vector2f(400,400), 600, 0xFF13FFFF));
 	}
+	public Light createLight(float x,float y,float size,int argb) {
+		return createLight(new Vector2f(x,y), size, argb);
+	}
 	
 	public Light createLight(Vector2f v,float size,int argb) {
 		lights.add(new Light(v, size, argb));
