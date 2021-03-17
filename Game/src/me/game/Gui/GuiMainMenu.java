@@ -33,7 +33,7 @@ public class GuiMainMenu extends GuiScreen
 		Engine.getEngine().getCurrlevel().addEntity(e);
 		Engine.getEngine().getRender().c.setP(()->new Vector2f(e.x,e.y));
 		Engine.getEngine().getHud().add(new Minimap(0, 0, 200));
-		Engine.getEngine().getHud().add(new Statbar(-60,1080-140,800,140,e));
+		Engine.getEngine().getHud().add(new Statbar(0,1080-100,400,100,e));
 		Engine.getEngine().getPm().addParticleSystem((a)->{a.getMotion().set(0, -0.1);a.setSize(4);}).setColor(0x35FFFFFF).setMax(20).setMaxLifetime(6000).setSpawndelay(30);
 		Engine.getEngine().setGuiscreen(null);
 	}

@@ -1,4 +1,5 @@
 #i Scripts.PlayerMovement:js
+#i Scripts.PlayerAbilities:js
 var Engine = Java.type("me.engine.Engine");
 var Animation = Java.type("me.engine.Entity.Animation");
 var EventManager = Java.type("me.engine.Utils.Event.EventManager");
@@ -8,7 +9,11 @@ var Space = Java.type("me.engine.Utils.Space");
 EventManager.registerfor(KeyPressed.class,e);
 EventManager.registerfor(MousePressed.class,e);
 var attackCooldown=0;
-
+Ult.use=function(){
+	print("Ult");
+}
+Ult.cooldown=100000;
+Ult.manacost=50;
 function death(){
 	
 }
@@ -19,6 +24,7 @@ function update(){
 	}
 	if(attackCooldown>0)
 		attackCooldown--;
+	abupdate();
 	pmupdate();
 	if(e.health<=0){
 		e.setAnimation(Animation.DEATH);
@@ -34,6 +40,7 @@ function update(){
 }
 
 function keypressed(key,state){
+	abkeypress(key,state);
 	pmkeypressed(key,state);
 }
 

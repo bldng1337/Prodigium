@@ -106,15 +106,13 @@ public class Entity{
 	}
 	
 	public void render(Renderer r) {
-		if(renderflipped)
-			r.setTexCoords(1, 0, 0, 1);
 		
 		long elapsed=System.currentTimeMillis()-animationstamp;
 		elapsed/=framedelay;
 		Vector2f pos=Space.worldtoscreen(new Vector2f(x, y));
-//		Engine.getEngine().getFontRenderer().draw(this.name, pos.x+width/2-Engine.getEngine().getFontRenderer().getWidth(this.name, 15)/2, pos.y-10-Engine.getEngine().getFontRenderer().getHeight(this.name, 15), 15);
-//		r.renderRect(x, y, width, height, 0x22FFFFFF);
 		Engine.getEngine().getUIrender().renderRect(pos.x, pos.y-10, width*(Math.max(health,0)/maxhealth), 5, MathUtils.torgba(1-(Math.max(health,0)/maxhealth), (Math.max(health,0)/maxhealth), 0f, 2f));
+		if(renderflipped)
+			r.setTexCoords(1, 0, 0, 1);
 		if(hurttime>0)
 			hurttime-=0.1f;
 		else hurttime=0;
@@ -124,6 +122,11 @@ public class Entity{
 			finishedanimation();
 		if(renderflipped)
 			r.resetTexCoords();
+	}
+	
+	
+	public Object get(String name) {
+		return script.get(name);
 	}
 	
 	public void finishedanimation() {

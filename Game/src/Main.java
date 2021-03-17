@@ -1,12 +1,8 @@
-import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 import me.engine.Engine;
-import me.engine.Utils.Space;
 import me.engine.Utils.Event.EventManager;
 import me.engine.Utils.Event.EventTarget;
 import me.engine.Utils.Event.Events.Initialization;
-import me.engine.Utils.Event.Events.MousePressed;
 import me.game.Gui.GuiMainMenu;
 
 public class Main {

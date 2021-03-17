@@ -10,9 +10,9 @@ public class MathUtils {
 
 	public static int torgba(int r,int g,int b,int a) {
 		return (a << 24)
-				| (b << 16)
+				| (r << 16)
 				| (g << 8)
-				| (r << 0);
+				| (b << 0);
 	}
 	
 	public static int torgba(float r,float g,float b,float a) {
