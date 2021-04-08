@@ -30,10 +30,11 @@ public class EventManager {
 	}
 	
 	public static void registerfor(Class e,Object o) {
+		System.out.println(e+" "+o);
 		if(!Event.class.isAssignableFrom(e))
 			return;
 		for(Method m: o.getClass().getMethods()) {
-			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterCount()==1&&m.getParameterTypes()[0].getSimpleName()==e.getSimpleName()) {
+			if(m.isAnnotationPresent(EventTarget.class)&&m.getParameterCount()==1&&m.getParameterTypes()[0].getSimpleName().equals(e.getSimpleName())) {
 				m.setAccessible(true);
 				clist.add(new MethodType(m, o,m.getAnnotationsByType(EventTarget.class)[0].p().getpri()));
 			}
